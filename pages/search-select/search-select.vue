@@ -74,7 +74,7 @@
 <style>
 	@import url("../../static/css/style.css");
 	.patient-select{
-		width: calc(100% - 80rpx);
+		width: calc(100% - 40rpx);
 		margin: 0 20rpx 0 20rpx;
 	}
 	.paitent-select-prefix{

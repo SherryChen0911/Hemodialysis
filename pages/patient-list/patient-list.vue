@@ -1,35 +1,35 @@
 <template>
 	<view class="content">
 		<view class="list-view">
-			<view class="list-item">
+			<view class="list-item" v-for="item in patientList">
 				<view class="header">
 					<view class="list-head-left">
-						<image src="../../static/patient1.jpg" mode="aspectFill"></image>
-						<text>筱燕秋 男</text>
-						<button> </button>
+						<image class="patient-pic" :src="item.pic" mode="aspectFill"></image>
+						<text>{{item.name}} {{item.sex}}</text>
+						<view class="patient-status">
+							<text v-show="item.isfinish">已完成</text>
+						</view>
 					</view>
 					<view class="list-head-right">
-						<text>ID: 350204198001101234</text>
-						<text>透析号: 2005150004</text>
-						<text>治疗项目: HD</text>
-						<text>传染病:</text>
-						<text>预订时间:</text>
-						<text>预计脱水:</text>
-						<text>抗凝方式:低分子肝素钙</text>
-						<text>首计:</text>
-						<text>追加:</text>
+						<text>ID: {{item.id}}</text>
+						<text>透析号: {{item.dialysisId}}</text>
+						<text>治疗项目: {{item.treatment}}</text>
+						<text>传染病: {{item.epidemic}}</text>
+						<text>净化器: {{item.depurator}}</text>
+						<text>预订时间: {{item.time}}小时</text>
+						<text>预计脱水: {{item.dehydration}}Kg</text>
+						<text>抗凝方式: {{item.antiFreezing}}</text>
+						<text>首计: {{item.first}}u</text>
+						<text>追加: {{item.add}}u</text>
 					</view>
 				</view>
-				<view class="footer">
+				<view v-show="!item.isfinish" class="footer">
 					<button class="btn">患者拍照</button>
-					<button class="btn">执行治疗</button>
-					<button class="btn">结束治疗</button>
+					<button class="btn" @click="doTreatment">执行治疗</button>
+					<button class="btn" @click="endTreatment(item)">结束治疗</button>
 				</view>
-
 			</view>
-			
 		</view>
-		
 	</view>
 </template>
 
@@ -37,26 +37,82 @@
 	export default {
 		data() {
 			return {
+				patientList:[
+					{
+						name:"筱燕秋",
+						sex:"男",
+						pic:"../../static/patient1.jpg",
+						id:"350204198001101234",
+						dialysisId:"2005150004",
+						treatment:"HD",
+						epidemic:"",
+						depurator:"德朗14H",
+						time:"4",
+						dehydration:"3.7",
+						antiFreezing:"低分子肝素钙",
+						first:"4000",
+						add:"",
+						isfinish:true,
+					},
+					{
+						name:"林晓梅",
+						sex:"女",
+						pic:"../../static/patient1.jpg",
+						id:"350204198001101234",
+						dialysisId:"2005150004",
+						treatment:"HD",
+						epidemic:"",
+						depurator:"德朗14H",
+						time:"4",
+						dehydration:"3.7",
+						antiFreezing:"低分子肝素钙",
+						first:"4000",
+						add:"",
+						isfinish:false,
+					},
+					{
+						name:"宁浩",
+						sex:"男",
+						pic:"../../static/patient1.jpg",
+						id:"350204198001101234",
+						dialysisId:"2005150004",
+						treatment:"HD",
+						epidemic:"",
+						depurator:"德朗14H",
+						time:"4",
+						dehydration:"3.7",
+						antiFreezing:"低分子肝素钙",
+						first:"4000",
+						add:"",
+						isfinish:true,
+					}										
+				],
 				
 			}
 		},
 		methods: {
-			
+			doTreatment(){
+				uni.switchTab({
+					url: "../treat-info/treat-info"
+				})
+			},
+			endTreatment(item){
+				if(item.isfinish == false){
+					item.isfinish = true;
+				}
+			}
 		}
 	}
 </script>
 
 <style>
 	@import url("../../static/css/style.css");	
-	image{
-		width: 200rpx;
-		height: 300rpx;
-	}
 	.list-view{
-		width: calc(100% - 40rpx);
+		width: 100%;
 	}
 	.list-item{
 		padding: 20rpx;
+		margin-bottom: 20rpx;
 		width: calc(100% - 40rpx);
 		display: flex;
 		flex-direction: column;
@@ -66,20 +122,34 @@
 	.header{
 		display: flex;
 		flex-direction: row;
-		padding-bottom: 20rpx;
+	}
+	.list-head-left{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+	}	
+	.patient-pic{
+		width: 200rpx;
+		height: 300rpx;
+	}
+	.patient-status{
+		margin-top: 5rpx;
+		width: 120rpx;
+		color: #FFFFFF;
+		background-color: #C0C0C0;
+		border-radius: 20rpx;
+		font-size: 28rpx;
 	}
 	.list-head-right{
 		margin-left: 20rpx;
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-	}
-	.list-head-left{
-		display: flex;
-		flex-direction: column;
-		text-align: center;
+		font-size: 28rpx;
 	}
 	.footer{
+		margin-top: 20rpx;
 		border-top: 2rpx solid;
 		border-color: #51D3C7;
 		padding-top: 20rpx;

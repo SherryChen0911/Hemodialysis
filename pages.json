@@ -15,7 +15,6 @@
 				"navigationBarTextStyle": "white",
 				"navigationBarBackgroundColor":"#51D3C7"
 			}
-            
         }
         ,{
             "path" : "pages/patient-list/patient-list",
@@ -24,7 +23,42 @@
 				"navigationBarTextStyle": "white",
 				"navigationBarBackgroundColor":"#51D3C7"
 			}
-            
+        }
+        ,{
+            "path" : "pages/treat-info/treat-info",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "治疗",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+            }
+        }
+        ,{
+            "path" : "pages/medical-advice/medical-advice",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "医嘱",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+            }
+        }
+        ,{
+            "path" : "pages/dialysis-param/dialysis-param",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "参数",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+            }
+        }
+        ,{
+            "path" : "pages/dialysis-summary/dialysis-summary",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "小结",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+            }
         }
     ],
 	"globalStyle": {
@@ -32,5 +66,29 @@
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"fontSize": "14px",
+		"selectedColor": "#51D3C7",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [{
+				"pagePath": "pages/treat-info/treat-info",
+				"text": "治疗信息"
+			},
+			{
+				"pagePath": "pages/medical-advice/medical-advice",
+				"text": "临时医嘱"
+			},
+			{
+				"pagePath": "pages/dialysis-param/dialysis-param",
+				"text": "透析参数"
+			},
+			{
+				"pagePath": "pages/dialysis-summary/dialysis-summary",
+				"text": "透析小结"
+			}
+		]
 	}
 }
