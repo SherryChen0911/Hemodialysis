@@ -21,6 +21,11 @@
 				<button class="one-btn login-btn" @click="login">登录</button>
 			</view>
 		</form>
+		<!-- input弹出框 -->
+		<uni-popup id="dialogInput" ref="dialogInput" type="dialog">
+			<uni-popup-dialog mode="input" title="IP地址设置" :value="ipInfo" placeholder="请输入内容" @confirm="dialogInputConfirm">
+			</uni-popup-dialog>
+		</uni-popup>
 	</view>
 </template>
 
@@ -28,11 +33,15 @@
 	export default {
 		data() {
 			return {
+				ipInfo:"",
 				loginInfo:{
 					name:"",
 					psw:""
 				}
 			}
+		},
+		onNavigationBarButtonTap(e){
+			this.$refs.dialogInput.open();
 		},
 		onLoad() {
 
@@ -42,6 +51,10 @@
 				uni.navigateTo({
 					url: "../search-select/search-select"
 				});
+			},
+			dialogInputConfirm(val){
+				console.log(val);
+				this.ipInfo = val;
 			}
 		}
 	}
@@ -65,9 +78,6 @@
 		border-radius: 20rpx 0 0 20rpx;
 		padding-left: 0;
 	}
-
-
-
 	.login-btn{
 		position: absolute;
 		top: 300rpx;

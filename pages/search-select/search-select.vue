@@ -52,6 +52,12 @@
 				roomRange:["透析1组","透析2组","透析3组","透析4组","透析5组","RPR","C区","B区"],
 			}
 		},
+		onBackPress() {
+			uni.navigateTo({
+				url:"../login/login",
+			});
+			return true;
+		},
 		methods: {
 			setPatientSelectDate(e){
 				this.patientSelectData.selectDate = e.detail.value;

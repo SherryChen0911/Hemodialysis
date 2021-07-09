@@ -1,9 +1,10 @@
 <template>
-	<view class="content">
-		<form>
+	<view>
+		<!-- <uni-nav-bar class="nav-style" left-icon="back" right-icon="loop" :title="patient.name" color="#ffffff" background-color="#51D3C7" ></uni-nav-bar> -->
+		<uni-nav-bar class="nav-style" left-icon="back" right-icon="loop" :title="patient.name" color="#ffffff" background-color="#51D3C7" @clickLeft="toPatientList"></uni-nav-bar>
+		<form class="content">
 		<uni-segmented-control class="segment" :current="segCtrlSelected" :values="segCtrlItems" @clickItem="onClickItem" styleType="text" activeColor="#51D3C7"></uni-segmented-control>
 			<view v-show="segCtrlSelected === 0">
-				
 				<view class="form-item">
 					<view class="form-prefix-space">
 						<text>上机前病情:</text>
@@ -466,7 +467,7 @@
 
 				<view class="form-item">
 					<view class="form-prefix-space">
-						<text>责任护士:</text>
+						<text>核对护士:</text>
 					</view>
 					<view class="form-cnt form-mid-space">
 						<input class="form-mid-space" type="text" placeholder=""/>
@@ -488,6 +489,7 @@
 	export default {
 		data() {
 			return {
+				patient:{},
 				segCtrlItems:['透析信息', '评估与治疗情况'],
 				segCtrlSelected:0,
 				info:{
@@ -507,7 +509,17 @@
 				doseRange:["u","u1","u2"]		
 			}
 		},
+		onShow: function () {
+			console.log("这里是治疗信息页面",uni.getStorageSync("patient"))
+			this.patient = uni.getStorageSync("patient");
+			console.log(this.patient);
+		},
 		methods: {
+			toPatientList(){
+				uni.navigateTo({
+					url: "../patient-list/patient-list",
+				});
+			},
 			onClickItem(e) {
 				if (this.segCtrlSelected !== e.currentIndex) {
 					this.segCtrlSelected = e.currentIndex;
@@ -524,7 +536,10 @@
 </script>
 
 <style>
-	@import url("../../static/css/style.css");	
+	@import url("../../static/css/style.css");
+	.uni-navbar--border{
+		border-bottom-color: #007AFF;
+	}
 	.segment{
 		width: calc(100% - 40rpx);
 	}

@@ -25,10 +25,14 @@
 				</view>
 				<view v-show="!item.isfinish" class="footer">
 					<button class="btn">患者拍照</button>
-					<button class="btn" @click="doTreatment">执行治疗</button>
+					<button class="btn" @click="doTreatment(item)">执行治疗</button>
 					<button class="btn" @click="endTreatment(item)">结束治疗</button>
 				</view>
 			</view>
+		</view>
+		<view v-show="navSelected" class="nav-select">
+			<view class="nav-select-item" @click="changeAccount">切换账号</view>
+			<view class="nav-select-item">刷新</view>
 		</view>
 	</view>
 </template>
@@ -37,6 +41,7 @@
 	export default {
 		data() {
 			return {
+				navSelected:false,
 				patientList:[
 					{
 						name:"筱燕秋",
@@ -52,7 +57,7 @@
 						antiFreezing:"低分子肝素钙",
 						first:"4000",
 						add:"",
-						isfinish:true,
+						isfinish:false,
 					},
 					{
 						name:"林晓梅",
@@ -84,22 +89,40 @@
 						antiFreezing:"低分子肝素钙",
 						first:"4000",
 						add:"",
-						isfinish:true,
+						isfinish:false,
 					}										
 				],
 				
 			}
 		},
+		onNavigationBarButtonTap(e){
+			this.navSelected = !this.navSelected;
+
+		},
+		onBackPress() {
+			uni.navigateTo({
+				url:"../search-select/search-select",
+			});
+			return true;
+		},
 		methods: {
-			doTreatment(){
+			doTreatment(item){
+				uni.setStorageSync("patient",item);
+				var test = uni.getStorageSync("patient");
+				console.log("这里是患者列表页面：",test);
 				uni.switchTab({
-					url: "../treat-info/treat-info"
-				})
+					url: "../treat-info/treat-info",
+				});
 			},
 			endTreatment(item){
 				if(item.isfinish == false){
 					item.isfinish = true;
 				}
+			},
+			changeAccount(){
+				uni.navigateTo({
+					url:"../login/login",
+				});
 			}
 		}
 	}
@@ -171,5 +194,23 @@
 	    border-radius: 20rpx;
 	    box-shadow: 1px 2px 5px rgba(28, 42, 134, 0.4);
 		height: 50rpx;
+	}
+	.nav-select{
+		position: fixed;
+		z-index: 100;
+		top: 90rpx;
+		right: 5rpx;
+		background-color: #EEEEEE;
+		width: 250rpx;
+		/* height: 100rpx; */
+		box-shadow: 2px 2px 5px rgba(28, 42, 134, 0.4);
+	}
+	.nav-select-item{
+		height: 50rpx;
+		padding: 10rpx;
+		border-left: 1rpx solid;
+		border-right: 1rpx solid;
+		border-bottom: 1rpx solid;
+		border-color: #C0C0C0;
 	}
 </style>

@@ -5,7 +5,19 @@
 			"style": {
 				"navigationBarTitleText": "血透移动系统",
 				"navigationBarTextStyle": "white",
-				"navigationBarBackgroundColor":"#51D3C7"
+				"navigationBarBackgroundColor":"#51D3C7",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [
+							{
+								"text":"\ue54b",
+								"fontSrc":"/static/iconfont.ttf",
+								"fontSize":"25px",
+								"float":"right"
+							}
+						]
+					}
+				}
 			}
 		}
 	    ,{
@@ -21,44 +33,82 @@
 			"style": {
 				"navigationBarTitleText": "血透患者选择",
 				"navigationBarTextStyle": "white",
-				"navigationBarBackgroundColor":"#51D3C7"
+				"navigationBarBackgroundColor":"#51D3C7",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [
+							{
+								"text":"\ue677",
+								"fontSrc":"/static/iconfont.ttf",
+								"fontSize":"25px",
+								"float":"right"
+							}
+						]
+					}
+				}
 			}
         }
         ,{
             "path" : "pages/treat-info/treat-info",
-            "style" :                                                                                    
-            {
-				"navigationBarTitleText": "治疗",
-				"navigationBarTextStyle": "white",
-				"navigationBarBackgroundColor":"#51D3C7"
-            }
+			"style" :
+			{
+				"app-plus":{"titleNView":false}
+			}
+    //         "style" :                                                                                    
+    //         {
+				// "navigationBarTitleText": "治疗",
+				// "navigationBarTextStyle": "white",
+				// "navigationBarBackgroundColor":"#51D3C7"
+    //         }
         }
         ,{
             "path" : "pages/medical-advice/medical-advice",
-            "style" :                                                                                    
-            {
-				"navigationBarTitleText": "医嘱",
-				"navigationBarTextStyle": "white",
-				"navigationBarBackgroundColor":"#51D3C7"
-            }
+			"style" :
+			{
+				"app-plus":{"titleNView":false}
+			}
+    //         "style" :                                                                                    
+    //         {
+				// "navigationBarTitleText": "医嘱",
+				// "navigationBarTextStyle": "white",
+				// "navigationBarBackgroundColor":"#51D3C7"
+    //         }
         }
         ,{
             "path" : "pages/dialysis-param/dialysis-param",
-            "style" :                                                                                    
-            {
-				"navigationBarTitleText": "参数",
-				"navigationBarTextStyle": "white",
-				"navigationBarBackgroundColor":"#51D3C7"
-            }
+			"style" :
+			{
+				"app-plus":{"titleNView":false}
+			}
+    //         "style" :                                                                                    
+    //         {
+				// "navigationBarTitleText": "参数",
+				// "navigationBarTextStyle": "white",
+				// "navigationBarBackgroundColor":"#51D3C7"
+    //         }
         }
         ,{
             "path" : "pages/dialysis-summary/dialysis-summary",
+			"style" :
+			{
+				"app-plus":{"titleNView":false}
+			}
+    //         "style" :                                                                                    
+    //         {
+				// "navigationBarTitleText": "小结",
+				// "navigationBarTextStyle": "white",
+				// "navigationBarBackgroundColor":"#51D3C7"
+    //         }
+        }
+        ,{
+            "path" : "pages/dialysis-param-add/dialysis-param-add",
             "style" :                                                                                    
             {
-				"navigationBarTitleText": "小结",
+				"navigationBarTitleText": "添加透析参数",
 				"navigationBarTextStyle": "white",
 				"navigationBarBackgroundColor":"#51D3C7"
             }
+            
         }
     ],
 	"globalStyle": {
