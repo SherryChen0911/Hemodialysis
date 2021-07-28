@@ -1,23 +1,23 @@
 <template>
 	<view>
-		<uni-nav-bar class="nav-style" left-icon="back" right-icon="loop" :title="patient.name" color="#ffffff" background-color="#51D3C7" @clickLeft="toPatientList"></uni-nav-bar>
+		<uni-nav-bar class="nav-style" statusBar="true" fixed="true" left-icon="back" right-icon="loop" :title="patient.name" color="#ffffff" background-color="#51D3C7" @clickLeft="toPatientList" @clickRight="reflesh"></uni-nav-bar>
 		<view class="content">
 				<button class="table-btn" @click="setTemplate">
 					<uni-icons class="btn-icon" type="plus" color="#51D3C7" size="15"></uni-icons>
 					使用模板
 				</button>
 			<view class="texarea-border">
-				<textarea :value="summary" placeholder="" />
+				<textarea v-model="summary" placeholder="" />
 			</view>
-			<button class="one-btn">保存</button>
+			<button class="one-btn" @click="submit">保存</button>
 		</view>
 
-		<!-- input弹出框 -->
+		<!-- 弹出框 -->
 		<uni-popup id="dialogInput" ref="templates" type="dialog">
 			<view class="template-list" slot="default">
 				<scroll-view scroll-y="true" >
 				<view class="template-item" scroll-y="true" v-for="item in templateList" @click="selectTemplate(item)">
-						<text>{{item}}</text>
+						<text>{{item.item_name}}</text>
 				</view>
 				</scroll-view>
 			</view>
@@ -26,53 +26,125 @@
 </template>
 
 <script>
+	
 	export default {
 		data() {
 			return {
 				patient:{},
 				summary:"",
-				templateList:[
-					"0本次透析过程顺利,平安离室",
-					"1患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"2患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"3患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"4患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"5患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"6患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"7患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"8患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"9患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"10患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"11患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"12患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"13患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"14患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"15患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"16患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"17患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"18患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"19患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-					"20患者透析中出现血压低,予取头低位,血压仍较前下降,予暂停超滤处理。",
-				],
+				templateList:[],
 			}
 		},
 		onShow: function () {
-			console.log("这里是透析小结页面",uni.getStorageSync("patient"));
 			this.patient = uni.getStorageSync("patient");
 			console.log(this.patient);
+			//获取透析小结
+			this.$myRequest({
+				url:'/patient/summary',
+				method:'POST',
+				data:{
+					cure_id:this.patient.cure_id,
+				},
+				success: (res) => {
+					if(res.data.code == 200){
+						
+						this.summary = res.data.data.summary;
+						console.log("透析小结",res.data.data,this.summary);
+					}
+				},
+			});
+			//获取透析小结模板
+			this.$myRequest({
+				url:'/common/dialysistemp',
+				success: (res) => {
+					if(res.data.code == 200){
+						console.log("透析小结模板",res.data.data);
+						this.templateList = res.data.data;
+					}
+				},
+			});
 		},
 		methods: {
+			//导航返回按钮对应方法
 			toPatientList(){
 				uni.navigateTo({
 					url: "../patient-list/patient-list",
 				});
+				this.patient={};
+				this.summary="";
+				this.templateList=[];
 			},
+			//导航刷新按钮对应方法
+			reflesh(){
+				uni.showToast({
+					title: 'loading',
+					icon: 'loading',
+					mask: true
+				});
+				//获取透析小结
+				this.$myRequest({
+					url:'/patient/summary',
+					method:'POST',
+					data:{
+						cure_id:this.patient.cure_id,
+					},
+					success: (res) => {
+						if(res.data.code == 200){
+							
+							this.summary = res.data.data.summary;
+							console.log("透析小结",res.data.data,this.summary);
+						}
+					},
+				});
+				//获取透析小结模板
+				this.$myRequest({
+					url:'/common/dialysistemp',
+					success: (res) => {
+						if(res.data.code == 200){
+							console.log("透析小结模板",res.data.data);
+							this.templateList = res.data.data;
+						}
+					},
+				});
+			},
+			//显示模板
 			setTemplate(){
 				this.$refs.templates.open();
 			},
+			//选择模板内容
 			selectTemplate(item){
-				this.summary = item;
+				this.summary = item.item_name;
 				this.$refs.templates.close();
+			},
+			//提交透析小结
+			submit(){
+				console.log(this.summary);
+				//提交透析小结
+				this.$myRequest({
+					url:'/patient/update/summary',
+					method:'POST',
+					data:{
+						cure_id:this.patient.cure_id,
+						"summary":this.summary,
+					},
+					success: (res) => {
+						if(res.data.code == 200){
+							uni.showToast({
+								title: '透析小结保存成功',
+								icon: 'none',
+								mask: true
+							});
+						}
+					},
+					fail: (err) => {
+						console.log('request fail', err);
+						uni.showToast({
+							title: '透析小结保存失败',
+							icon: 'none',
+							mask: true
+						});
+					},
+				});
 			}
 		}
 	}

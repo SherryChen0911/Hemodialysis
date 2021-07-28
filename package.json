@@ -1,0 +1,23 @@
+{
+  "name": "hemodialysis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SherryChen0911/Hemodialysis.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SherryChen0911/Hemodialysis/issues"
+  },
+  "homepage": "https://github.com/SherryChen0911/Hemodialysis#readme",
+  "dependencies": {
+    "js-md5": "^0.7.3",
+    "lodash": "^4.17.21"
+  }
+}

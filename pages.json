@@ -3,7 +3,7 @@
 		{
 			"path": "pages/login/login",
 			"style": {
-				"navigationBarTitleText": "血透移动系统",
+				"navigationBarTitleText": "福鼎市医院血透系统",
 				"navigationBarTextStyle": "white",
 				"navigationBarBackgroundColor":"#51D3C7",
 				"app-plus": {
@@ -52,7 +52,11 @@
             "path" : "pages/treat-info/treat-info",
 			"style" :
 			{
-				"app-plus":{"titleNView":false}
+				"app-plus":{
+					"softinputMode": "adjustResize",
+					"animationType": "none",
+					"titleNView":false
+				}
 			}
     //         "style" :                                                                                    
     //         {
@@ -65,7 +69,11 @@
             "path" : "pages/medical-advice/medical-advice",
 			"style" :
 			{
-				"app-plus":{"titleNView":false}
+				"app-plus":{
+					"softinputMode": "adjustResize",
+					"animationType": "none",
+					"titleNView":false
+				}
 			}
     //         "style" :                                                                                    
     //         {
@@ -78,7 +86,11 @@
             "path" : "pages/dialysis-param/dialysis-param",
 			"style" :
 			{
-				"app-plus":{"titleNView":false}
+				"app-plus":{
+					"softinputMode": "adjustResize",
+					"animationType": "none",
+					"titleNView":false
+				}
 			}
     //         "style" :                                                                                    
     //         {
@@ -91,7 +103,11 @@
             "path" : "pages/dialysis-summary/dialysis-summary",
 			"style" :
 			{
-				"app-plus":{"titleNView":false}
+				"app-plus":{
+					"softinputMode": "adjustResize",
+					"animationType": "none",
+					"titleNView":false
+				}
 			}
     //         "style" :                                                                                    
     //         {
@@ -108,8 +124,25 @@
 				"navigationBarTextStyle": "white",
 				"navigationBarBackgroundColor":"#51D3C7"
             }
-            
         }
+		,{
+		    "path" : "pages/dialysis-param-copy/dialysis-param-copy",
+		    "style" :                                                                                    
+		    {
+				"navigationBarTitleText": "复制透析参数",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+		    }
+		}
+		,{
+		    "path" : "pages/dialysis-param-edit/dialysis-param-edit",
+		    "style" :                                                                                    
+		    {
+				"navigationBarTitleText": "修改透析参数",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+		    }
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

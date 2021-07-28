@@ -1,12 +1,12 @@
 <template>
 	<view class="content">
-		<form class="login">
+		<form class="login"  @submit="formSubmit">
 			<view class="form-item form-cnt login-item">
 				<view class="form-prefix-space login-prefix">
 					<uni-icons type="person" color="#FFFFFF" size="20"></uni-icons>
 				</view>
 				<view class="form-mid-space">
-					<input type="text" placeholder="请输入用户名"/>
+					<input type="text" v-model="userinfo.id" placeholder="请输入用户名" name="user"/>
 				</view>
 			</view>
 			<view class="form-item form-cnt login-item">
@@ -14,11 +14,11 @@
 					<uni-icons type="locked" color="#FFFFFF" size="20"></uni-icons>
 				</view>
 				<view class="form-mid-space">
-					<input type="password" placeholder="请输入密码"/>
+					<input type="password" v-model="userinfo.pswd" placeholder="请输入密码" name="password"/>
 				</view>
 			</view>
 			<view class="btn-area">
-				<button class="one-btn login-btn" @click="login">登录</button>
+				<button class="one-btn login-btn" form-type="submit">登录</button>
 			</view>
 		</form>
 		<!-- input弹出框 -->
@@ -30,23 +30,68 @@
 </template>
 
 <script>
+	import md5 from "js-md5";
 	export default {
 		data() {
 			return {
 				ipInfo:"",
-				loginInfo:{
-					name:"",
-					psw:""
+				userinfo:{
+					id:"",
+					pswd:""
 				}
 			}
 		},
 		onNavigationBarButtonTap(e){
-			this.$refs.dialogInput.open();
+				if(e.index == 0){
+					console.log(e);
+					this.$refs.dialogInput.open();
+				}
+
 		},
 		onLoad() {
 
 		},
 		methods: {
+			formSubmit(e){
+				//密码md5加密
+				let psw = md5(e.detail.value.password).toUpperCase();
+				this.$myRequest({
+					url:'/user/login',
+					method:'POST',
+					data:{
+						userid:e.detail.value.user,
+						password:psw
+					},
+					success: (res) => {
+						// console.log(res);
+						if(res.data.code == 200){
+							console.log(res.data.data.user_id);
+							uni.setStorageSync("userid",res.data.data.user_id);
+							uni.showToast({
+								title: e.detail.value.user+'，登录成功',
+								icon: 'none',
+								mask: true
+							});
+							setTimeout(() => {
+									uni.hideToast();
+									//关闭提示后跳转
+									uni.navigateTo({
+										url: "../search-select/search-select"
+									});
+								}, 500);	
+						}
+						else if(res.data.code == 10001){
+							uni.showToast({
+								title: res.data.msg,
+								icon: 'none',
+								mask: true
+							});
+						}
+						this.userinfo.id = "";
+						this.userinfo.pswd = "";
+					},
+				});	
+			},
 			login(){
 				uni.navigateTo({
 					url: "../search-select/search-select"

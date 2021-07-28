@@ -1,0 +1,45 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/search-select/search-select",
+    "pages/patient-list/patient-list",
+    "pages/treat-info/treat-info",
+    "pages/medical-advice/medical-advice",
+    "pages/dialysis-param/dialysis-param",
+    "pages/dialysis-summary/dialysis-summary",
+    "pages/dialysis-param-add/dialysis-param-add"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "fontSize": "14px",
+    "selectedColor": "#51D3C7",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/treat-info/treat-info",
+        "text": "治疗信息"
+      },
+      {
+        "pagePath": "pages/medical-advice/medical-advice",
+        "text": "临时医嘱"
+      },
+      {
+        "pagePath": "pages/dialysis-param/dialysis-param",
+        "text": "透析参数"
+      },
+      {
+        "pagePath": "pages/dialysis-summary/dialysis-summary",
+        "text": "透析小结"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

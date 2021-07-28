@@ -1,13 +1,13 @@
 <template>
 	<view class="content">
-		<form class="patient-select">
+		<form class="patient-select" @submit="formSubmit">
 			<view class="form-item form-cnt paitent-select-cnt">
 				<view class="form-prefix-space paitent-select-prefix">
 						<text>选择日期:</text>
 				</view>
 				<view class="form-mid-space">
 					<picker mode="date" fields="day"  @change="setPatientSelectDate">
-						<input type="text" :value="patientSelectData.selectDate" placeholder="请选择查询日期"/>
+						<input type="text" disabled="true" :value="patientSelectData.selectDate" placeholder="请选择查询日期"/>
 					</picker>
 				</view>
 			</view>
@@ -16,8 +16,8 @@
 					<text>选择时段:</text>
 				</view>
 				<view class="form-mid-space">
-					<picker mode="selector" :range="timeRange"  @change="setPatientSelectTime">
-						<input type="text" :value="patientSelectData.selectTime" placeholder="请选择查询时段"/>
+					<picker mode="selector" :range="timeRange" @change="setPatientSelectTime">
+						<input type="text" disabled="true" :value="patientSelectData.selectTime" placeholder="请选择查询时段"/>
 					</picker>
 				</view>
 			</view>
@@ -27,12 +27,12 @@
 				</view>
 				<view class="form-mid-space">
 					<picker mode="selector" :range="roomRange"  @change="setPatientSelectRoom">
-						<input type="text" :value="patientSelectData.selectRoom" placeholder="请选择查询诊室"/>
+						<input type="text" disabled="true" :value="patientSelectData.selectRoom" placeholder="请选择查询诊室"/>
 					</picker>					
 				</view>
 			</view>
 			<view class="btn-area">
-				<button class="one-btn paitent-select-btn" @click="selectPatient">查询患者</button>
+				<button class="one-btn paitent-select-btn" form-type="submit">查询患者</button>
 			</view> 
 		</form>
 	</view>
@@ -46,11 +46,43 @@
 				{
 					selectDate:"",
 					selectTime:"",
+					timeOrder:-1,
 					selectRoom:"",
+					roomOrder:-1,
 				},
-				timeRange:["上午","下午","晚班","急诊"],
-				roomRange:["透析1组","透析2组","透析3组","透析4组","透析5组","RPR","C区","B区"],
+				timeInfo:[],
+				roomInfo:[],
+				timeRange:[],
+				roomRange:[],
 			}
+		},
+		onLoad() {
+			//请求【选择时段】的选项
+			this.$myRequest({
+				url:'/common/banci',
+				success: (res) => {
+					// console.log(res);
+					if(res.data.code == 200){
+						this.timeInfo = res.data.data;
+						for (let i = 0; i < this.timeInfo.length; i++) {
+							this.timeRange.push(this.timeInfo[i].item_name);
+						}
+					}
+				},
+			});
+			//请求【选择透析室】的选项
+			this.$myRequest({
+				url:'/common/dialysisroom',
+				success: (res) => {
+					// console.log(res);
+					if(res.data.code == 200){
+						this.roomInfo = res.data.data;
+						for (let i = 0; i < this.roomInfo.length; i++) {
+							this.roomRange.push(this.roomInfo[i].item_name);
+						}
+					}
+				},
+			});
 		},
 		onBackPress() {
 			uni.navigateTo({
@@ -59,14 +91,52 @@
 			return true;
 		},
 		methods: {
+			//查询病患列表
+			formSubmit(e){
+				//判断数据是否存在
+				if((this.patientSelectData.selectDate != "") && (this.patientSelectData.timeOrder != -1) && (this.patientSelectData.selectRoom != "")){
+					//转换数据格式
+					let timeVal = this.timeInfo[this.patientSelectData.timeOrder].item_value;
+					//发起请求
+					this.$myRequest({
+						url:'/patient/patientlist',
+						method:'POST',
+						data:{
+							banci_id:timeVal,
+							date:this.patientSelectData.selectDate,
+							room:this.patientSelectData.selectRoom,
+						},
+						success: (res) => {
+							if(res.data.code == 200){
+								uni.setStorageSync("patientList",res.data.data);
+								uni.setStorageSync("searchInfo",{banci_id:timeVal,date:this.patientSelectData.selectDate,room:this.patientSelectData.selectRoom,});
+								setTimeout(() => {
+										uni.navigateTo({
+											url: "../patient-list/patient-list"
+										});
+									}, 1000);
+							}
+						},
+					});
+				}
+				else{
+					uni.showToast({
+						title: "搜索信息不全",
+						icon: 'none',
+					});
+				}
+			},
 			setPatientSelectDate(e){
 				this.patientSelectData.selectDate = e.detail.value;
 			},
 			setPatientSelectTime(e){
+				// console.log(e);
 				this.patientSelectData.selectTime = this.timeRange[e.detail.value];
+				this.patientSelectData.timeOrder = e.detail.value;
 			},
 			setPatientSelectRoom(e){
 				this.patientSelectData.selectRoom = this.roomRange[e.detail.value];
+				this.patientSelectData.roomOrder = e.detail.value;
 			},
 			selectPatient(){
 				uni.navigateTo({

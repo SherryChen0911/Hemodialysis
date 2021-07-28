@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uni-nav-bar class="nav-style" left-icon="back" right-icon="loop" :title="patient.name" color="#ffffff" background-color="#51D3C7" @clickLeft="toPatientList"></uni-nav-bar>
+		<uni-nav-bar class="nav-style" statusBar="true" fixed="true" left-icon="back" right-icon="loop" :title="patient.name" color="#ffffff" background-color="#51D3C7" @clickLeft="toPatientList" @clickRight="reflesh"></uni-nav-bar>
 		<view class="content">
 			<view class="table-list">
 				<view class="table-line table-title">
@@ -11,13 +11,13 @@
 					<text class="table-item">跨膜压</text>
 					<text class="table-item">脉搏</text>
 				</view>
-				<view class="table-line table-cnt" v-for="item in info">
-					<text class="table-item">{{item.time}}</text>
-					<text class="table-item">{{item.sbp}}</text>
-					<text class="table-item">{{item.dbp}}</text>
-					<text class="table-item">{{item.cvp}}</text>
-					<text class="table-item">{{item.tmp}}</text>
-					<text class="table-item">{{item.pulse}}</text>
+				<view class="table-line table-cnt" v-for="item in dialysisParamInfo" @click="showParamSelect(item)">
+					<text class="table-item">{{item.show_create_date}}</text>
+					<text class="table-item">{{item.systolic_pressure}}</text>
+					<text class="table-item">{{item.diastolic_pressure}}</text>
+					<text class="table-item">{{item.venous_pressure}}</text>
+					<text class="table-item">{{item.transmembrane_pressure}}</text>
+					<text class="table-item">{{item.cardiotach}}</text>
 				</view>
 				<view class="btn-line table-cnt">
 					<button class="table-btn" @click="addInfo">
@@ -26,7 +26,16 @@
 					</button>
 				</view>
 			</view>
-		</view>		
+		</view>
+		
+		<!-- 弹出框 -->
+		<uni-popup ref="paramSelect" type="dialog">
+			<view class="bottom-select-view" slot="default">
+					<button class="one-btn" @click="copyParam">复制</button>
+					<button class="one-btn" @click="editParam">编辑</button>
+					<button class="err-btn" @click="deleteParam">删除</button>
+			</view>
+		</uni-popup>
 	</view>
 
 </template>
@@ -36,51 +45,109 @@
 		data() {
 			return {
 				patient:{},
-				info:[
-					{
-						time:'08:30',
-						sbp:'170',//收缩压
-						dbp:'90',//舒张压
-						cvp:'100',//静脉压
-						tmp:'76',//跨膜压
-						pulse:'80'
-					},
-					{
-						time:'08:30',
-						sbp:'180',//收缩压
-						dbp:'90',//舒张压
-						cvp:'100',//静脉压
-						tmp:'76',//跨膜压
-						pulse:'81'
-					},
-					{
-						time:'08:30',
-						sbp:'190',//收缩压
-						dbp:'90',//舒张压
-						cvp:'100',//静脉压
-						tmp:'76',//跨膜压
-						pulse:'82'
-					},
-				]
+				dialysisParamInfo:[],
+				selectItem:{}
 			}
 		},
 		onShow: function () {
-			console.log("这里是透析参数页面",uni.getStorageSync("patient"));
 			this.patient = uni.getStorageSync("patient");
 			console.log(this.patient);
+			//获取透析参数
+			this.$myRequest({
+				url:'/patient/dialysisparam',
+				method:'POST',
+				data:{
+					cure_id:this.patient.cure_id,
+				},
+				success: (res) => {
+					if(res.data.code == 200){
+						console.log("透析参数",res.data.data);
+						//改记录时间的样式
+						for(let i = 0; i < res.data.data.length; i++){
+							if(res.data.data[i].create_date != ""){
+								let temp = res.data.data[i].create_date.split(" ");
+								let temp1 = temp[1].slice(0,5);
+								res.data.data[i].show_create_date = temp1;
+							}
+						}
+						this.dialysisParamInfo = res.data.data;
+						console.log("dialysisParamInfo",this.dialysisParamInfo);
+					}
+				},
+			});
 		},		
 		methods: {
+			//导航返回按钮对应方法
 			toPatientList(){
 				uni.navigateTo({
 					url: "../patient-list/patient-list",
 				});
+				this.patient={};
+				this.dialysisParamInfo=[];
 			},
+			//导航刷新按钮对应方法
+			reflesh(){
+				uni.showToast({
+					title: 'loading',
+					icon: 'loading',
+					mask: true
+				});
+				//获取透析参数
+				this.$myRequest({
+					url:'/patient/dialysisparam',
+					method:'POST',
+					data:{
+						cure_id:this.patient.cure_id,
+					},
+					success: (res) => {
+						if(res.data.code == 200){
+							console.log("透析参数",res.data.data);
+							//改记录时间的样式
+							for(let i = 0; i < res.data.data.length; i++){
+								if(res.data.data[i].create_date != ""){
+									let temp = res.data.data[i].create_date.split(" ");
+									let temp1 = temp[1].slice(0,5);
+									res.data.data[i].show_create_date = temp1;
+								}
+							}
+							this.dialysisParamInfo = res.data.data;
+							console.log("dialysisParamInfo",this.dialysisParamInfo);
+						}
+					},
+				});
+			},
+			//新增按钮
 			addInfo(){
 				uni.navigateTo({
 					url: "../dialysis-param-add/dialysis-param-add"
 				});
+			},
+			//选中列表按钮
+			showParamSelect(item){
+				this.$refs.paramSelect.open();
+				this.selectItem = item;
+				console.log(this.selectItem);
+			},
+			//复制透析参数
+			copyParam(){
+				uni.navigateTo({
+					url: "../dialysis-param-copy/dialysis-param-copy",
+				});
+				uni.setStorageSync("dialysisParam",this.selectItem);
+				this.$refs.paramSelect.close();
+			},
+			//编辑透析参数
+			editParam(){
+				uni.navigateTo({
+					url: "../dialysis-param-edit/dialysis-param-edit",
+				});
+				uni.setStorageSync("dialysisParam",this.selectItem);
+				this.$refs.paramSelect.close();
+			},
+			//删除透析参数
+			deleteParam(){
+				this.$refs.paramSelect.close();
 			}
-			
 		}
 	}
 </script>
@@ -125,5 +192,17 @@
 	.table-btn{
 		width: 240rpx;
 	}
-	
+	.bottom-select-view{
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 100rpx;
+		padding: 0 20rpx;
+	}
+	.one-btn{
+		margin-bottom: 20rpx;
+	}
+	.err-btn{
+		margin-bottom: 20rpx;
+	}
 </style>
