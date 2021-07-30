@@ -41,6 +41,7 @@
 </template>
 
 <script>
+	import Store from '../../common/store.js'
 	export default {
 		data() {
 			return {
@@ -126,27 +127,53 @@
 			showParamSelect(item){
 				this.$refs.paramSelect.open();
 				this.selectItem = item;
-				console.log(this.selectItem);
+				console.log("选中数据",this.selectItem);
 			},
 			//复制透析参数
 			copyParam(){
+				Store.setStorageSync("dialysisParam",this.selectItem);
 				uni.navigateTo({
 					url: "../dialysis-param-copy/dialysis-param-copy",
 				});
-				uni.setStorageSync("dialysisParam",this.selectItem);
 				this.$refs.paramSelect.close();
 			},
 			//编辑透析参数
 			editParam(){
+				Store.setStorageSync("dialysisParam",this.selectItem);
 				uni.navigateTo({
 					url: "../dialysis-param-edit/dialysis-param-edit",
 				});
-				uni.setStorageSync("dialysisParam",this.selectItem);
 				this.$refs.paramSelect.close();
 			},
 			//删除透析参数
 			deleteParam(){
 				this.$refs.paramSelect.close();
+				//删除透析参数
+				this.$myRequest({
+					url:'/patient/delete/dialysisparam',
+					method:'POST',
+					data:{
+						hemodialysis_parameters_id: this.selectItem.hemodialysis_parameters_id,
+					},
+					success: (res) => {
+						if(res.data.code == 200){
+							console.log("删除透析参数",res);
+							this.reflesh();
+							uni.showToast({
+								title: '透析参数删除成功',
+								icon: 'none',
+								mask: true
+							},500);
+						}
+						else{
+							uni.showToast({
+								title: '透析参数删除失败',
+								icon: 'none',
+								mask: true
+							},500);
+						}
+					},
+				});
 			}
 		}
 	}

@@ -24,7 +24,8 @@
 					</view>
 				</view>
 				<view v-show="!item.isfinish" class="footer">
-					<button class="btn" @click="takePic(item)">患者拍照</button>
+					<button class="btn" @click="callPatient(item,key)">叫号</button>
+					<button class="btn" @click="takePic(item,key)">患者拍照</button>
 					<button class="btn" @click="doTreatment(item)">执行治疗</button>
 					<button class="btn" @click="endTreatment(item,key)">结束治疗</button>
 				</view>
@@ -43,6 +44,7 @@
 
 <script>
 	import _ from "lodash"
+	let that = null;
 	export default {
 		data() {
 			return {
@@ -63,6 +65,7 @@
 			return true;
 		},
 		onLoad() {
+			that = this;
 			//获取患者信息
 			let patientData = uni.getStorageSync("patientList");
 			console.log(patientData);
@@ -124,7 +127,7 @@
 					url:'/patient/img',
 					method:'POST',
 					data:{
-						hemodialysis_id:patientData[i].hemodialysis_id,
+						"hemodialysis_id":patientData[i].hemodialysis_id
 					},
 					success: (res) => {
 						//若获取成功同时传入图片和治疗状态数据
@@ -145,43 +148,73 @@
 			}
 		},
 		methods: {
+			//患者叫号
+			callPatient(item,key){
+				//获取诊室信息
+				let searchInfo = uni.getStorageSync("searchInfo");
+				console.log(searchInfo);
+				let needkey = key.toString();
+				this.$myRequest({
+					url:'/patient/call/number',
+					method:'POST',
+					data:{
+						clinicname:searchInfo.room,
+						patientnum:needkey,
+						patientname:item.name
+					},
+					success: (res) => {
+						console.log(res);
+						if(res.data.code == 200){
+						}
+					},
+				});
+			},
 			//患者拍照
-			takePic(item){
+			takePic(item,key){
 				uni.chooseImage({
 					count: 1,
 					success: function (res) {
-						console.log("success",res,item);
+						console.log("chooseImage 成功",res,item);
+						uni.showToast({
+							title: "img:" + res.tempFilePaths[0],
+							icon: 'none',
+							mask: true
+						});
 						uni.uploadFile({
 							url:"http://192.168.0.46:8080/patient/update/pic",
 							filePath:res.tempFilePaths[0],
+							fileType:'image',
+							name:'file',
 							formData:{
-								'hemodialysis_id':item.hemodialysis_id,
-								'pat_pic':res.tempFiles[0]
+								'hemodialysis_id':item.hemodialysis_id
 							},
-							success:(res)=>{
-								console.log("上传成功",res);
+							success:(res1)=>{
+								console.log("uploadFile 成功",res1);
+								//刷新单个头像
+								that.$myRequest({
+									url:'/patient/img',
+									method:'POST',
+									data:{
+										"hemodialysis_id":item.hemodialysis_id
+									},
+									success: (res) => {
+										//若获取成功同时传入图片和治疗状态数据
+										if(res.data.code == 200){
+											that.patientList[key].pic = res.data.data.pat_pic;
+										}
+									},
+								});
 							},
-							fail:(err)=>{
-								console.error("上传失败",err);
+							fail:(err1)=>{
+								console.error("uploadFile 失败",err1);
 							}
 						})
 					},
 					fail: function (err) {
-						console.log("err",err);
+						console.log("chooseImage 失败",err);
 					}
 				});
 			   },
-			// takePic(item){
-			// 	uni.chooseImage({
-			// 		count: 1,
-			// 		success: function (res) {
-			// 			console.log("success",res);
-			// 		},
-			// 		fail: function (err) {
-			// 			console.log("err",err);
-			// 		}
-			// 	});
-			// },
 			//执行治疗按钮方法
 			doTreatment(item){
 				uni.setStorageSync("patient",item);

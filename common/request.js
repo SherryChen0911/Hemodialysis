@@ -1,8 +1,10 @@
 import urlConfig from './config.js'
-    
+import ipConfig from './ip.js'
+
 export const myRequest = (httpConfig) => {
+	// console.log(ipConfig.getIp() , httpConfig.url)
     return uni.request({
-        url: urlConfig + httpConfig.url,
+        url: ipConfig.getIp() + httpConfig.url,
         method: httpConfig.method || 'GET',
         data: httpConfig.data,
         dataType: 'json',
@@ -11,7 +13,12 @@ export const myRequest = (httpConfig) => {
 			httpConfig.success(res);
 		},
 		fail: (err) => {
-			console.log('request fail', err);
+			console.log('request fail:', err);
+			uni.showToast({
+				title: "接口错误",
+				icon: 'none',
+				mask: true
+			});
 		},
     })
  }

@@ -23,13 +23,14 @@
 		</form>
 		<!-- input弹出框 -->
 		<uni-popup id="dialogInput" ref="dialogInput" type="dialog">
-			<uni-popup-dialog mode="input" title="IP地址设置" :value="ipInfo" placeholder="请输入内容" @confirm="dialogInputConfirm">
+			<uni-popup-dialog mode="input" title="IP地址设置" v-model="ipInfo" placeholder="请输入ip地址" @confirm="dialogInputConfirm">
 			</uni-popup-dialog>
 		</uni-popup>
 	</view>
 </template>
 
 <script>
+	import ipConfig from '../../common/ip.js'
 	import md5 from "js-md5";
 	export default {
 		data() {
@@ -42,16 +43,18 @@
 			}
 		},
 		onNavigationBarButtonTap(e){
-				if(e.index == 0){
-					console.log(e);
-					this.$refs.dialogInput.open();
-				}
-
+			if(e.index == 0){
+				this.$refs.dialogInput.open();
+			}
 		},
 		onLoad() {
+			this.ipInfo = this.getIP();
 
 		},
 		methods: {
+			getIP(){
+				return ipConfig.getIp()
+			},
 			formSubmit(e){
 				//密码md5加密
 				let psw = md5(e.detail.value.password).toUpperCase();
@@ -90,16 +93,20 @@
 						this.userinfo.id = "";
 						this.userinfo.pswd = "";
 					},
+					fail: (err) => {
+						console.log('fail', err);
+					},
+					
 				});	
 			},
-			login(){
-				uni.navigateTo({
-					url: "../search-select/search-select"
-				});
-			},
 			dialogInputConfirm(val){
-				console.log(val);
-				this.ipInfo = val;
+				let ip = 'http://'+val
+				if (val.indexOf('http')===0){
+					 ip = val
+				}
+				ipConfig.setIp(ip)
+				// console.log("configValue：",configValue);
+				this.ipInfo = this.getIP();
 			}
 		}
 	}

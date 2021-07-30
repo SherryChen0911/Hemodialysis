@@ -107,3 +107,6 @@
 		font-size: 30rpx;
 		color: #51D3C7;
 	}
+	.disable-style{
+		background-color: #ebedef;
+	}

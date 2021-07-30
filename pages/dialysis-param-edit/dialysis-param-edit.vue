@@ -9,7 +9,6 @@
 					<picker mode="time" @change="setRecordTime($event)">
 						<input class="form-mid-space" type="text" v-model="info.showTime" disabled="true" placeholder="请点击选择时间"/>
 					</picker>
-					
 				</view>
 			</view>
 			<view class="form-item">
@@ -164,13 +163,14 @@
 				</view>
 			</view>
 			<button class="one-btn" form-type="submit">保存</button>
-			<button class="err-btn">取消</button>
+			<button class="err-btn" @click="close">取消</button>
 		</form>
 		
 	</view>
 </template>
 
 <script>
+	import Store from '../../common/store.js'
 	export default {
 		data() {
 			return {
@@ -189,11 +189,25 @@
 				},
 			}
 		},
+		onBackPress() {
+			this.patient = {};
+			this.nursePicker1 = true;
+			this.nurseRange = [];
+			this.nurseInfo = [];
+			this.dialysisParamInfo = {};
+			this.info = {};
+			uni.setStorageSync("dialysisParam",{});
+			console.log("我是返回按钮的方法");
+			console.log("病人",this.patient);
+			console.log("信息",this.info);
+			return false;
+		},
 		onLoad() {
-			this.dialysisParamInfo = uni.getStorageSync("dialysisParam");
+			this.dialysisParamInfo = Store.getStorageSync("dialysisParam");
 			console.log("dialysisParam",this.dialysisParamInfo);
 			//同步记录时间
 			this.info.showTime = this.dialysisParamInfo.show_create_date;
+			this.info.time = this.dialysisParamInfo.create_date;
 			//同步责任护士
 			this.info.nurse = this.dialysisParamInfo.recordnurse;
 			//同步渗血
@@ -272,54 +286,65 @@
 						nurseSubmit = this.nurseInfo[e.detail.value.nurse_id].emp_no;
 					}
 				}
-				// 新增透析参数
-				// this.$myRequest({
-				// 	url:'/patient/new/dialysisparam',
-				// 	method:'POST',
-				// 	data:{
-				// 		cure_id: this.patient.cure_id,
-				// 		recipe_id: this.patient.recipe_id,
-				// 		create_date: this.info.time,
-				// 		venous_pressure: e.detail.value.venous_pressure,
-				// 		artery_pressure: e.detail.value.artery_pressure,
-				// 		transmembrane_pressure: e.detail.value.transmembrane_pressure,
-				// 		blood_flow: e.detail.value.blood_flow,
-				// 		temperature: e.detail.value.temperature,
-				// 		cardiotach: e.detail.value.cardiotach,
-				// 		breath: e.detail.value.breath,
-				// 		systolic_pressure: e.detail.value.systolic_pressure,
-				// 		diastolic_pressure: e.detail.value.diastolic_pressure,
-				// 		spo2: e.detail.value.spo2,
-				// 		conductivity: e.detail.value.conductivity,
-				// 		urf: e.detail.value.urf,
-				// 		dialysate_temperature: e.detail.value.dialysate_temperature,
-				// 		vascular_access_errhyisis: e.detail.value.vascular_access_errhyisis,
-				// 		vascular_access_glide: e.detail.value.vascular_access_glide,
-				// 		nurse_id: nurseSubmit,
-				// 		clinical_manifestation: e.detail.value.clinical_manifestation,
-				// 	},
-				// 	success: (res) => {
-				// 		console.log('res', res);
-				// 		if(res.data.code == 200){
-				// 			uni.showToast({
-				// 				title: '透析参数添加成功',
-				// 				icon: 'none',
-				// 				mask: true
-				// 			},500);
-				// 			uni.switchTab({
-				// 				url:"../dialysis-param/dialysis-param",
-				// 			});
-				// 		}
-				// 	},
-				// 	fail: (err) => {
-				// 		console.log('request fail', err);
-				// 		uni.showToast({
-				// 			title: '透析参数添加失败',
-				// 			icon: 'none',
-				// 			mask: true
-				// 		});
-				// 	}
-				// });
+				//修改透析参数
+				this.$myRequest({
+					url:'/patient/update/dialysisparam',
+					method:'POST',
+					data:{
+						"id":this.dialysisParamInfo.hemodialysis_parameters_id,
+						"cure_id":this.dialysisParamInfo.cure_id,
+						"recipe_id":this.dialysisParamInfo.recipe_id,
+						"create_date":this.info.time,
+						"venous_pressure":this.dialysisParamInfo.venous_pressure,
+						"artery_pressure":this.dialysisParamInfo.artery_pressure,
+						"transmembrane_pressure":this.dialysisParamInfo.transmembrane_pressure,
+						"blood_flow":this.dialysisParamInfo.blood_flow,
+						"temperature":this.dialysisParamInfo.temperature,
+						"cardiotach":this.dialysisParamInfo.cardiotach,
+						"breath":this.dialysisParamInfo.breath,
+						"systolic_pressure":this.dialysisParamInfo.systolic_pressure,
+						"diastolic_pressure":this.dialysisParamInfo.diastolic_pressure,
+						"spo2":this.dialysisParamInfo.spo2,
+						"conductivity":this.dialysisParamInfo.conductivity,
+						"urf":this.dialysisParamInfo.urf,
+						"dialysate_temperature":this.dialysisParamInfo.dialysate_temperature,
+						"vascular_access_errhyisis":e.detail.value.vascular_access_errhyisis,
+						"vascular_access_glide":e.detail.value.vascular_access_glide,
+						"nurse_id":nurseSubmit,
+						"clinical_manifestation":this.dialysisParamInfo.clinical_manifestation,
+					},
+					success: (res) => {
+						if(res.data.code == 200){
+							console.log("修改透析参数",res);
+							uni.showToast({
+								title: '透析参数修改成功',
+								icon: 'none',
+								mask: true
+							},500);
+							setTimeout(() => {
+									uni.hideToast();
+									//关闭提示后跳转
+									uni.switchTab({
+										url:"../dialysis-param/dialysis-param",
+									});
+									this.dialysisParamInfo = {};
+								}, 500);
+						}
+					},
+				});
+			},
+			close(){
+				uni.switchTab({
+					url:"../dialysis-param/dialysis-param",
+				});
+				this.patient = {};
+				this.nursePicker1 = true;
+				this.nurseRange = [];
+				this.nurseInfo = [];
+				this.dialysisParamInfo = {};
+				this.info = {};
+				uni.setStorageSync("dialysisParam",{});
+				console.log("返回清除数据patient:",this.patient);
 			}
 		}
 	}

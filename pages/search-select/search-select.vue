@@ -93,10 +93,16 @@
 		methods: {
 			//查询病患列表
 			formSubmit(e){
+				uni.showToast({
+					title: 'loading',
+					icon: 'loading',
+					mask: true
+				});
 				//判断数据是否存在
 				if((this.patientSelectData.selectDate != "") && (this.patientSelectData.timeOrder != -1) && (this.patientSelectData.selectRoom != "")){
 					//转换数据格式
 					let timeVal = this.timeInfo[this.patientSelectData.timeOrder].item_value;
+					
 					//发起请求
 					this.$myRequest({
 						url:'/patient/patientlist',
@@ -114,7 +120,7 @@
 										uni.navigateTo({
 											url: "../patient-list/patient-list"
 										});
-									}, 1000);
+									}, 500);
 							}
 						},
 					});

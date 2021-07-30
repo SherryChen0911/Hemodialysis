@@ -266,9 +266,13 @@
 								icon: 'none',
 								mask: true
 							},500);
-							uni.switchTab({
-								url:"../dialysis-param/dialysis-param",
-							});
+							setTimeout(() => {
+									uni.hideToast();
+									//关闭提示后跳转
+									uni.switchTab({
+										url:"../dialysis-param/dialysis-param",
+									});
+								}, 500);
 						}
 					},
 					fail: (err) => {

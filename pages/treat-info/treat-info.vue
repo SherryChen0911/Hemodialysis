@@ -431,7 +431,7 @@
 						</view>
 						<view class="form-cnt form-mid-space">
 							<picker mode="selector" :range="doctorRange"  @change="setDoctor">
-								<input class="form-mid-space" v-model="treatStateInfo.primary_doctor" type="text" placeholder=""/>
+								<input class="form-mid-space" v-model="treatStateInfo.primary_doctor" disabled="true" type="text" placeholder=""/>
 							</picker>
 						</view>
 					</view>
@@ -836,6 +836,168 @@
 			//导航刷新按钮对应方法
 			reflesh(){
 				console.log("aaa");
+				uni.showToast({
+					title: 'loading',
+					icon: 'loading',
+					mask: true
+				});
+				//获取病人透析信息
+				let searchInfo = uni.getStorageSync("searchInfo");
+				this.date = searchInfo.date;
+				this.$myRequest({
+					url:'/patient/dialysisinfo',
+					method:'POST',
+					data:{
+						patient_id:this.patient.patient_id,
+						date:this.date,
+					},
+					success: (res) => {
+						if(res.data.code == 200){
+							console.log("透析信息:",res.data.data);
+							this.dialysisInfo = res.data.data;
+							//页面加载信息：上机前病情
+							for (let i = 0; i < this.info.status.length; i++) {
+								if(this.info.status[i].value == this.dialysisInfo.has_special_state){
+									this.info.status[i].checked = true;
+									break;
+								}
+							}
+							if(this.dialysisInfo.has_special_state == "1"){
+								this.statusInput = true;
+							}
+							//页面加载信息：穿刺
+							for (let i = 0; i < this.info.puncture.length; i++) {
+								if(this.info.puncture[i].value == this.dialysisInfo.chuanci_dunzhen){
+									this.info.puncture[i].checked = true;
+									break;
+								}
+							}
+							//页面加载信息：方向
+							for (let i = 0; i < this.info.direction.length; i++) {
+								if(this.info.direction[i].value == this.dialysisInfo.chuanci_fangxiang){
+									this.info.direction[i].checked = true;
+									break;
+								}
+							}
+							//页面加载信息：抗凝方式
+							if(this.dialysisInfo.therapeutic_method != ""){
+								for (let i = 0; i < this.bloodmethodInfo.length; i++) {
+									if(this.dialysisInfo.therapeutic_method == this.bloodmethodInfo[i].item_id){
+										this.antiFreeze = this.bloodmethodInfo[i].item_name;
+										break;
+									}
+								}
+							}
+						}
+					},
+				});
+				//获取病人评估与治疗情况
+				this.$myRequest({
+					url:'/patient/treatstate',
+					method:'POST',
+					data:{
+						patient_id:this.patient.patient_id,
+						date:this.date,
+					},
+					success: (res) => {
+						if(res.data.code == 200){
+							console.log("病人评估与治疗情况:",res.data.data);
+							this.treatStateInfo =  _.cloneDeep(res.data.data);
+							//页面加载信息：内瘘震颤
+							for (let i = 0; i < this.info.tremor.length; i++) {
+								if(this.info.tremor[i].value == this.treatStateInfo.in_basket_wound_allergy){
+									this.info.tremor[i].checked = true;
+									break;
+								}
+							}
+							//页面加载信息：杂音
+							for (let i = 0; i < this.info.noise.length; i++) {
+								if(this.info.noise[i].value == this.treatStateInfo.in_basket_plaster_allergy){
+									this.info.noise[i].checked = true;
+									break;
+								}
+							}
+							//页面加载信息：红肿
+							for (let i = 0; i < this.info.swell.length; i++) {
+								if(this.info.swell[i].value == this.treatStateInfo.in_basket_hongzhong){
+									this.info.swell[i].checked = true;
+									break;
+								}
+							}
+							//页面加载信息：狭窄
+							for (let i = 0; i < this.info.narrow.length; i++) {
+								if(this.info.narrow[i].value == this.treatStateInfo.in_basket_xiazhai){
+									this.info.narrow[i].checked = true;
+									break;
+								}
+							}
+							//页面加载信息：瘤样扩张
+							for (let i = 0; i < this.info.expand.length; i++) {
+								if(this.info.expand[i].value == this.treatStateInfo.in_basket_liuyangkuozhang){
+									this.info.expand[i].checked = true;
+									break;
+								}
+							}
+							//页面加载信息：护理措施
+							if(this.treatStateInfo.in_basket_huliliusuanmei == "" && this.treatStateInfo.in_basket_huliliusuanmei == "" && this.treatStateInfo.in_basket_huliliusuanmei == ""){
+								
+							}
+							else{
+								this.info.medicare[0].checked = false;
+								if(this.treatStateInfo.in_basket_hulirefu == "1"){
+									this.info.medicare[1].checked = true;
+								}
+								if(this.treatStateInfo.in_basket_hulixiliaotuo == "1"){
+									this.info.medicare[2].checked = true;
+								}
+								if(this.treatStateInfo.in_basket_huliliusuanmei == "1"){
+									this.info.medicare[3].checked = true;
+								}
+							}
+							//页面加载信息：平车/轮椅
+							if(this.treatStateInfo.before_dry_weightpc == "1"){
+								this.info.transfer[0].checked = true;
+							}
+							if(this.treatStateInfo.before_dry_weightly == "1"){
+								this.info.transfer[1].checked = true;
+							}
+							//页面加载信息：透析器凝血
+							for (let i = 0; i < this.info.expand.length; i++) {
+								if(this.info.cruor[i].value == this.treatStateInfo.coagulation_in_dialyser){
+									this.info.cruor[i].checked = true;
+									break;
+								}
+							}
+							//获取核对医生名称
+							for (let i = 0; i < this.doctorInfo.length; i++) {
+								if(this.doctorInfo[i].emp_no == this.treatStateInfo.primary_doctor){
+									this.pickerInfo.primary_doctor = this.treatStateInfo.primary_doctor;
+									this.treatStateInfo.primary_doctor = this.doctorInfo[i].name;
+									break;
+								}
+							}
+							console.log("核对医生id",this.pickerInfo.primary_doctor)
+							//获取核对护士名称
+							for (let i = 0; i < this.nurseInfo.length; i++) {
+								if(this.nurseInfo[i].emp_no == this.treatStateInfo.primary_nurse){
+									this.pickerInfo.primary_nurse = this.treatStateInfo.primary_nurse;
+									this.treatStateInfo.primary_nurse = this.nurseInfo[i].name;
+								}
+								if(this.nurseInfo[i].emp_no == this.treatStateInfo.check_nurse){
+									this.pickerInfo.check_nurse = this.treatStateInfo.check_nurse;
+									this.treatStateInfo.check_nurse = this.nurseInfo[i].name;
+								}
+								if(this.nurseInfo[i].emp_no == this.treatStateInfo.puncture_nurse){
+									this.pickerInfo.puncture_nurse = this.treatStateInfo.puncture_nurse;
+									this.treatStateInfo.puncture_nurse = this.nurseInfo[i].name;
+								}
+							}
+							console.log("责任护士id",this.pickerInfo.primary_nurse)
+							console.log("核对护士id",this.pickerInfo.check_nurse)
+							console.log("穿刺护士id",this.pickerInfo.puncture_nurse)
+						}
+					},
+				});
 			},
 			//下拉框选择治疗方式
 			setTreatment(e){
