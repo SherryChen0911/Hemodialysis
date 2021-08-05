@@ -51,7 +51,7 @@
 			}
 		},
 		onShow: function () {
-			this.patient = uni.getStorageSync("patient");
+			this.patient = Store.getStorageSync("patient");
 			console.log(this.patient);
 			//获取透析参数
 			this.$myRequest({

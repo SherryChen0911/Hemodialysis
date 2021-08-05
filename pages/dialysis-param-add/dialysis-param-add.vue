@@ -171,6 +171,7 @@
 </template>
 
 <script>
+	import Store from '../../common/store.js'
 	export default {
 		data() {
 			return {
@@ -188,9 +189,9 @@
 			}
 		},
 		onLoad() {
-			this.patient = uni.getStorageSync("patient");
+			this.patient = Store.getStorageSync("patient");
 			console.log(this.patient);
-			this.nurseInfo = uni.getStorageSync("nurseInfo");
+			this.nurseInfo = Store.getStorageSync("nurseInfo");
 			console.log(this.nurseInfo);
 			for (let i = 0; i < this.nurseInfo.length; i++) {
 				this.nurseRange.push(this.nurseInfo[i].name);

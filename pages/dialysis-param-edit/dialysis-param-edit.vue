@@ -196,7 +196,7 @@
 			this.nurseInfo = [];
 			this.dialysisParamInfo = {};
 			this.info = {};
-			uni.setStorageSync("dialysisParam",{});
+			Store.setStorageSync("dialysisParam",{});
 			console.log("我是返回按钮的方法");
 			console.log("病人",this.patient);
 			console.log("信息",this.info);
@@ -228,9 +228,9 @@
 					}
 				}
 			}
-			this.patient = uni.getStorageSync("patient");
+			this.patient = Store.getStorageSync("patient");
 			console.log(this.patient);
-			this.nurseInfo = uni.getStorageSync("nurseInfo");
+			this.nurseInfo = Store.getStorageSync("nurseInfo");
 			console.log(this.nurseInfo);
 			for (let i = 0; i < this.nurseInfo.length; i++) {
 				this.nurseRange.push(this.nurseInfo[i].name);
@@ -343,7 +343,7 @@
 				this.nurseInfo = [];
 				this.dialysisParamInfo = {};
 				this.info = {};
-				uni.setStorageSync("dialysisParam",{});
+				Store.setStorageSync("dialysisParam",{});
 				console.log("返回清除数据patient:",this.patient);
 			}
 		}

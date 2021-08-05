@@ -30,6 +30,7 @@
 </template>
 
 <script>
+	import Store from '../../common/store.js'
 	import ipConfig from '../../common/ip.js'
 	import md5 from "js-md5";
 	export default {
@@ -69,7 +70,7 @@
 						// console.log(res);
 						if(res.data.code == 200){
 							console.log(res.data.data.user_id);
-							uni.setStorageSync("userid",res.data.data.user_id);
+							Store.setStorageSync("userid",res.data.data.user_id);
 							uni.showToast({
 								title: e.detail.value.user+'，登录成功',
 								icon: 'none',

@@ -36,6 +36,7 @@
 </template>
 
 <script>
+	import Store from '../../common/store.js'
 	export default {
 		data() {
 			return {
@@ -48,8 +49,8 @@
 			}
 		},
 		onShow: function () {
-			this.patient = uni.getStorageSync("patient");
-			let searchInfo = uni.getStorageSync("searchInfo");
+			this.patient = Store.getStorageSync("patient");
+			let searchInfo = Store.getStorageSync("searchInfo");
 			this.date = searchInfo.date;
 			//获取长期医嘱
 			this.$myRequest({

@@ -1,4 +1,5 @@
 <script>
+	import Store from './common/store.js'
 	import {myRequest} from './common/request.js'
 	export default {
 		onLaunch: function() {
@@ -10,10 +11,10 @@
 					if(res.data.code == 200){
 						// console.log(res.data.data);
 						let treatmentInfo = res.data.data;
-						uni.setStorageSync("treatmentInfo",treatmentInfo);
+						Store.setStorageSync("treatmentInfo",treatmentInfo);
 					}
 					else{
-						uni.setStorageSync("treatmentInfo","error");
+						Store.setStorageSync("treatmentInfo","error");
 					}
 				},
 			});
@@ -24,10 +25,10 @@
 					if(res.data.code == 200){
 						// console.log(res.data.data);
 						let fliterInfo = res.data.data;
-						uni.setStorageSync("fliterInfo",fliterInfo);
+						Store.setStorageSync("fliterInfo",fliterInfo);
 					}
 					else{
-						uni.setStorageSync("fliterInfo","error");
+						Store.setStorageSync("fliterInfo","error");
 					}
 				},
 			});
@@ -38,10 +39,10 @@
 					if(res.data.code == 200){
 						// console.log(res.data.data);
 						let bloodmethodInfo = res.data.data;
-						uni.setStorageSync("bloodmethodInfo",bloodmethodInfo);
+						Store.setStorageSync("bloodmethodInfo",bloodmethodInfo);
 					}
 					else{
-						uni.setStorageSync("bloodmethodInfo","error");
+						Store.setStorageSync("bloodmethodInfo","error");
 					}
 				},
 			});
@@ -52,10 +53,10 @@
 					if(res.data.code == 200){
 						// console.log(res.data.data);
 						let drugunitInfo = res.data.data;
-						uni.setStorageSync("drugunitInfo",drugunitInfo);
+						Store.setStorageSync("drugunitInfo",drugunitInfo);
 					}
 					else{
-						uni.setStorageSync("drugunitInfo","error");
+						Store.setStorageSync("drugunitInfo","error");
 					}
 				},
 			});
@@ -66,10 +67,10 @@
 					if(res.data.code == 200){
 						// console.log(res.data.data);
 						let doctorInfo = res.data.data;
-						uni.setStorageSync("doctorInfo",doctorInfo);
+						Store.setStorageSync("doctorInfo",doctorInfo);
 					}
 					else{
-						uni.setStorageSync("doctorInfo","error");
+						Store.setStorageSync("doctorInfo","error");
 					}
 				},
 			});
@@ -80,10 +81,10 @@
 					if(res.data.code == 200){
 						// console.log(res.data.data);
 						let nurseInfo = res.data.data;
-						uni.setStorageSync("nurseInfo",nurseInfo);
+						Store.setStorageSync("nurseInfo",nurseInfo);
 					}
 					else{
-						uni.setStorageSync("nurseInfo","error");
+						Store.setStorageSync("nurseInfo","error");
 					}
 				},
 				fail: (err) => {

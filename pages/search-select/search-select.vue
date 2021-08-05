@@ -39,6 +39,7 @@
 </template>
 
 <script>
+	import Store from '../../common/store.js'
 	export default {
 		data() {
 			return {
@@ -114,8 +115,8 @@
 						},
 						success: (res) => {
 							if(res.data.code == 200){
-								uni.setStorageSync("patientList",res.data.data);
-								uni.setStorageSync("searchInfo",{banci_id:timeVal,date:this.patientSelectData.selectDate,room:this.patientSelectData.selectRoom,});
+								Store.setStorageSync("patientList",res.data.data);
+								Store.setStorageSync("searchInfo",{banci_id:timeVal,date:this.patientSelectData.selectDate,room:this.patientSelectData.selectRoom,});
 								setTimeout(() => {
 										uni.navigateTo({
 											url: "../patient-list/patient-list"

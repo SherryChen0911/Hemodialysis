@@ -26,7 +26,7 @@
 </template>
 
 <script>
-	
+	import Store from '../../common/store.js'
 	export default {
 		data() {
 			return {
@@ -36,7 +36,7 @@
 			}
 		},
 		onShow: function () {
-			this.patient = uni.getStorageSync("patient");
+			this.patient = Store.getStorageSync("patient");
 			console.log(this.patient);
 			//获取透析小结
 			this.$myRequest({

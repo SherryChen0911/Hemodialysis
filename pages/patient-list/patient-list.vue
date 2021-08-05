@@ -43,6 +43,7 @@
 </template>
 
 <script>
+	import Store from '../../common/store.js'
 	import _ from "lodash"
 	let that = null;
 	export default {
@@ -67,7 +68,7 @@
 		onLoad() {
 			that = this;
 			//获取患者信息
-			let patientData = uni.getStorageSync("patientList");
+			let patientData = Store.getStorageSync("patientList");
 			console.log(patientData);
 			//获取当前时间
 			let dateGetter = new Date();
@@ -151,7 +152,7 @@
 			//患者叫号
 			callPatient(item,key){
 				//获取诊室信息
-				let searchInfo = uni.getStorageSync("searchInfo");
+				let searchInfo = Store.getStorageSync("searchInfo");
 				console.log(searchInfo);
 				let needkey = key.toString();
 				this.$myRequest({
@@ -217,7 +218,8 @@
 			   },
 			//执行治疗按钮方法
 			doTreatment(item){
-				uni.setStorageSync("patient",item);
+				Store.setStorageSync("patient",item);
+				// console.log('doTreatment',item)
 				uni.switchTab({
 					url: "../treat-info/treat-info",
 				});
@@ -265,7 +267,7 @@
 							this.operatePatient.isfinish = true;
 							//改变本地缓存
 							this.patientList[this.operatePatientOrder] = this.operatePatient;
-							uni.setStorageSync("patientList",this.patientList);
+							Store.setStorageSync("patientList",this.patientList);
 						}
 					},
 				});
@@ -280,7 +282,7 @@
 			////导航栏右侧刷新
 			reflesh(){
 				this.navSelected = false;
-				let searchInfo = uni.getStorageSync("searchInfo");
+				let searchInfo = Store.getStorageSync("searchInfo");
 				uni.showToast({
 					title: 'loading',
 					icon: 'loading',
@@ -297,7 +299,7 @@
 					success: (res) => {
 						// console.log(res);
 						if(res.data.code == 200){
-							uni.setStorageSync("patientList",res.data.data);
+							Store.setStorageSync("patientList",res.data.data);
 							let patientData = res.data.data;
 							
 							let timer = 0;

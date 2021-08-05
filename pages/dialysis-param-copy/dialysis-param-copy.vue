@@ -170,6 +170,7 @@
 </template>
 
 <script>
+	import Store from '../../common/store.js'
 	export default {
 		data() {
 			return {
@@ -189,7 +190,7 @@
 			}
 		},
 		onLoad() {
-			this.dialysisParamInfo = uni.getStorageSync("dialysisParam");
+			this.dialysisParamInfo = Store.getStorageSync("dialysisParam");
 			console.log("dialysisParam",this.dialysisParamInfo);
 			//同步记录时间
 			this.info.showTime = this.dialysisParamInfo.show_create_date;
@@ -222,9 +223,9 @@
 					}
 				}
 			}
-			this.patient = uni.getStorageSync("patient");
+			this.patient = Store.getStorageSync("patient");
 			console.log(this.patient);
-			this.nurseInfo = uni.getStorageSync("nurseInfo");
+			this.nurseInfo = Store.getStorageSync("nurseInfo");
 			console.log(this.nurseInfo);
 			for (let i = 0; i < this.nurseInfo.length; i++) {
 				this.nurseRange.push(this.nurseInfo[i].name);
