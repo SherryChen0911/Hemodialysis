@@ -1,7 +1,31 @@
 <template>
 	<view>
 		<uni-nav-bar class="nav-style" statusBar="true" fixed="true" left-icon="back" right-icon="loop" :title="patient.name" color="#ffffff" background-color="#51D3C7" @clickLeft="toPatientList" @clickRight="reflesh"></uni-nav-bar>
+		<view class="test">
+			0000
+			<view @click="oneFun" v-show="testOne == false" class="test_one_k"></view>
+			<view @click="oneFun" v-show="testOne == true" class="test_one_y"></view>
+		</view>
+		=====================
+		<view class="">
+			111
+			<view >
+				<view @click="TwoFun" v-show="testTwo == false" class="test_one_k"></view>
+				<view @click="TwoFun" v-show="testTwo == true" class="test_one_y"></view>
+			</view>
+			111
+			<view >
+				<view @click="threeFun" v-show="testThree == false" class="test_one_k"></view>
+				<view @click="threeFun" v-show="testThree == true" class="test_one_y"></view>
+			</view>
+			111
+			<view >
+				<view v-show="testFour == false" class="test_one_k"></view>
+				<view v-show="testFour == true" class="test_one_y"></view>
+			</view>
+		</view>
 		<view class="content">
+			
 			<form @submit="resetTreatInfo">
 				<uni-segmented-control class="segment" :current="segCtrlSelected" :values="segCtrlItems"
 					@clickItem="onClickItem" styleType="text" activeColor="#51D3C7"></uni-segmented-control>
@@ -267,17 +291,30 @@
 							</radio-group>
 						</view>
 					</view>
+					medicare1
 					<view class="form-item">
 						<view class="form-prefix-space">
 							<text>护理措施:</text>
 						</view>
 						<view class="form-cnt-noborder form-mid-space">
-							<checkbox-group name="huli" @change="setmedicare" v-if="hackReset">
-								<label v-for="item in info.medicare" class="radio-item">
-									<checkbox v-model="item.value" :checked="item.checked" color="#51D3C7" style="transform:scale(0.7)" />
-									<text>{{item.name}}{{item.value}}{{item.checked}}</text>
+							<checkbox-group name="huli" @change="setmedicare1" v-if="resetMed1">
+								<label class="radio-item">
+									<checkbox v-model="info.medicare1.value" :checked="info.medicare1.checked" color="#51D3C7" style="transform:scale(0.7)" />
+									<text>{{info.medicare1.name}}</text>
 								</label>
 							</checkbox-group>
+							<checkbox-group name="huli" @change="setmedicare2" v-if="resetMed2">
+								<label v-for="item in info.medicare2" class="radio-item">
+									<checkbox v-model="item.value" :checked="item.checked" color="#51D3C7" style="transform:scale(0.7)" />
+									<text>{{item.name}}</text>
+								</label>
+							</checkbox-group>
+							<!-- <checkbox-group name="huli" @change="setmedicare2" v-if="resetMed2">
+								<label v-for="item in info.medicare2" class="radio-item">
+									<checkbox v-model="item.value" :checked="item.checked" color="#51D3C7" style="transform:scale(0.7)" />
+									<text>{{item.name}}</text>
+								</label>
+							</checkbox-group> -->
 						</view>
 					</view>
 					<view class="form-item">
@@ -542,14 +579,23 @@
 		swell: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
 		narrow: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
 		expand: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
-		medicare: [{name: '无',checked: false,value: 'wu'}, {name: '热敷',checked: false,value: 'refu'}, {name: '喜疗妥',checked: false,value: 'xiliaotuo'}, {name: '硫酸镁',checked: false,value: 'liusuanmei'}, ],
+		medicare1: {name: '无',checked: false,value: 'wu'},
+		medicare2: [ {name: '无',checked: false,value: 'wu'},{name: '热敷',checked: false,value: 'refu'}, {name: '喜疗妥',checked: false,value: 'xiliaotuo'}, {name: '硫酸镁',checked: false,value: 'liusuanmei'}, ],
 		transfer: [{name: '平车',checked: false,value: '0'}, {name: '轮椅',checked: false,value: '1'}, ],
 		cruor: [{name: '0级',checked: false,value: '0'}, {name: '1级',checked: false,value: '1'}, {name: '2级',checked: false,value: '2'}, {name: '3级',checked: false,value: '3'}, ],
 	}
 	export default {
 		data() {
 			return {
+				testOne: true,
+				testTwo: false,
+				testThree: false,
+				testFour: false,
+				
+				
 				hackReset:false,
+				resetMed1:false,
+				resetMed2:false,
 				segCtrlItems: ['透析信息', '评估与治疗情况'],
 				segCtrlSelected: 0,
 				patient: {},
@@ -591,8 +637,13 @@
 		},
 		onShow: function() {
 			this.hackReset = false;
+			this.resetMed1 = false;
+			this.resetMed2 = false;
 			this.$nextTick(() => {
 				this.hackReset = true;
+				this.resetMed1 = true;
+				console.log("setmed2刷新")
+				this.resetMed2 = true;
 			});
 			this.patient = Store.getStorageSync("patient");
 			console.log("patient:", this.patient);
@@ -670,6 +721,37 @@
 			this.getTreatInfo();
 		},
 		methods: {
+			oneFun() {
+				if(this.testOne){
+					this.testTwo = false
+					this.testThree = false
+					this.testFour = false
+				}else {
+					this.testOne = !this.testOne
+					this.testTwo = false
+					this.testThree = false
+					this.testFour = false
+					
+				}
+			},
+			TwoFun() {
+				this.testOne = false
+				this.testTwo = !this.testTwo
+				this.checkBoxAllFun()
+			},
+			threeFun() {
+				this.testOne = false
+				this.testThree = !this.testThree
+				this.checkBoxAllFun()
+			},
+			checkBoxAllFun() {
+				if(!this.testTwo  && !this.testThree){
+					this.testOne = true
+				}
+			},
+			
+			
+			
 			//页面tab切换
 			onClickItem(e) {
 				if (this.segCtrlSelected !== e.currentIndex) {
@@ -742,8 +824,18 @@
 				this.treatStateInfo.in_basket_liuyangkuozhang = e.detail.value;
 			},
 			//选择变更：护理措施
-			setmedicare(e) {
-				console.log(e);
+			setmedicare1(e) {
+				console.log("setmed1:::::",e);
+				if(e.detail.value.length == 1){
+					console.log("enter if 1");
+					this.resetMed1 = false;
+					this.resetMed2 = false;
+					this.info.medicare2[0].checked = false;
+					this.info.medicare2[1].checked = false;
+					this.info.medicare2[2].checked = false;
+					this.resetMed1 = true;
+					this.resetMed2 = true;
+				}
 				// if(e.detail.value[0]="wu"){
 				// 	this.hackReset = false;
 				// 	console.log("enter if");
@@ -768,6 +860,63 @@
 				// 	}
 				// }
 			},
+			setmedicare2(e) {
+				// console.log("setmed2:::::",e);
+				// let select = e.detail.value;
+				// this.resetMed2 = false;
+				// if(select.length>=0){
+				// 	let findrefu = select.indexOf('refu');
+				// 	if(findrefu > -1){
+				// 		this.info.medicare2[0].checked = false;
+				// 		this.info.medicare2[1].checked = true;
+				// 	}
+				// 	let findxiliaotuo = select.indexOf('xiliaotuo');
+				// 	if(findxiliaotuo > -1){
+				// 		this.info.medicare2[0].checked = false;
+				// 		this.info.medicare2[2].checked = true;
+				// 	}
+				// 	let findliusuanmei = select.indexOf('liusuanmei');
+				// 	if(findliusuanmei > -1){
+				// 		this.info.medicare2[0].checked = false;
+				// 		this.info.medicare2[3].checked = true;
+				// 	}
+				// 	if(findrefu == -1 && findxiliaotuo == -1 && findliusuanmei == -1){
+				// 		this.info.medicare2[0].checked = true;
+				// 	}
+				// 	let findwu = select.indexOf('wu');
+				// 	if(findwu > -1){
+				// 		if(findrefu > -1 || findliusuanmei > -1 || findxiliaotuo > -1){
+				// 			this.info.medicare2[0].checked = false;
+				// 		}else if(findrefu > -1 || findliusuanmei > -1 || findxiliaotuo > -1){
+							
+				// 		}else{
+				// 			this.info.medicare2[0].checked = true;
+				// 		}
+				// 		// this.info.medicare2[0].checked = true;
+				// 		// this.info.medicare2[1].checked = false;
+				// 		// this.info.medicare2[2].checked = false;
+				// 		// this.info.medicare2[3].checked = false;
+				// 	}
+				// 	this.resetMed2 = true;
+				// }
+				console.log("setmed2:::::",e);
+					if(e.detail.value.length != 0){
+						console.log("enter if 2");
+						this.resetMed1 = false;
+						this.resetMed2 = false;
+						this.info.medicare1.checked = false;
+						this.resetMed1 = true;
+						this.resetMed2 = true;
+						console.log("enter if 22222",this.info.medicare1);
+					}
+			},
+			// 	if(e.detail.value.length != 0){
+			// 		console.log("enter if 2");
+			// 		this.resetMed1 = false;
+			// 		this.info.medicare1.checked = false;
+			// 		this.resetMed1 = true;
+			// 	}
+			// },
 			//下拉框选择医生
 			setDoctor(e) {
 				this.treatStateInfo.primary_doctor = this.doctorRange[e.detail.value];
@@ -822,20 +971,20 @@
 					}
 				}
 				//获取护理措施状态值
-				this.pickerInfo.in_basket_hulirefu = "";
-				this.pickerInfo.in_basket_hulixiliaotuo = "";
-				this.pickerInfo.in_basket_huliliusuanmei = "";
-				for (let i = 0; i < e.detail.value.huli.length; i++) {
-					if (e.detail.value.huli[i] == "refu") {
-						this.pickerInfo.in_basket_hulirefu = "1";
-					} 
-					else if (e.detail.value.huli[i] == "xiliaotuo") {
-						this.pickerInfo.in_basket_hulixiliaotuo = "1";
-					} 
-					else if (e.detail.value.huli[i] == "liusuanmei") {
-						this.pickerInfo.in_basket_huliliusuanmei = "1";
-					}
-				}
+				// this.pickerInfo.in_basket_hulirefu = "";
+				// this.pickerInfo.in_basket_hulixiliaotuo = "";
+				// this.pickerInfo.in_basket_huliliusuanmei = "";
+				// for (let i = 0; i < e.detail.value.huli.length; i++) {
+				// 	if (e.detail.value.huli[i] == "refu") {
+				// 		this.pickerInfo.in_basket_hulirefu = "1";
+				// 	} 
+				// 	else if (e.detail.value.huli[i] == "xiliaotuo") {
+				// 		this.pickerInfo.in_basket_hulixiliaotuo = "1";
+				// 	} 
+				// 	else if (e.detail.value.huli[i] == "liusuanmei") {
+				// 		this.pickerInfo.in_basket_huliliusuanmei = "1";
+				// 	}
+				// }
 				console.log("this.pickerInfo.in_basket_hulirefu",this.pickerInfo.in_basket_hulirefu);
 				console.log("this.pickerInfo.in_basket_hulixiliaotuo",this.pickerInfo.in_basket_hulixiliaotuo);
 				console.log("this.pickerInfo.in_basket_huliliusuanmei",this.pickerInfo.in_basket_huliliusuanmei);
@@ -1021,36 +1170,47 @@
 									break;
 								}
 							}
+							// console.log("变更前",this.info.medicare);
+							// if (this.treatStateInfo.in_basket_hulirefu == "" && this.treatStateInfo.in_basket_hulixiliaotuo == "" && this.treatStateInfo.in_basket_huliliusuanmei == "") {
+							// 	this.info.medicare2[0].checked = true;
+							// } 
+							// else {
+							// 	this.info.medicare2[0].checked = false;
+							// 	if (this.treatStateInfo.in_basket_hulirefu == "1") {
+							// 		this.info.medicare2[1].checked = true;
+							// 	}
+							// 	if (this.treatStateInfo.in_basket_hulixiliaotuo == "1") {
+							// 		this.info.medicare2[2].checked = true;
+							// 	}
+							// 	if (this.treatStateInfo.in_basket_huliliusuanmei == "1") {
+							// 		this.info.medicare2[3].checked = true;
+							// 	}
+							// 	console.log("变更后",this.info.medicare);
+							// }
 							//页面加载信息：护理措施
-							console.log("变更前",this.info.medicare);
 							if (this.treatStateInfo.in_basket_hulirefu == "" && this.treatStateInfo.in_basket_hulixiliaotuo == "" && this.treatStateInfo.in_basket_huliliusuanmei == "") {
-								this.info.medicare[0].checked = true;
+								this.info.medicare1.checked = true;
 							} 
 							else {
-								this.info.medicare[0].checked = false;
+								this.info.medicare1.checked = false;
 								if (this.treatStateInfo.in_basket_hulirefu == "1") {
-									this.info.medicare[1].checked = true;
+									this.info.medicare2[0].checked = true;
 								}
 								if (this.treatStateInfo.in_basket_hulixiliaotuo == "1") {
-									this.info.medicare[2].checked = true;
+									this.info.medicare2[1].checked = true;
 								}
 								if (this.treatStateInfo.in_basket_huliliusuanmei == "1") {
-									this.info.medicare[3].checked = true;
+									this.info.medicare2[2].checked = true;
 								}
-								console.log("变更后",this.info.medicare);
+								console.log("medicare1：",this.info.medicare1);
+								console.log("medicare2：",this.info.medicare2);
 							}
 							//页面加载信息：平车/轮椅
 							if (this.treatStateInfo.before_dry_weightpc == "1") {
 								this.info.transfer[0].checked = true;
 							}
-							else{
-								this.info.transfer[0].checked = false;
-							}
 							if (this.treatStateInfo.before_dry_weightly == "1") {
 								this.info.transfer[1].checked = true;
-							}
-							else{
-								this.info.transfer[1].checked = false;
 							}
 							//页面加载信息：透析器凝血
 							for (let i = 0; i < this.info.expand.length; i++) {
@@ -1099,7 +1259,18 @@
 
 <style>
 	@import url("../../static/css/style.css");
-
+	
+	.test_one_k {
+		width: 20rpx;
+		height: 20rpx;
+		border: 3rpx solid blue;
+	}
+	.test_one_y {
+		width: 20rpx;
+		height: 20rpx;
+		border: 3rpx solid red;
+	}
+	
 	form {
 		width: 100%;
 	}

@@ -272,12 +272,28 @@
 							<text>护理措施:</text>
 						</view>
 						<view class="form-cnt-noborder form-mid-space">
-							<checkbox-group name="huli" @change="setmedicare" v-if="hackReset">
+							<view class="my-checkbox" v-show="check1 === true" @click="setCheck1"><text>√</text></view>
+							<view class="my-checkbox" v-show="check1 === false" @click="setCheck1"></view>
+							<text class="my-checkbox-cnt">无</text>
+							
+							<view class="my-checkbox" v-show="check2 === true" @click="setCheck2"><text>√</text></view>
+							<view class="my-checkbox" v-show="check2 === false" @click="setCheck2"></view>
+							<text class="my-checkbox-cnt">热敷</text>
+							
+							<view class="my-checkbox" v-show="check3 === true" @click="setCheck3"><text>√</text></view>
+							<view class="my-checkbox" v-show="check3 === false" @click="setCheck3"></view>
+							<text class="my-checkbox-cnt">喜疗妥</text>
+							
+							<view class="my-checkbox" v-show="check4 === true" @click="setCheck4"><text>√</text></view>
+							<view class="my-checkbox" v-show="check4 === false" @click="setCheck4"></view>
+							<text class="my-checkbox-cnt">硫酸镁</text>
+							
+<!-- 							<checkbox-group name="huli" @change="setmedicare" v-if="hackReset">
 								<label v-for="item in info.medicare" class="radio-item">
 									<checkbox v-model="item.value" :checked="item.checked" color="#51D3C7" style="transform:scale(0.7)" />
 									<text>{{item.name}}{{item.value}}{{item.checked}}</text>
 								</label>
-							</checkbox-group>
+							</checkbox-group> -->
 						</view>
 					</view>
 					<view class="form-item">
@@ -326,13 +342,25 @@
 							<!-- 平车轮椅 -->
 						</view>
 						<view class="form-cnt-noborder form-mid-space">
-							<radio-group name="pcly" @change="setExpand" v-if="hackReset">
+							<view class="my-radio" v-show="radio1 === true" @click="setRadio1">
+								<image src="../../static/radiopic.png" style="width: 30rpx; height: 30rpx;"></image>
+							</view>
+							<view class="my-radio" v-show="radio1 === false" @click="setRadio1"></view>
+							<text class="my-radio-cnt">平车</text>
+							
+							<view class="my-radio" v-show="radio2 === true" @click="setRadio2">
+								<image src="../../static/radiopic.png" style="width: 20rpx; height: 20rpx;"></image>
+							</view>
+							<view class="my-radio" v-show="radio2 === false" @click="setRadio2"></view>
+							<text class="my-radio-cnt">轮椅</text>
+							
+<!-- 							<radio-group name="pcly" @change="setExpand" v-if="hackReset">
 								<label v-for="item in info.transfer" class="radio-item">
 									<radio v-model="item.value" :checked="item.checked" color="#51D3C7"
 										style="transform:scale(0.7)" />
 									{{item.name}}
 								</label>
-							</radio-group>
+							</radio-group> -->
 						</view>
 					</view>
 					<view class="form-item">
@@ -542,8 +570,6 @@
 		swell: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
 		narrow: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
 		expand: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
-		medicare: [{name: '无',checked: false,value: 'wu'}, {name: '热敷',checked: false,value: 'refu'}, {name: '喜疗妥',checked: false,value: 'xiliaotuo'}, {name: '硫酸镁',checked: false,value: 'liusuanmei'}, ],
-		transfer: [{name: '平车',checked: false,value: '0'}, {name: '轮椅',checked: false,value: '1'}, ],
 		cruor: [{name: '0级',checked: false,value: '0'}, {name: '1级',checked: false,value: '1'}, {name: '2级',checked: false,value: '2'}, {name: '3级',checked: false,value: '3'}, ],
 	}
 	export default {
@@ -552,6 +578,12 @@
 				hackReset:false,
 				segCtrlItems: ['透析信息', '评估与治疗情况'],
 				segCtrlSelected: 0,
+				check1: false,
+				check2: false,
+				check3: false,
+				check4: false,
+				radio1: false,
+				radio2: false,
 				patient: {},
 				date: "",
 				statusInput: false,
@@ -577,11 +609,6 @@
 				pickerInfo: {
 					treatmentitems: "",
 					filter: "",
-					in_basket_hulirefu: "",
-					in_basket_hulixiliaotuo: "",
-					in_basket_huliliusuanmei: "",
-					before_dry_weightpc: "",
-					before_dry_weightly: "",
 					primary_doctor: "",
 					primary_nurse: "",
 					check_nurse: "",
@@ -669,6 +696,9 @@
 			}
 			this.getTreatInfo();
 		},
+		onHide() {
+			this.segCtrlSelected = 0;
+		},
 		methods: {
 			//页面tab切换
 			onClickItem(e) {
@@ -681,6 +711,7 @@
 				uni.navigateTo({
 					url: "../patient-list/patient-list",
 				});
+				this.segCtrlSelected = 0;
 			},
 			//导航刷新按钮对应方法
 			reflesh() {
@@ -742,31 +773,61 @@
 				this.treatStateInfo.in_basket_liuyangkuozhang = e.detail.value;
 			},
 			//选择变更：护理措施
-			setmedicare(e) {
-				console.log(e);
-				// if(e.detail.value[0]="wu"){
-				// 	this.hackReset = false;
-				// 	console.log("enter if");
-				// 	this.info.medicare[0].checked = true;
-				// 	this.info.medicare[1].checked = false;
-				// 	this.info.medicare[2].checked = false;
-				// 	this.info.medicare[3].checked = false;
-				// 	this.hackReset = true;
-				// }
-				// else{
-				// 	this.info.medicare[0].checked = false;
-				// 	for(let i = 0; i < e.detail.value.length; i++){
-				// 		if(e.detail.value[i] == "refu"){
-				// 			this.info.medicare[1].checked = true;
-				// 		}
-				// 		else if(e.detail.value[i] == "xiliaotuo"){
-				// 			this.info.medicare[2].checked = true;
-				// 		}
-				// 		else if(e.detail.value[i] == "liusuanmei"){
-				// 			this.info.medicare[3].checked = true;
-				// 		}
-				// 	}
-				// }
+			setCheck1(){
+				this.check1 = !this.check1;
+				if(this.check1 == true){
+					this.check2 = false;
+					this.check3 = false;
+					this.check4 = false;
+				}
+			},
+			setCheck2(){
+				this.check2 = !this.check2;
+				if(this.check2 == true){
+					this.check1 = false;
+				}
+				else{
+					if(this.check3 == false && this.check4 == false){
+						this.check1 = true;
+					}
+				}
+			},
+			setCheck3(){
+				this.check3 = !this.check3;
+				if(this.check3 == true){
+					this.check1 = false;
+				}
+				else{
+					if(this.check2 == false && this.check4 == false){
+						this.check1 = true;
+					}
+				}
+			},
+			setCheck4(){
+				this.check4 = !this.check4;
+				if(this.check4 == true){
+					this.check1 = false;
+				}
+				else{
+					if(this.check2 == false && this.check3 == false){
+						this.check1 = true;
+					}
+				}
+			},
+			//选择变更：平车轮椅
+			setRadio1(){
+				this.radio1 = !this.radio1
+				if(this.radio1 == true){
+					this.radio2 = false;
+				}
+
+			},
+			setRadio2(){
+				this.radio2 = !this.radio2
+				if(this.radio2 == true){
+					this.radio1 = false;
+				}
+				
 			},
 			//下拉框选择医生
 			setDoctor(e) {
@@ -822,28 +883,39 @@
 					}
 				}
 				//获取护理措施状态值
-				this.pickerInfo.in_basket_hulirefu = "";
-				this.pickerInfo.in_basket_hulixiliaotuo = "";
-				this.pickerInfo.in_basket_huliliusuanmei = "";
-				for (let i = 0; i < e.detail.value.huli.length; i++) {
-					if (e.detail.value.huli[i] == "refu") {
-						this.pickerInfo.in_basket_hulirefu = "1";
-					} 
-					else if (e.detail.value.huli[i] == "xiliaotuo") {
-						this.pickerInfo.in_basket_hulixiliaotuo = "1";
-					} 
-					else if (e.detail.value.huli[i] == "liusuanmei") {
-						this.pickerInfo.in_basket_huliliusuanmei = "1";
-					}
+				if(this.check2 == true){
+					this.treatStateInfo.in_basket_hulirefu = "1";
 				}
-				console.log("this.pickerInfo.in_basket_hulirefu",this.pickerInfo.in_basket_hulirefu);
-				console.log("this.pickerInfo.in_basket_hulixiliaotuo",this.pickerInfo.in_basket_hulixiliaotuo);
-				console.log("this.pickerInfo.in_basket_huliliusuanmei",this.pickerInfo.in_basket_huliliusuanmei);
+				else{
+					this.treatStateInfo.in_basket_hulirefu = "";
+				}
+				if(this.check3 == true){
+					this.treatStateInfo.in_basket_hulixiliaotuo = "1";
+				}
+				else{
+					this.treatStateInfo.in_basket_hulixiliaotuo = "";
+				}
+				if(this.check4 == true){
+					this.treatStateInfo.in_basket_huliliusuanmei = "1";
+				}
+				else{
+					this.treatStateInfo.in_basket_huliliusuanmei = "";
+				}
+				console.log("this.treatStateInfo.in_basket_hulirefu",this.treatStateInfo.in_basket_hulirefu);
+				console.log("this.treatStateInfo.in_basket_hulixiliaotuo",this.treatStateInfo.in_basket_hulixiliaotuo);
+				console.log("this.treatStateInfo.in_basket_huliliusuanmei",this.treatStateInfo.in_basket_huliliusuanmei);
 				// //获取平车轮椅状态值
-				if (e.detail.value.pcly == "0") {
-					this.pickerInfo.before_dry_weightpc = "1";
-				} else if (e.detail.value.pcly == "1") {
-					this.pickerInfo.before_dry_weightly = "1";
+				if (this.radio1 == true) {
+					this.treatStateInfo.before_dry_weightpc = "1";
+				}
+				else {
+					this.treatStateInfo.before_dry_weightpc = "";
+				}
+				if (this.radio2 == true) {
+					this.treatStateInfo.before_dry_weightly = "1";
+				}
+				else {
+					this.treatStateInfo.before_dry_weightly = "";
 				}
 				//治疗信息修改提交
 				this.$myRequest({
@@ -872,16 +944,16 @@
 						"in_basket_hongzhong": e.detail.value.in_basket_hongzhong,
 						"in_basket_xiazhai": e.detail.value.in_basket_xiazhai,
 						"in_basket_liuyangkuozhang": e.detail.value.in_basket_liuyangkuozhang,
-						"in_basket_hulirefu": this.pickerInfo.in_basket_hulirefu,
-						"in_basket_hulixiliaotuo": this.pickerInfo.in_basket_hulixiliaotuo,
-						"in_basket_huliliusuanmei": this.pickerInfo.in_basket_huliliusuanmei,
+						"in_basket_hulirefu": this.treatStateInfo.in_basket_hulirefu,
+						"in_basket_hulixiliaotuo": this.treatStateInfo.in_basket_hulixiliaotuo,
+						"in_basket_huliliusuanmei": this.treatStateInfo.in_basket_huliliusuanmei,
 						"actual_cleanup_hour": this.treatStateInfo.actual_cleanup_hour,
 						"actual_cleanup_minute": this.treatStateInfo.actual_cleanup_minute,
 						"dry_weight": this.treatStateInfo.dry_weight,
 						"last_time_dry_weight": this.treatStateInfo.dry_weight,
 						"before_dry_weight": this.treatStateInfo.before_dry_weight,
-						"before_dry_weightpc": this.pickerInfo.before_dry_weightpc,
-						"before_dry_weightly": this.pickerInfo.before_dry_weightly,
+						"before_dry_weightpc": this.treatStateInfo.before_dry_weightpc,
+						"before_dry_weightly": this.treatStateInfo.before_dry_weightly,
 						"dry_weight_tag": this.treatStateInfo.dry_weight_tag,
 						"dry_weight_add": this.treatStateInfo.dry_weight_add,
 						"ufr": this.treatStateInfo.ufr,
@@ -1022,29 +1094,35 @@
 								}
 							}
 							//页面加载信息：护理措施
-							console.log("变更前",this.info.medicare);
 							if (this.treatStateInfo.in_basket_hulirefu == "" && this.treatStateInfo.in_basket_hulixiliaotuo == "" && this.treatStateInfo.in_basket_huliliusuanmei == "") {
-								this.info.medicare[0].checked = true;
+								this.check1 = true;
 							} 
 							else {
-								this.info.medicare[0].checked = false;
+								this.check1 = false;
 								if (this.treatStateInfo.in_basket_hulirefu == "1") {
-									this.info.medicare[1].checked = true;
+									this.check2 = true;
 								}
 								if (this.treatStateInfo.in_basket_hulixiliaotuo == "1") {
-									this.info.medicare[2].checked = true;
+									this.check3 = true;
 								}
 								if (this.treatStateInfo.in_basket_huliliusuanmei == "1") {
-									this.info.medicare[3].checked = true;
+									this.check4 = true;
 								}
-								console.log("变更后",this.info.medicare);
 							}
 							//页面加载信息：平车/轮椅
 							if (this.treatStateInfo.before_dry_weightpc == "1") {
-								this.info.transfer[0].checked = true;
+								console.log("enter pc");
+								this.radio1 = true;
+							}
+							else{
+								this.radio1 = false;
 							}
 							if (this.treatStateInfo.before_dry_weightly == "1") {
-								this.info.transfer[1].checked = true;
+								console.log("enter ly");
+								this.radio2 = true;
+							}
+							else{
+								this.radio2 = false;
 							}
 							//页面加载信息：透析器凝血
 							for (let i = 0; i < this.info.expand.length; i++) {
@@ -1127,7 +1205,30 @@
 		height: 80rpx;
 		border-color: #C0C0C0;
 	}
-
+	.my-checkbox{
+		width: 30rpx;
+		height: 30rpx;
+		margin-right: 10rpx;
+		border: 1px solid;
+		border-color: #C0C0C0;
+		color: #51D3C7;
+		text-align: center;
+		line-height:30rpx
+	}
+	.my-checkbox-cnt{
+		margin-right: 20rpx;
+	}
+	.my-radio{
+		width: 30rpx;
+		height: 30rpx;
+		margin-right: 10rpx;
+		border: 1px solid;
+		border-color: #C0C0C0;
+		border-radius: 16rpx;
+	}
+	.my-radio-cnt{
+		margin-right: 20rpx;
+	}
 	.small-btn {
 		border-radius: 20rpx;
 		height: 60rpx;
