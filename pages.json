@@ -66,6 +66,23 @@
     //         }
         }
         ,{
+            "path" : "pages/treat-info2/treat-info2",
+			"style" :
+			{
+				"app-plus":{
+					"softinputMode": "adjustResize",
+					"animationType": "none",
+					"titleNView":false
+				}
+			}
+    //         "style" :                                                                                    
+    //         {
+				// "navigationBarTitleText": "治疗",
+				// "navigationBarTextStyle": "white",
+				// "navigationBarBackgroundColor":"#51D3C7"
+    //         }
+        }
+        ,{
             "path" : "pages/medical-advice/medical-advice",
 			"style" :
 			{
@@ -161,7 +178,7 @@
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
-				"pagePath": "pages/treat-info/treat-info",
+				"pagePath": "pages/treat-info2/treat-info2",
 				"text": "治疗信息"
 			},
 			{

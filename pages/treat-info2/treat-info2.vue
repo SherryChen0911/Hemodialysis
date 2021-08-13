@@ -79,7 +79,7 @@
 								type="text" placeholder="" />
 						</view>
 					</view>
-					<view class="form-item">
+<!-- 					<view class="form-item">
 						<view class="form-prefix-space">
 							<text>穿刺:</text>
 						</view>
@@ -106,7 +106,7 @@
 								</label>
 							</radio-group>
 						</view>
-					</view>
+					</view> -->
 					<view class="form-item">
 						<view class="form-prefix-space">
 							<text>体温℃:</text>
@@ -197,7 +197,7 @@
 					</view>
 				</view>
 				<view v-show="segCtrlSelected === 1">
-					<view class="form-item">
+<!-- 					<view class="form-item">
 						<view class="form-prefix-space">
 							<text>内瘘震颤:</text>
 						</view>
@@ -287,15 +287,211 @@
 							<view class="my-checkbox" v-show="check4 === true" @click="setCheck4"><text>√</text></view>
 							<view class="my-checkbox" v-show="check4 === false" @click="setCheck4"></view>
 							<text class="my-checkbox-cnt">硫酸镁</text>
+						</view>
+					</view> -->
+					
+					
+					
+					
+					
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>置管时间:</text>
+						</view>
+						<view class="form-cnt form-mid-space">
+							<picker mode="time" @change="setPipeTime()">
+								<input class="form-mid-space" type="text" v-model="temp.pipeTime" disabled="true" placeholder="请点击选择时间"/>
+							</picker>
 							
-<!-- 							<checkbox-group name="huli" @change="setmedicare" v-if="hackReset">
-								<label v-for="item in info.medicare" class="radio-item">
-									<checkbox v-model="item.value" :checked="item.checked" color="#51D3C7" style="transform:scale(0.7)" />
-									<text>{{item.name}}{{item.value}}{{item.checked}}</text>
-								</label>
-							</checkbox-group> -->
 						</view>
 					</view>
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>固定牢固:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<radio-group name="in_basket_xiazhai" @change="setFixed" v-if="hackReset">
+								<label v-for="item in info.fixed" class="radio-item">
+									<radio v-model="item.value" :checked="item.checked" color="#51D3C7"
+										style="transform:scale(0.7)" />
+									{{item.name}}
+								</label>
+							</radio-group>
+						</view>
+					</view>
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>滑脱:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<radio-group name="in_basket_xiazhai" @change="setSlide" v-if="hackReset">
+								<label v-for="item in info.slide" class="radio-item">
+									<radio v-model="item.value" :checked="item.checked" color="#51D3C7"
+										style="transform:scale(0.7)" />
+									{{item.name}}
+								</label>
+							</radio-group>
+						</view>
+					</view>
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>敷料:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<radio-group name="in_basket_xiazhai" @change="setDressing" v-if="hackReset">
+								<label v-for="item in info.dressing" class="radio-item">
+									<radio v-model="item.value" :checked="item.checked" color="#51D3C7"
+										style="transform:scale(0.7)" />
+									{{item.name}}
+								</label>
+							</radio-group>
+						</view>
+					</view>
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>置管口红肿:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<radio-group name="in_basket_xiazhai" @change="setPipeSwell" v-if="hackReset">
+								<label v-for="item in info.pipeSwell" class="radio-item">
+									<radio v-model="item.value" :checked="item.checked" color="#51D3C7"
+										style="transform:scale(0.7)" />
+									{{item.name}}
+								</label>
+							</radio-group>
+						</view>
+					</view>
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>渗血:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<radio-group name="in_basket_xiazhai" @change="setBleedBlood" v-if="hackReset">
+								<label v-for="item in info.bleedBlood" class="radio-item">
+									<radio v-model="item.value" :checked="item.checked" color="#51D3C7"
+										style="transform:scale(0.7)" />
+									{{item.name}}
+								</label>
+							</radio-group>
+						</view>
+					</view>
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>渗液:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<radio-group name="in_basket_xiazhai" @change="setBleedLiquid" v-if="hackReset">
+								<label v-for="item in info.bleedLiquid" class="radio-item">
+									<radio v-model="item.value" :checked="item.checked" color="#51D3C7"
+										style="transform:scale(0.7)" />
+									{{item.name}}
+								</label>
+							</radio-group>
+						</view>
+					</view>
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>血栓:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<radio-group name="in_basket_xiazhai" @change="setThrombus" v-if="hackReset">
+								<label v-for="item in info.thrombus" class="radio-item">
+									<radio v-model="item.value" :checked="item.checked" color="#51D3C7"
+										style="transform:scale(0.7)" />
+									{{item.name}}
+								</label>
+							</radio-group>
+						</view>
+					</view>
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>导管情况:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<radio-group name="in_basket_xiazhai" @change="setPipeStatus" v-if="hackReset">
+								<label v-for="item in info.pipeStatus" class="radio-item">
+									<radio v-model="item.value" :checked="item.checked" color="#51D3C7"
+										style="transform:scale(0.7)" />
+									{{item.name}}
+								</label>
+							</radio-group>
+						</view>
+					</view>
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>溶栓:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<radio-group name="in_basket_xiazhai" @change="setThrombolysis" v-if="hackReset">
+								<label v-for="item in info.thrombolysis" class="radio-item">
+									<radio v-model="item.value" :checked="item.checked" color="#51D3C7"
+										style="transform:scale(0.7)" />
+									{{item.name}}
+								</label>
+							</radio-group>
+						</view>
+					</view>					
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>对接方式:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<radio-group name="in_basket_xiazhai" @change="setJoinWay" v-if="hackReset">
+								<label v-for="item in info.joinWay" class="radio-item">
+									<radio v-model="item.value" :checked="item.checked" color="#51D3C7"
+										style="transform:scale(0.7)" />
+									{{item.name}}
+								</label>
+							</radio-group>
+						</view>
+					</view>	
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>血流感染:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<radio-group name="in_basket_xiazhai" @change="setBleedInfection" v-if="hackReset">
+								<label v-for="item in info.bleedInfection" class="radio-item">
+									<radio v-model="item.value" :checked="item.checked" color="#51D3C7"
+										style="transform:scale(0.7)" />
+									{{item.name}}
+								</label>
+							</radio-group>
+						</view>
+					</view>
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>使用抗生素:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<radio-group name="in_basket_xiazhai" @change="setAntibiotic" v-if="hackReset">
+								<label v-for="item in info.antibiotic" class="radio-item">
+									<radio v-model="item.value" :checked="item.checked" color="#51D3C7"
+										style="transform:scale(0.7)" />
+									{{item.name}}
+								</label>
+							</radio-group>
+						</view>
+					</view>
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>宣教指导:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<radio-group name="in_basket_xiazhai" @change="setGuide" v-if="hackReset">
+								<label v-for="item in info.guide" class="radio-item">
+									<radio v-model="item.value" :checked="item.checked" color="#51D3C7"
+										style="transform:scale(0.7)" />
+									{{item.name}}
+								</label>
+							</radio-group>
+						</view>
+					</view>
+					
+					
+					
+					
+					
 					<view class="form-item">
 						<view class="form-prefix-space">
 							<text>实际治疗时间:</text>
@@ -571,6 +767,19 @@
 		narrow: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
 		expand: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
 		cruor: [{name: '0级',checked: false,value: '0'}, {name: '1级',checked: false,value: '1'}, {name: '2级',checked: false,value: '2'}, {name: '3级',checked: false,value: '3'}, ],
+		fixed: [{name: '是',checked: false,value: '0'}, {name: '否',checked: false,value: '1'}, ],
+		slide: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
+		dressing: [{name: '干燥完好',checked: false,value: '0'}, {name: '贴数不紧密',checked: false,value: '1'}, ],
+		pipeSwell: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
+		bleedBlood: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
+		bleedLiquid: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
+		thrombus: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
+		pipeStatus: [{name: '畅通',checked: false,value: '0'}, {name: '动脉困难',checked: false,value: '1'}, {name: '静脉困难',checked: false,value: '2'}, ],
+		thrombolysis: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
+		joinWay: [{name: '正接',checked: false,value: '0'}, {name: '反接',checked: false,value: '1'}, ],
+		bleedInfection: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
+		antibiotic: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
+		guide: [{name: '有',checked: false,value: '0'}, {name: '无',checked: false,value: '1'}, ],
 	}
 	export default {
 		data() {
@@ -613,6 +822,9 @@
 					primary_nurse: "",
 					check_nurse: "",
 					puncture_nurse: "",
+				},
+				temp: {
+					pipeTime:"",	
 				}
 			}
 		},
@@ -752,6 +964,60 @@
 			setDoseRange2(e) {
 				this.dialysisInfo.second_drug_unit = this.drugunitRange[e.detail.value];
 			},
+			
+			
+			
+			
+			
+			setPipeTime(e){
+				
+			},
+			setFixed(e){
+				
+			},
+			setSlide(e){
+				
+			},
+			setDressing(e){
+				
+			},
+			setPipeSwell(e){
+				
+			},
+			setBleedBlood(e){
+				
+			},
+			setBleedLiquid(e){
+				
+			},
+			setThrombus(e){
+				
+			},
+			setThrombus(e){
+				
+			},
+			setPipeStatus(e){
+				
+			},
+			setThrombolysis(e){
+				
+			},
+			setJoinWay(e){
+				
+			},
+			setBleedInfection(e){
+				
+			},
+			setAntibiotic(e){
+				
+			},
+			setGuide(e){
+				
+			},
+			
+			
+			
+			
 			//选择变更：内瘘震颤
 			setTremor(e) {
 				this.treatStateInfo.in_basket_wound_allergy = e.detail.value;

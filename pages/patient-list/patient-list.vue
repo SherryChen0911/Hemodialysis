@@ -221,7 +221,7 @@
 				Store.setStorageSync("patient",item);
 				// console.log('doTreatment',item)
 				uni.switchTab({
-					url: "../treat-info/treat-info",
+					url: "../treat-info2/treat-info2",
 				});
 			},
 			//结束治疗按钮方法：弹出提示框
