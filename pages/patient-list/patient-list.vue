@@ -26,7 +26,8 @@
 				<view v-show="!item.isfinish" class="footer">
 					<button class="btn" @click="callPatient(item,key)">叫号</button>
 					<button class="btn" @click="takePic(item,key)">患者拍照</button>
-					<button class="btn" @click="doTreatment(item)">执行治疗</button>
+					<button class="btn" v-show="item.start_time == ''" @click="doTreatment(item)">开始治疗</button>
+					<button class="btn" v-show="item.start_time != ''" @click="doTreatment(item)">执行治疗</button>
 					<button class="btn" @click="endTreatment(item,key)">结束治疗</button>
 				</view>
 			</view>
@@ -45,6 +46,8 @@
 <script>
 	import Store from '../../common/store.js'
 	import _ from "lodash"
+	import moment from "moment"
+	
 	let that = null;
 	export default {
 		data() {
@@ -66,94 +69,13 @@
 			return true;
 		},
 		onLoad() {
-			that = this;
-			//获取患者信息
-			let patientData = Store.getStorageSync("patientList");
-			console.log(patientData);
-			//获取当前时间
-			let dateGetter = new Date();
-			let year = dateGetter.getFullYear();
-			let month = dateGetter.getMonth() + 1;
-			let date = dateGetter.getDate();
-			let hour = dateGetter.getHours();
-			let min = dateGetter.getMinutes();
-			let sec = dateGetter.getSeconds();
-			let timer = 0;
-			for (let i = 0; i < patientData.length; i++) {
-				//判断治疗状态是否为已完成
-				let finishTreatement = false;
-				if(patientData[i].end_time != ""){
-					//获取end-time中年月日时分秒的具体数值
-					let temp = patientData[i].end_time.split(" ");
-					let day = temp[0].split("-");
-					let time = temp[1].split(":");
-					let endYear = parseInt(day[0]);
-					let endMonth = parseInt(day[1]);
-					let endDate = parseInt(day[2]);
-					let endHour = parseInt(time[0]);
-					let endMin = parseInt(time[1]);
-					let endSec = parseInt(time[2]);
-					//与当前时间进行对比，小于当前时间的，治疗状态应为已完成
-					if(endYear < year){
-						finishTreatement = true;
-					}
-					else{
-						if(endMonth < month){
-							finishTreatement = true;
-						}
-						else{
-							if(endDate < date){
-								finishTreatement = true;
-							}
-							else{
-								if(endHour < hour){
-									finishTreatement = true;
-								}
-								else{
-									if(endMin < min){
-										finishTreatement = true;
-									}
-									else{
-										if(endSec < sec){
-											finishTreatement = true;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-				//获取患者头像
-				this.$myRequest({
-					url:'/patient/img',
-					method:'POST',
-					data:{
-						"hemodialysis_id":patientData[i].hemodialysis_id
-					},
-					success: (res) => {
-						//若获取成功同时传入图片和治疗状态数据
-						if(res.data.code == 200){
-							patientData[i].pic = res.data.data.pat_pic;
-							patientData[i].isfinish = finishTreatement;
-						}
-						//若获取失败只传入治疗状态数据
-						else{
-							patientData[i].isfinish = finishTreatement;
-						}
-						clearTimeout(timer)
-						timer = setTimeout(()=>{
-							this.patientList =  _.cloneDeep(patientData);
-						},300)
-					},
-				});
-			}
+			this.reflesh()
 		},
 		methods: {
 			//患者叫号
 			callPatient(item,key){
 				//获取诊室信息
 				let searchInfo = Store.getStorageSync("searchInfo");
-				console.log(searchInfo);
 				let needkey = key.toString();
 				this.$myRequest({
 					url:'/patient/call/number',
@@ -164,8 +86,12 @@
 						patientname:item.name
 					},
 					success: (res) => {
-						console.log(res);
 						if(res.data.code == 200){
+							uni.showToast({
+								title: res.data.data.message,
+								icon: 'none',
+								mask: true
+							});
 						}
 					},
 				});
@@ -175,7 +101,6 @@
 				uni.chooseImage({
 					count: 1,
 					success: function (res) {
-						console.log("chooseImage 成功",res,item);
 						uni.showToast({
 							title: "img:" + res.tempFilePaths[0],
 							icon: 'none',
@@ -190,7 +115,6 @@
 								'hemodialysis_id':item.hemodialysis_id
 							},
 							success:(res1)=>{
-								console.log("uploadFile 成功",res1);
 								//刷新单个头像
 								that.$myRequest({
 									url:'/patient/img',
@@ -218,26 +142,66 @@
 			   },
 			//执行治疗按钮方法
 			doTreatment(item){
-				Store.setStorageSync("patient",item);
-				// console.log('doTreatment',item)
-				uni.switchTab({
-					url: "../treat-info2/treat-info2",
-				});
+				if(item.cure_id == ""){
+					// console.log("进入创建主表流程")
+					let searchInfo = Store.getStorageSync("searchInfo");
+					this.$myRequest({
+						url:'/patient/create/cure',
+						method:'POST',
+						data:{
+							banci_id: searchInfo.banci_id,
+							room: searchInfo.room,
+							hemodialysis_id: item.hemodialysis_id,
+							date: searchInfo.date,
+							patient_id: item.patient_id,
+							patient_schedule_id: item.patient_schedule_id,
+						},
+						success: (res) => {
+							// console.log("创建主表",res.data.data)
+							if(res.data.code == 200){
+								this.reflesh();
+								setTimeout(()=>{
+									// console.log("重新打印patientList",this.patientList)
+									for(let k = 0; k < this.patientList.length; k++){
+										if(this.patientList[k].patient_id == item.patient_id){
+											// console.log("找到patient",this.patientList[k])
+											Store.setStorageSync("patient",this.patientList[k]);
+											break;
+										}
+									}
+									uni.switchTab({
+										url: "../treat-info/treat-info",
+									});
+								},5000)
+							}
+							else{
+								uni.showToast({
+									title: "主表创建失败！",
+									icon: 'none',
+								});
+							}
+						},
+					});
+				}
+				else{
+					console.log("进入执行治疗流程")
+					Store.setStorageSync("patient",item);
+					uni.switchTab({
+						url: "../treat-info/treat-info",
+					});
+				}
 			},
 			//结束治疗按钮方法：弹出提示框
 			endTreatment(item,key){
-				
 				this.operatePatientOrder = key;
 				this.operatePatient = item;
 				this.popupMsg = "是否为患者" + item.name + "结束治疗？";
-				console.log("operatePatient:",this.operatePatientOrder,this.operatePatient);
 				this.$refs.endTreatement.open();
 			},
 			//取消执行结束治疗
 			cancelEndtreatment(){
 				this.operatePatientOrder = -1;
 				this.operatePatient = {};
-				console.log("cancel:",this.operatePatientOrder,this.operatePatient);
 			},
 			//确认执行结束治疗
 			confirmEndTreatment(){
@@ -257,10 +221,10 @@
 					data:{
 						cure_id: this.operatePatient.cure_id,
 						end_time:endtime,
+						patient_schedule_id: this.operatePatient.patient_schedule_id,
 					},
 					success: (res) => {
 						if(res.data.code == 200){
-							console.log(res);
 							//改变end_time值
 							this.operatePatient.end_time = endtime;
 							//改变患者卡片按钮显示状态
@@ -281,50 +245,69 @@
 			},
 			////导航栏右侧刷新
 			reflesh(){
+				console.log("enter reflesh")
 				this.navSelected = false;
-				let searchInfo = Store.getStorageSync("searchInfo");
+				that = this;
 				uni.showToast({
 					title: 'loading',
 					icon: 'loading',
 					mask: true
 				});
+				that = this;
+				let searchInfo = Store.getStorageSync("searchInfo");
+				let patientData = [];
+				//请求患者列表信息
 				this.$myRequest({
 					url:'/patient/patientlist',
 					method:'POST',
 					data:{
-						banci_id:searchInfo.banci_id,
-						date:searchInfo.date,
-						room:searchInfo.room,
+						banci_id: searchInfo.banci_id,
+						date: searchInfo.date,
+						room: searchInfo.room,
 					},
 					success: (res) => {
-						// console.log(res);
 						if(res.data.code == 200){
 							Store.setStorageSync("patientList",res.data.data);
-							let patientData = res.data.data;
-							
+							patientData = res.data.data;
+							console.log("patientList:",patientData)
 							let timer = 0;
-							for (let i = 0; i < patientData.length; i++) {
+							for (let j = 0; j < patientData.length; j++) {
 								//获取患者头像
 								this.$myRequest({
 									url:'/patient/img',
 									method:'POST',
 									data:{
-										hemodialysis_id:patientData[i].hemodialysis_id,
+										"hemodialysis_id":patientData[j].hemodialysis_id
 									},
 									success: (res) => {
-										if(res.data.code == 200){
-											patientData[i].pic = res.data.data.pat_pic;
+										let i = _.findIndex(patientData,{hemodialysis_id:res.data.data.hemodialysis_id})
+										if (i>=0){
+											let finishTreatement = false;
+											let endTime = moment(patientData[i].end_time)
+											if (endTime.isValid()){
+												finishTreatement = endTime.isBefore(moment());
+											}
+											//若获取成功同时传入图片和治疗状态数据
+											if(res.data.code == 200){
+												patientData[i].pic = res.data.data.pat_pic;
+												patientData[i].isfinish = finishTreatement;
+											}
+											//若获取失败只传入治疗状态数据
+											else{
+												patientData[i].isfinish = finishTreatement;
+											}
+											clearTimeout(timer)
+											timer = setTimeout(()=>{
+												this.patientList =  _.cloneDeep(patientData);
+											},300)
 										}
-										clearTimeout(timer)
-										timer = setTimeout(()=>{
-											this.patientList =  _.cloneDeep(patientData);
-										},300)
 									},
 								});
 							}
 						}
 					},
 				});
+				console.log("out of reflesh")
 			}
 		}
 	}
@@ -389,8 +372,6 @@
 	    align-items: center;
 	    justify-content: center;
 		background-color: #51D3C7;
-		/* border: 2rpx solid; */
-	    /* border-color: #51D3C7; */
 		color: #FFFFFF;
 		font-size: 28upx;
 	    border-radius: 20rpx;
@@ -404,7 +385,6 @@
 		right: 5rpx;
 		background-color: #EEEEEE;
 		width: 250rpx;
-		/* height: 100rpx; */
 		box-shadow: 2px 2px 5px rgba(28, 42, 134, 0.4);
 	}
 	.nav-select-item{

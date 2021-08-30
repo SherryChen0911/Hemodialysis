@@ -37,7 +37,6 @@
 		},
 		onShow: function () {
 			this.patient = Store.getStorageSync("patient");
-			console.log(this.patient);
 			//获取透析小结
 			this.$myRequest({
 				url:'/patient/summary',
@@ -47,9 +46,8 @@
 				},
 				success: (res) => {
 					if(res.data.code == 200){
-						
+						console.log("透析小结",res.data.data)
 						this.summary = res.data.data.summary;
-						console.log("透析小结",res.data.data,this.summary);
 					}
 				},
 			});
@@ -58,7 +56,6 @@
 				url:'/common/dialysistemp',
 				success: (res) => {
 					if(res.data.code == 200){
-						console.log("透析小结模板",res.data.data);
 						this.templateList = res.data.data;
 					}
 				},
@@ -92,7 +89,6 @@
 						if(res.data.code == 200){
 							
 							this.summary = res.data.data.summary;
-							console.log("透析小结",res.data.data,this.summary);
 						}
 					},
 				});
@@ -101,7 +97,6 @@
 					url:'/common/dialysistemp',
 					success: (res) => {
 						if(res.data.code == 200){
-							console.log("透析小结模板",res.data.data);
 							this.templateList = res.data.data;
 						}
 					},
@@ -118,7 +113,6 @@
 			},
 			//提交透析小结
 			submit(){
-				console.log(this.summary);
 				//提交透析小结
 				this.$myRequest({
 					url:'/patient/update/summary',

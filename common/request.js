@@ -1,4 +1,4 @@
-import urlConfig from './config.js'
+// import urlConfig from './config.js'
 import ipConfig from './ip.js'
 
 export const myRequest = (httpConfig) => {

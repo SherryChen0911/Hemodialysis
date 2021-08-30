@@ -52,7 +52,8 @@
 		},
 		onShow: function () {
 			this.patient = Store.getStorageSync("patient");
-			console.log(this.patient);
+			let tempa = Store.getStorageSync("bloodPressure")
+			console.log("bloodPressure",tempa);
 			//获取透析参数
 			this.$myRequest({
 				url:'/patient/dialysisparam',
@@ -62,7 +63,14 @@
 				},
 				success: (res) => {
 					if(res.data.code == 200){
+						console.log("length:",res.data.data.length);
 						console.log("透析参数",res.data.data);
+						if(res.data.data.length === 0){
+							Store.setStorageSync("defaultBP",0);
+						}
+						else{
+							Store.setStorageSync("defaultBP",1);
+						}
 						//改记录时间的样式
 						for(let i = 0; i < res.data.data.length; i++){
 							if(res.data.data[i].create_date != ""){
@@ -72,7 +80,6 @@
 							}
 						}
 						this.dialysisParamInfo = res.data.data;
-						console.log("dialysisParamInfo",this.dialysisParamInfo);
 					}
 				},
 			});
@@ -88,6 +95,7 @@
 			},
 			//导航刷新按钮对应方法
 			reflesh(){
+				let tempa = Store.getStorageSync("bloodPressure")
 				uni.showToast({
 					title: 'loading',
 					icon: 'loading',
@@ -102,7 +110,14 @@
 					},
 					success: (res) => {
 						if(res.data.code == 200){
+							console.log("length:",res.data.data.length);
 							console.log("透析参数",res.data.data);
+							if(res.data.data.length === 0){
+								Store.setStorageSync("defaultBP",0);
+							}
+							else{
+								Store.setStorageSync("defaultBP",1);
+							}
 							//改记录时间的样式
 							for(let i = 0; i < res.data.data.length; i++){
 								if(res.data.data[i].create_date != ""){
@@ -112,7 +127,6 @@
 								}
 							}
 							this.dialysisParamInfo = res.data.data;
-							console.log("dialysisParamInfo",this.dialysisParamInfo);
 						}
 					},
 				});
@@ -127,7 +141,6 @@
 			showParamSelect(item){
 				this.$refs.paramSelect.open();
 				this.selectItem = item;
-				console.log("选中数据",this.selectItem);
 			},
 			//复制透析参数
 			copyParam(){
@@ -157,7 +170,6 @@
 					},
 					success: (res) => {
 						if(res.data.code == 200){
-							console.log("删除透析参数",res);
 							this.reflesh();
 							uni.showToast({
 								title: '透析参数删除成功',

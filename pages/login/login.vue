@@ -69,8 +69,6 @@
 					success: (res) => {
 						// console.log(res);
 						if(res.data.code == 200){
-							console.log(res.data.data.user_id);
-							Store.setStorageSync("userid",res.data.data.user_id);
 							uni.showToast({
 								title: e.detail.value.user+'，登录成功',
 								icon: 'none',
@@ -97,7 +95,6 @@
 					fail: (err) => {
 						console.log('fail', err);
 					},
-					
 				});	
 			},
 			dialogInputConfirm(val){
@@ -106,7 +103,6 @@
 					 ip = val
 				}
 				ipConfig.setIp(ip)
-				// console.log("configValue：",configValue);
 				this.ipInfo = this.getIP();
 			}
 		}

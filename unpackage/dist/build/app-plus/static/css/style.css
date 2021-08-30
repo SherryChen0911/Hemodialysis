@@ -110,3 +110,6 @@
 	.disable-style{
 		background-color: #ebedef;
 	}
+	input{
+		height: 100%;
+	}

@@ -1,17 +1,16 @@
 <template>
 	<view class="content">
 		<form @submit="submitDialysisParam">
-			<view class="form-item">
+<!-- 			<view class="form-item">
 				<view class="form-prefix-space">
 					<text>记录时间:</text>
 				</view>
-				<view class="form-cnt form-mid-space">
-					<picker mode="time" @change="setRecordTime($event)">
-						<input class="form-mid-space" type="text" v-model="info.showTime" disabled="true" placeholder="请点击选择时间"/>
+				<view class="form-cnt form-mid-space disable-style">
+					<picker mode="time" disabled="true" @change="setRecordTime($event)">
+						<input class="form-mid-space" type="text" v-model="info.showTime" disabled="true" placeholder="提交时生成记录时间"/>
 					</picker>
-					
 				</view>
-			</view>
+			</view> -->
 			<view class="form-item">
 				<view class="form-prefix-space">
 					<text>静脉压mmHg:</text>
@@ -25,7 +24,7 @@
 					<text>动脉压mmHg:</text>
 				</view>
 				<view class="form-cnt form-mid-space">
-					<input class="form-mid-space" type="text" name="artery_pressure"/>
+					<input class="form-mid-space" v-model="defaultInfo.artery_pressure" type="text" name="artery_pressure"/>
 				</view>
 			</view>
 			<view class="form-item">
@@ -41,7 +40,7 @@
 					<text>血流量ml/min:</text>
 				</view>
 				<view class="form-cnt form-mid-space">
-					<input class="form-mid-space" type="text" name="blood_flow"/>
+					<input class="form-mid-space" v-model="defaultInfo.blood_flow" type="text" name="blood_flow"/>
 				</view>
 			</view>
 			<view class="form-item">
@@ -73,7 +72,7 @@
 					<text>收缩压mmHg:</text>
 				</view>
 				<view class="form-cnt form-mid-space">
-					<input class="form-mid-space" type="text" name="systolic_pressure"/>
+					<input class="form-mid-space" v-model="defaultInfo.systolic_pressure" type="text" name="systolic_pressure"/>
 				</view>
 			</view>
 			<view class="form-item">
@@ -81,7 +80,7 @@
 					<text>舒张压mmHg:</text>
 				</view>
 				<view class="form-cnt form-mid-space">
-					<input class="form-mid-space" type="text" name="diastolic_pressure"/>
+					<input class="form-mid-space" v-model="defaultInfo.diastolic_pressure" type="text" name="diastolic_pressure"/>
 				</view>
 			</view>
 			<view class="form-item">
@@ -89,7 +88,7 @@
 					<text>SpO2(%):</text>
 				</view>
 				<view class="form-cnt form-mid-space">
-					<input class="form-mid-space" type="text" name="spo2"/>
+					<input class="form-mid-space" v-model="defaultInfo.spo2" type="text" name="spo2"/>
 				</view>
 			</view>
 			<view class="form-item">
@@ -97,7 +96,7 @@
 					<text>电导度ms/cm:</text>
 				</view>
 				<view class="form-cnt form-mid-space">
-					<input class="form-mid-space" type="text" name="conductivity"/>
+					<input class="form-mid-space" v-model="defaultInfo.conductivity" type="text" name="conductivity"/>
 				</view>
 			</view>
 			<view class="form-item">
@@ -105,7 +104,7 @@
 					<text>超滤率ml/h:</text>
 				</view>
 				<view class="form-cnt form-mid-space">
-					<input class="form-mid-space" type="text" name="urf"/>
+					<input class="form-mid-space" v-model="defaultInfo.urf" type="text" name="urf"/>
 				</view>
 			</view>
 			<view class="form-item">
@@ -113,7 +112,7 @@
 					<text>透析液温度℃:</text>
 				</view>
 				<view class="form-cnt form-mid-space">
-					<input class="form-mid-space" type="text" name="dialysate_temperature"/>
+					<input class="form-mid-space" v-model="defaultInfo.dialysate_temperature" type="text" name="dialysate_temperature"/>
 				</view>
 			</view>
 			<view class="form-item">
@@ -172,6 +171,19 @@
 
 <script>
 	import Store from '../../common/store.js'
+	import _ from "lodash"
+	import moment from "moment"
+	
+	let defaultInfo = {
+		artery_pressure: "0",
+		blood_flow: "250",
+		spo2: "0",
+		conductivity: "14.0",
+		urf: "550",
+		dialysate_temperature: "37",
+		systolic_pressure: "",
+		diastolic_pressure: "",
+	}
 	export default {
 		data() {
 			return {
@@ -186,13 +198,23 @@
 					bleed:[{name:"是",value:"1"},{name:"否",value:"0"}],
 					slide:[{name:"是",value:"1"},{name:"否",value:"0"}],
 				},
+				defaultInfo: _.cloneDeep(defaultInfo),
 			}
 		},
 		onLoad() {
+			// let currTime = moment().toArray();
 			this.patient = Store.getStorageSync("patient");
-			console.log(this.patient);
 			this.nurseInfo = Store.getStorageSync("nurseInfo");
-			console.log(this.nurseInfo);
+			this.defaultInfo = _.cloneDeep(defaultInfo);
+			let defaultBP = Store.getStorageSync("defaultBP")
+			console.log("defaultBP",defaultBP);
+			if(defaultBP === 0){
+				let bpData = Store.getStorageSync("bloodPressure")
+				console.log("bloodPressure:",bpData);
+				this.defaultInfo.systolic_pressure = bpData.before_systolic_pressure;
+				this.defaultInfo.diastolic_pressure = bpData.before_diastolic_pressure;
+			}
+			this.nurseRange = [];
 			for (let i = 0; i < this.nurseInfo.length; i++) {
 				this.nurseRange.push(this.nurseInfo[i].name);
 			}
@@ -205,17 +227,16 @@
 			}
 		},
 		methods: {
-			//设置记录时间
-			setRecordTime(e){
-				//获取当前时间
-				let dateGetter = new Date();
-				let year = dateGetter.getFullYear();
-				let month = dateGetter.getMonth() + 1;
-				let date = dateGetter.getDate();
-				this.info.time = year + "-" + month + "-" + date + " " +  e.detail.value + ":00";
-				this.info.showTime = e.detail.value;
-				console.log("记录时间",this.info.time);
-			},
+			// //设置记录时间
+			// setRecordTime(e){
+			// 	//获取当前时间
+			// 	let dateGetter = new Date();
+			// 	let year = dateGetter.getFullYear();
+			// 	let month = dateGetter.getMonth() + 1;
+			// 	let date = dateGetter.getDate();
+			// 	this.info.time = year + "-" + month + "-" + date + " " +  e.detail.value + ":00";
+			// 	this.info.showTime = e.detail.value;
+			// },
 			//下拉框选择责任护士
 			setNurese1(e){
 				this.info.nurse = this.nurseRange[e.detail.value];
@@ -226,13 +247,14 @@
 			},
 			//保存按钮
 			submitDialysisParam(e){
-				console.log(e);
 				let nurseSubmit = "";
 				if(this.info.nurse == ""){
 				}
 				else{
 					nurseSubmit = this.nurseInfo[e.detail.value.nurse_id].emp_no;
 				}
+				let currTime = moment().format('YYYY-MM-DD HH:mm:ss')
+				console.log("currTime:",currTime)
 				// 新增透析参数
 				this.$myRequest({
 					url:'/patient/new/dialysisparam',
@@ -240,7 +262,7 @@
 					data:{
 						cure_id: this.patient.cure_id,
 						recipe_id: this.patient.recipe_id,
-						create_date: this.info.time,
+						create_date: currTime,
 						venous_pressure: e.detail.value.venous_pressure,
 						artery_pressure: e.detail.value.artery_pressure,
 						transmembrane_pressure: e.detail.value.transmembrane_pressure,
@@ -260,7 +282,6 @@
 						clinical_manifestation: e.detail.value.clinical_manifestation,
 					},
 					success: (res) => {
-						console.log('res', res);
 						if(res.data.code == 200){
 							uni.showToast({
 								title: '透析参数添加成功',

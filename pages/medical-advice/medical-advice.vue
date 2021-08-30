@@ -37,6 +37,7 @@
 
 <script>
 	import Store from '../../common/store.js'
+	
 	export default {
 		data() {
 			return {
@@ -52,6 +53,8 @@
 			this.patient = Store.getStorageSync("patient");
 			let searchInfo = Store.getStorageSync("searchInfo");
 			this.date = searchInfo.date;
+			this.permanentAdvice = [];
+			this.temporaryAdvice = [];
 			//获取长期医嘱
 			this.$myRequest({
 				url:'/doctororder/long',
@@ -66,7 +69,7 @@
 						}
 						else{
 							console.log("长期医嘱",res.data.data);
-							this.permanentAdvice = res.data.data;
+							this.permanentAdvice =  _.cloneDeep(res.data.data);;
 						}
 					}
 				},
@@ -136,7 +139,7 @@
 							}
 							else{
 								console.log("长期医嘱",res.data.data);
-								this.permanentAdvice = res.data.data;
+								this.permanentAdvice =  _.cloneDeep(res.data.data);
 							}
 						}
 					},
@@ -165,7 +168,7 @@
 										res.data.data[i].able = false;
 									}
 								}
-								this.temporaryAdvice = res.data.data;
+								this.temporaryAdvice = _.cloneDeep(res.data.data);
 							}
 							console.log("临时医嘱",res.data.data);
 						}

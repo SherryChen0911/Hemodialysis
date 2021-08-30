@@ -58,29 +58,6 @@
 					"titleNView":false
 				}
 			}
-    //         "style" :                                                                                    
-    //         {
-				// "navigationBarTitleText": "治疗",
-				// "navigationBarTextStyle": "white",
-				// "navigationBarBackgroundColor":"#51D3C7"
-    //         }
-        }
-        ,{
-            "path" : "pages/treat-info2/treat-info2",
-			"style" :
-			{
-				"app-plus":{
-					"softinputMode": "adjustResize",
-					"animationType": "none",
-					"titleNView":false
-				}
-			}
-    //         "style" :                                                                                    
-    //         {
-				// "navigationBarTitleText": "治疗",
-				// "navigationBarTextStyle": "white",
-				// "navigationBarBackgroundColor":"#51D3C7"
-    //         }
         }
         ,{
             "path" : "pages/medical-advice/medical-advice",
@@ -92,12 +69,6 @@
 					"titleNView":false
 				}
 			}
-    //         "style" :                                                                                    
-    //         {
-				// "navigationBarTitleText": "医嘱",
-				// "navigationBarTextStyle": "white",
-				// "navigationBarBackgroundColor":"#51D3C7"
-    //         }
         }
         ,{
             "path" : "pages/dialysis-param/dialysis-param",
@@ -109,12 +80,6 @@
 					"titleNView":false
 				}
 			}
-    //         "style" :                                                                                    
-    //         {
-				// "navigationBarTitleText": "参数",
-				// "navigationBarTextStyle": "white",
-				// "navigationBarBackgroundColor":"#51D3C7"
-    //         }
         }
         ,{
             "path" : "pages/dialysis-summary/dialysis-summary",
@@ -126,12 +91,6 @@
 					"titleNView":false
 				}
 			}
-    //         "style" :                                                                                    
-    //         {
-				// "navigationBarTitleText": "小结",
-				// "navigationBarTextStyle": "white",
-				// "navigationBarBackgroundColor":"#51D3C7"
-    //         }
         }
         ,{
             "path" : "pages/dialysis-param-add/dialysis-param-add",
@@ -178,7 +137,7 @@
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
-				"pagePath": "pages/treat-info2/treat-info2",
+				"pagePath": "pages/treat-info/treat-info",
 				"text": "治疗信息"
 			},
 			{

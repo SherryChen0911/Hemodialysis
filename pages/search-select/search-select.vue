@@ -48,7 +48,7 @@
 					selectDate:"",
 					selectTime:"",
 					timeOrder:-1,
-					selectRoom:"",
+					selectRoom:"透析1组",
 					roomOrder:-1,
 				},
 				timeInfo:[],
@@ -58,11 +58,103 @@
 			}
 		},
 		onLoad() {
+			//获取治疗方式
+			this.$myRequest({
+				url:'/common/treatment',
+				success: (res) => {
+					if(res.data.code == 200){
+						let treatmentInfo = res.data.data;
+						Store.setStorageSync("treatmentInfo",treatmentInfo);
+					}
+					else{
+						Store.setStorageSync("treatmentInfo","error");
+					}
+				},
+			});
+			//获取净化器列表
+			this.$myRequest({
+				url:'/common/fliterlist',
+				success: (res) => {
+					if(res.data.code == 200){
+						let fliterInfo = res.data.data;
+						Store.setStorageSync("fliterInfo",fliterInfo);
+					}
+					else{
+						Store.setStorageSync("fliterInfo","error");
+					}
+				},
+			});
+			//获取抗凝方式列表
+			this.$myRequest({
+				url:'/common/bloodmethod',
+				success: (res) => {
+					if(res.data.code == 200){
+						let bloodmethodInfo = res.data.data;
+						Store.setStorageSync("bloodmethodInfo",bloodmethodInfo);
+					}
+					else{
+						Store.setStorageSync("bloodmethodInfo","error");
+					}
+				},
+			});
+			//获取药品单位列表
+			this.$myRequest({
+				url:'/common/drugunit',
+				success: (res) => {
+					if(res.data.code == 200){
+						let drugunitInfo = res.data.data;
+						Store.setStorageSync("drugunitInfo",drugunitInfo);
+					}
+					else{
+						Store.setStorageSync("drugunitInfo","error");
+					}
+				},
+			});
+			//获取医生列表
+			this.$myRequest({
+				url:'/common/doctorlist',
+				success: (res) => {
+					if(res.data.code == 200){
+						let doctorInfo = res.data.data;
+						Store.setStorageSync("doctorInfo",doctorInfo);
+					}
+					else{
+						Store.setStorageSync("doctorInfo","error");
+					}
+				},
+			});
+			//获取护士列表
+			this.$myRequest({
+				url:'/common/nurselist',
+				success: (res) => {
+					if(res.data.code == 200){
+						let nurseInfo = res.data.data;
+						Store.setStorageSync("nurseInfo",nurseInfo);
+					}
+					else{
+						Store.setStorageSync("nurseInfo","error");
+					}
+				},
+				fail: (err) => {
+					console.log('request fail', err);
+				},
+			});
+			var myDate = new Date();
+			let y = myDate.getFullYear(); 
+			let m = myDate.getMonth() +1;
+			let d = myDate.getDate();
+			if(m<10){
+				m = '0'+ m;
+			}
+			if(d<10){
+				d = '0'+ d;
+			}
+			this.patientSelectData.selectDate = y+'-'+m+'-'+d;
+			this.patientSelectData.selectRoom = "透析1组";
 			//请求【选择时段】的选项
 			this.$myRequest({
 				url:'/common/banci',
 				success: (res) => {
-					// console.log(res);
 					if(res.data.code == 200){
 						this.timeInfo = res.data.data;
 						for (let i = 0; i < this.timeInfo.length; i++) {
@@ -75,7 +167,6 @@
 			this.$myRequest({
 				url:'/common/dialysisroom',
 				success: (res) => {
-					// console.log(res);
 					if(res.data.code == 200){
 						this.roomInfo = res.data.data;
 						for (let i = 0; i < this.roomInfo.length; i++) {
@@ -103,27 +194,9 @@
 				if((this.patientSelectData.selectDate != "") && (this.patientSelectData.timeOrder != -1) && (this.patientSelectData.selectRoom != "")){
 					//转换数据格式
 					let timeVal = this.timeInfo[this.patientSelectData.timeOrder].item_value;
-					
-					//发起请求
-					this.$myRequest({
-						url:'/patient/patientlist',
-						method:'POST',
-						data:{
-							banci_id:timeVal,
-							date:this.patientSelectData.selectDate,
-							room:this.patientSelectData.selectRoom,
-						},
-						success: (res) => {
-							if(res.data.code == 200){
-								Store.setStorageSync("patientList",res.data.data);
-								Store.setStorageSync("searchInfo",{banci_id:timeVal,date:this.patientSelectData.selectDate,room:this.patientSelectData.selectRoom,});
-								setTimeout(() => {
-										uni.navigateTo({
-											url: "../patient-list/patient-list"
-										});
-									}, 500);
-							}
-						},
+					Store.setStorageSync("searchInfo",{banci_id:timeVal,date:this.patientSelectData.selectDate,room:this.patientSelectData.selectRoom,});
+					uni.navigateTo({
+						url: "../patient-list/patient-list"
 					});
 				}
 				else{
@@ -137,7 +210,6 @@
 				this.patientSelectData.selectDate = e.detail.value;
 			},
 			setPatientSelectTime(e){
-				// console.log(e);
 				this.patientSelectData.selectTime = this.timeRange[e.detail.value];
 				this.patientSelectData.timeOrder = e.detail.value;
 			},

@@ -197,14 +197,10 @@
 			this.dialysisParamInfo = {};
 			this.info = {};
 			Store.setStorageSync("dialysisParam",{});
-			console.log("我是返回按钮的方法");
-			console.log("病人",this.patient);
-			console.log("信息",this.info);
 			return false;
 		},
 		onLoad() {
 			this.dialysisParamInfo = Store.getStorageSync("dialysisParam");
-			console.log("dialysisParam",this.dialysisParamInfo);
 			//同步记录时间
 			this.info.showTime = this.dialysisParamInfo.show_create_date;
 			this.info.time = this.dialysisParamInfo.create_date;
@@ -229,9 +225,7 @@
 				}
 			}
 			this.patient = Store.getStorageSync("patient");
-			console.log(this.patient);
 			this.nurseInfo = Store.getStorageSync("nurseInfo");
-			console.log(this.nurseInfo);
 			for (let i = 0; i < this.nurseInfo.length; i++) {
 				this.nurseRange.push(this.nurseInfo[i].name);
 			}
@@ -261,7 +255,6 @@
 				let date = dateGetter.getDate();
 				this.info.time = year + "-" + month + "-" + date + " " +  e.detail.value + ":00";
 				this.info.showTime = e.detail.value;
-				console.log("记录时间",this.info.time);
 			},
 			//下拉框选择责任护士
 			setNurese1(e){
@@ -274,7 +267,6 @@
 			},
 			//保存按钮
 			submitDialysisParam(e){
-				console.log(e);
 				let nurseSubmit = "";
 				if(this.info.nurse == ""){
 				}
@@ -315,7 +307,6 @@
 					},
 					success: (res) => {
 						if(res.data.code == 200){
-							console.log("修改透析参数",res);
 							uni.showToast({
 								title: '透析参数修改成功',
 								icon: 'none',
@@ -344,7 +335,6 @@
 				this.dialysisParamInfo = {};
 				this.info = {};
 				Store.setStorageSync("dialysisParam",{});
-				console.log("返回清除数据patient:",this.patient);
 			}
 		}
 	}
