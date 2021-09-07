@@ -42,6 +42,8 @@
 
 <script>
 	import Store from '../../common/store.js'
+	import _ from "lodash"
+	
 	export default {
 		data() {
 			return {
@@ -52,56 +54,12 @@
 		},
 		onShow: function () {
 			this.patient = Store.getStorageSync("patient");
-			let tempa = Store.getStorageSync("bloodPressure")
-			console.log("bloodPressure",tempa);
 			//获取透析参数
-			this.$myRequest({
-				url:'/patient/dialysisparam',
-				method:'POST',
-				data:{
-					cure_id:this.patient.cure_id,
-				},
-				success: (res) => {
-					if(res.data.code == 200){
-						console.log("length:",res.data.data.length);
-						console.log("透析参数",res.data.data);
-						if(res.data.data.length === 0){
-							Store.setStorageSync("defaultBP",0);
-						}
-						else{
-							Store.setStorageSync("defaultBP",1);
-						}
-						//改记录时间的样式
-						for(let i = 0; i < res.data.data.length; i++){
-							if(res.data.data[i].create_date != ""){
-								let temp = res.data.data[i].create_date.split(" ");
-								let temp1 = temp[1].slice(0,5);
-								res.data.data[i].show_create_date = temp1;
-							}
-						}
-						this.dialysisParamInfo = res.data.data;
-					}
-				},
-			});
+			this.getDialysisData();
 		},		
 		methods: {
-			//导航返回按钮对应方法
-			toPatientList(){
-				uni.navigateTo({
-					url: "../patient-list/patient-list",
-				});
-				this.patient={};
-				this.dialysisParamInfo=[];
-			},
-			//导航刷新按钮对应方法
-			reflesh(){
-				let tempa = Store.getStorageSync("bloodPressure")
-				uni.showToast({
-					title: 'loading',
-					icon: 'loading',
-					mask: true
-				});
-				//获取透析参数
+			//获取透析参数
+			getDialysisData(){
 				this.$myRequest({
 					url:'/patient/dialysisparam',
 					method:'POST',
@@ -126,10 +84,27 @@
 									res.data.data[i].show_create_date = temp1;
 								}
 							}
-							this.dialysisParamInfo = res.data.data;
+							this.dialysisParamInfo = _.cloneDeep(res.data.data);
 						}
 					},
 				});
+			},
+			//导航返回按钮对应方法
+			toPatientList(){
+				uni.navigateTo({
+					url: "../patient-list/patient-list",
+				});
+				this.patient={};
+				this.dialysisParamInfo=[];
+			},
+			//导航刷新按钮对应方法
+			reflesh(){
+				uni.showToast({
+					title: 'loading',
+					icon: 'loading',
+					mask: true
+				});
+				this.getDialysisData()
 			},
 			//新增按钮
 			addInfo(){

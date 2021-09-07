@@ -40,6 +40,9 @@
 
 <script>
 	import Store from '../../common/store.js'
+	import moment from "moment"
+	
+	
 	export default {
 		data() {
 			return {
@@ -58,6 +61,19 @@
 			}
 		},
 		onLoad() {
+			var myDate = new Date();
+			let y = myDate.getFullYear(); 
+			let m = myDate.getMonth() +1;
+			let d = myDate.getDate();
+			if(m<10){
+				m = '0'+ m;
+			}
+			if(d<10){
+				d = '0'+ d;
+			}
+			this.patientSelectData.selectDate = y+'-'+m+'-'+d;
+			this.patientSelectData.selectRoom = "透析1组";
+
 			//获取治疗方式
 			this.$myRequest({
 				url:'/common/treatment',
@@ -139,31 +155,53 @@
 					console.log('request fail', err);
 				},
 			});
-			var myDate = new Date();
-			let y = myDate.getFullYear(); 
-			let m = myDate.getMonth() +1;
-			let d = myDate.getDate();
-			if(m<10){
-				m = '0'+ m;
-			}
-			if(d<10){
-				d = '0'+ d;
-			}
-			this.patientSelectData.selectDate = y+'-'+m+'-'+d;
-			this.patientSelectData.selectRoom = "透析1组";
+			
 			//请求【选择时段】的选项
+			this.timeRange = [];
 			this.$myRequest({
 				url:'/common/banci',
 				success: (res) => {
 					if(res.data.code == 200){
 						this.timeInfo = res.data.data;
+						console.log(this.timeInfo)
 						for (let i = 0; i < this.timeInfo.length; i++) {
 							this.timeRange.push(this.timeInfo[i].item_name);
+						}
+						//获取时段默认值
+						let currTime = moment().format('YYYY-MM-DD HH:mm:ss');
+						let currDate = moment().format('YYYY-MM-DD');
+						console.log(currTime,currDate);
+						let time1 = currDate + ' 06:00:00';
+						let time2 = currDate + ' 12:00:00';
+						let time3 = currDate + ' 18:00:00';
+						let result1 = moment(time1).isBefore(currTime);
+						let result2 = moment(time2).isBefore(currTime);
+						let result3 = moment(time3).isBefore(currTime);
+						console.log(result1,result2,result3)
+						console.log('timeRange',this.timeRange)
+						if(result1 === true && result2 ===false){
+							console.log("上午")
+							this.patientSelectData.selectTime = "上午";
+							this.patientSelectData.timeOrder = this.timeRange.indexOf("上午");
+							console.log("序号",this.patientSelectData.timeOrder)
+						}
+						else if(result2 === true && result3 === false){
+							console.log("下午")
+							this.patientSelectData.selectTime = "下午";
+							this.patientSelectData.timeOrder = this.timeRange.indexOf("下午");
+							console.log("序号",this.patientSelectData.timeOrder)
+						}
+						else if(result3 === true || result1 === false){
+							console.log("晚班")
+							this.patientSelectData.selectTime = "晚班";
+							this.patientSelectData.timeOrder = this.timeRange.indexOf("晚班");
+							console.log("序号",this.patientSelectData.timeOrder)
 						}
 					}
 				},
 			});
 			//请求【选择透析室】的选项
+			this.roomRange = [];
 			this.$myRequest({
 				url:'/common/dialysisroom',
 				success: (res) => {
@@ -172,6 +210,7 @@
 						for (let i = 0; i < this.roomInfo.length; i++) {
 							this.roomRange.push(this.roomInfo[i].item_name);
 						}
+
 					}
 				},
 			});
@@ -190,10 +229,12 @@
 					icon: 'loading',
 					mask: true
 				});
+				
 				//判断数据是否存在
 				if((this.patientSelectData.selectDate != "") && (this.patientSelectData.timeOrder != -1) && (this.patientSelectData.selectRoom != "")){
 					//转换数据格式
 					let timeVal = this.timeInfo[this.patientSelectData.timeOrder].item_value;
+					console.log('timeVal',timeVal);
 					Store.setStorageSync("searchInfo",{banci_id:timeVal,date:this.patientSelectData.selectDate,room:this.patientSelectData.selectRoom,});
 					uni.navigateTo({
 						url: "../patient-list/patient-list"
@@ -210,6 +251,7 @@
 				this.patientSelectData.selectDate = e.detail.value;
 			},
 			setPatientSelectTime(e){
+				console.log(e);
 				this.patientSelectData.selectTime = this.timeRange[e.detail.value];
 				this.patientSelectData.timeOrder = e.detail.value;
 			},

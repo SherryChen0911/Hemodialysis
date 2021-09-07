@@ -153,7 +153,7 @@
 				<view class="form-cnt-noborder form-mid-space">
 					<button :class="nursePicker1 ?'one-btn small-btn':'err-btn small-btn'" @click="ableNurse1">修改签名</button>
 				</view>
-			</view>				
+			</view>
 			<view class="form-item">
 				<view class="form-prefix-space">
 					<text>症状及处理:</text>
@@ -200,7 +200,9 @@
 			return false;
 		},
 		onLoad() {
+			this.changeid ="";
 			this.dialysisParamInfo = Store.getStorageSync("dialysisParam");
+			console.log("dialysisParamInfo",this.dialysisParamInfo)
 			//同步记录时间
 			this.info.showTime = this.dialysisParamInfo.show_create_date;
 			this.info.time = this.dialysisParamInfo.create_date;
@@ -225,7 +227,9 @@
 				}
 			}
 			this.patient = Store.getStorageSync("patient");
+			this.nurseInfo = [];
 			this.nurseInfo = Store.getStorageSync("nurseInfo");
+			console.log("nurseInfo",this.nurseInfo)
 			for (let i = 0; i < this.nurseInfo.length; i++) {
 				this.nurseRange.push(this.nurseInfo[i].name);
 			}
@@ -236,11 +240,13 @@
 					mask: true
 				});
 			}
+			//在获取nurse名字以后循环获取nurseid
 			else{
 				for(let i = 0; i < this.nurseInfo.length; i++){
 					if(this.nurseInfo[i].name == this.info.nurse)
 					{
 						this.info.nurseid = this.nurseInfo[i].emp_no;
+						break;
 					}
 				}
 			}
@@ -259,7 +265,10 @@
 			//下拉框选择责任护士
 			setNurese1(e){
 				this.info.nurse = this.nurseRange[e.detail.value];
+				console.log("nurse:",this.info.nurse)
+				//将nurseid置为空，提交时再去获取id
 				this.info.nurseid = "";
+				console.log("nurseid:",this.info.nurseid)
 			},
 			//责任护士修改按钮,解除禁用
 			ableNurse1(){
@@ -268,6 +277,7 @@
 			//保存按钮
 			submitDialysisParam(e){
 				let nurseSubmit = "";
+				//如果一开始获取数据时没有nurse名字，且没变过
 				if(this.info.nurse == ""){
 				}
 				else{
@@ -275,7 +285,17 @@
 						nurseSubmit = this.info.nurseid;
 					}
 					else{
-						nurseSubmit = this.nurseInfo[e.detail.value.nurse_id].emp_no;
+						// nurseSubmit = this.nurseInfo[e.detail.value.nurse_id].emp_no;
+						if(Array.isArray( this.nurseInfo)){
+							for(let i = 0; i < this.nurseInfo.length; i++){
+								if(this.nurseInfo[i].name == this.info.nurse)
+								{
+									nurseSubmit = this.nurseInfo[i].emp_no;
+									break;
+								}
+							}
+						}
+
 					}
 				}
 				//修改透析参数
@@ -314,7 +334,7 @@
 							},500);
 							setTimeout(() => {
 									uni.hideToast();
-									//关闭提示后跳转
+									关闭提示后跳转
 									uni.switchTab({
 										url:"../dialysis-param/dialysis-param",
 									});

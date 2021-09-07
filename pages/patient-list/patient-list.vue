@@ -101,13 +101,15 @@
 				uni.chooseImage({
 					count: 1,
 					success: function (res) {
+						console.log("chooseImage",res)
 						uni.showToast({
 							title: "img:" + res.tempFilePaths[0],
 							icon: 'none',
 							mask: true
 						});
 						uni.uploadFile({
-							url:"http://192.168.0.46:8080/patient/update/pic",
+							// url:"http://192.168.0.46:8083/patient/update/pic",
+							url:"http://172.19.38.137:8083/patient/update/pic",
 							filePath:res.tempFilePaths[0],
 							fileType:'image',
 							name:'file',
@@ -115,6 +117,7 @@
 								'hemodialysis_id':item.hemodialysis_id
 							},
 							success:(res1)=>{
+								console.log("uploadFile",res1)
 								//刷新单个头像
 								that.$myRequest({
 									url:'/patient/img',
@@ -131,6 +134,7 @@
 								});
 							},
 							fail:(err1)=>{
+								console.log("uploadFile",err1)
 								console.error("uploadFile 失败",err1);
 							}
 						})

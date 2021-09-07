@@ -202,7 +202,6 @@
 			}
 		},
 		onLoad() {
-			// let currTime = moment().toArray();
 			this.patient = Store.getStorageSync("patient");
 			this.nurseInfo = Store.getStorageSync("nurseInfo");
 			this.defaultInfo = _.cloneDeep(defaultInfo);

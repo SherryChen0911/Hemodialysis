@@ -60,6 +60,28 @@
 			}
         }
         ,{
+            "path" : "pages/vascular-access/vascular-access",
+			"style" :
+			{
+				"onReachBottomDistance":100,
+				"app-plus":{
+					"softinputMode": "adjustResize",
+					"animationType": "none",
+					"titleNView":false
+				}
+			}
+        }
+		,{
+		    "path" : "pages/vascular-access-detail/vascular-access-detail",
+			"style" :
+			{
+				"navigationBarTitleText": "血管通路照片列表",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7",
+				"onReachBottomDistance":500
+			}
+		}
+        ,{
             "path" : "pages/medical-advice/medical-advice",
 			"style" :
 			{
@@ -139,6 +161,10 @@
 		"list": [{
 				"pagePath": "pages/treat-info/treat-info",
 				"text": "治疗信息"
+			},
+			{
+				"pagePath": "pages/vascular-access/vascular-access",
+				"text": "血管通路"
 			},
 			{
 				"pagePath": "pages/medical-advice/medical-advice",

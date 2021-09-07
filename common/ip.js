@@ -9,6 +9,7 @@ class singletonIP {
 		}else{
 			ipstate = this
 			this.ip = 'http://172.19.38.137:8083'
+			// this.ip = 'http://192.168.0.46:8083'
 		}
 		return result
 	}
