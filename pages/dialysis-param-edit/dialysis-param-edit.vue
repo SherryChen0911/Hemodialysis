@@ -334,7 +334,7 @@
 							},500);
 							setTimeout(() => {
 									uni.hideToast();
-									关闭提示后跳转
+									// 关闭提示后跳转
 									uni.switchTab({
 										url:"../dialysis-param/dialysis-param",
 									});
