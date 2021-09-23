@@ -162,7 +162,7 @@
 					<input class="form-mid-space" v-model="dialysisParamInfo.clinical_manifestation" type="text" name="clinical_manifestation"/>
 				</view>
 			</view>
-			<button class="one-btn" form-type="submit">保存</button>
+			<button class="one-btn btn-margin" form-type="submit">保存</button>
 			<button class="err-btn" @click="close">取消</button>
 		</form>
 		
@@ -367,17 +367,17 @@
 	}
 	.form-item{
 		align-items: center;
-		font-size: 28rpx;
+		font-size: 24rpx;
 	}
 	.form-prefix-space{
 		justify-content: flex-start;
 		padding-left: 0;
 		width: 150rpx;
-		height: 80rpx;
+		height: 60rpx;
 	}
 	.form-cnt{
 		margin-left: 10rpx;
-		height: 80rpx;
+		height: 60rpx;
 		border-color: #C0C0C0;
 	}
 	.small-btn{
@@ -386,6 +386,9 @@
 		font-size: 28rpx;
 	}
 	.one-btn{
+		margin-bottom: 20rpx;
+	}
+	.btn-margin{
 		margin-bottom: 20rpx;
 	}
 </style>

@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<form @submit="submitDialysisParam">
-<!-- 			<view class="form-item">
+		<!-- <view class="form-item">
 				<view class="form-prefix-space">
 					<text>记录时间:</text>
 				</view>
@@ -122,7 +122,7 @@
 				<view class="form-cnt-noborder form-mid-space">
 					<radio-group name="vascular_access_errhyisis">
 						<label  v-for="item in info.bleed" class="radio-item">
-							<radio :value="item.value" color="#51D3C7"  style="transform:scale(0.7)" />
+							<radio :value="item.value" :checked="item.checked" color="#51D3C7" style="transform:scale(0.7)" />
 							{{item.name}}
 						</label>					
 					</radio-group>	
@@ -135,7 +135,7 @@
 				<view class="form-cnt-noborder form-mid-space">
 					<radio-group name="vascular_access_glide">
 						<label  v-for="item in info.slide" class="radio-item">
-							<radio :value="item.value" color="#51D3C7"  style="transform:scale(0.7)" />
+							<radio :value="item.value" :checked="item.checked" color="#51D3C7"  style="transform:scale(0.7)" />
 							{{item.name}}
 						</label>					
 					</radio-group>	
@@ -162,7 +162,7 @@
 					<input class="form-mid-space" type="text" name="clinical_manifestation"/>
 				</view>
 			</view>
-			<button class="one-btn" form-type="submit">保存</button>
+			<button class="one-btn btn-margin" form-type="submit">保存</button>
 			<button class="err-btn">取消</button>
 		</form>
 		
@@ -187,6 +187,7 @@
 	export default {
 		data() {
 			return {
+				user:{},
 				patient:{},
 				nursePicker1:true,
 				nurseRange:[],
@@ -195,13 +196,18 @@
 					time:"",
 					showTime:"",
 					nurse:"",
-					bleed:[{name:"是",value:"1"},{name:"否",value:"0"}],
-					slide:[{name:"是",value:"1"},{name:"否",value:"0"}],
+					nurseId:"",
+					bleed:[{name:"是",value:"1",checked:false},{name:"否",value:"0",checked:true}],
+					slide:[{name:"是",value:"1",checked:false},{name:"否",value:"0",checked:true}],
 				},
 				defaultInfo: _.cloneDeep(defaultInfo),
 			}
 		},
 		onLoad() {
+			this.user = Store.getStorageSync("userInfo");
+			console.log("user",this.user)
+			this.info.nurse = this.user.user_name;
+			this.info.nurseId = this.user.user_id;
 			this.patient = Store.getStorageSync("patient");
 			this.nurseInfo = Store.getStorageSync("nurseInfo");
 			this.defaultInfo = _.cloneDeep(defaultInfo);
@@ -239,6 +245,7 @@
 			//下拉框选择责任护士
 			setNurese1(e){
 				this.info.nurse = this.nurseRange[e.detail.value];
+				this.info.nurseId = "";
 			},
 			//责任护士修改按钮,解除禁用
 			ableNurse1(){
@@ -246,12 +253,24 @@
 			},
 			//保存按钮
 			submitDialysisParam(e){
+				console.log("e",e)
 				let nurseSubmit = "";
-				if(this.info.nurse == ""){
+				if(this.info.nurseId == ""){
+					if(Array.isArray( this.nurseInfo)){
+						for(let i = 0; i < this.nurseInfo.length; i++){
+							if(this.nurseInfo[i].name == this.info.nurse)
+							{
+								nurseSubmit = this.nurseInfo[i].emp_no;
+								break;
+							}
+						}
+					}
 				}
 				else{
-					nurseSubmit = this.nurseInfo[e.detail.value.nurse_id].emp_no;
+					nurseSubmit = this.info.nurseId;
 				}
+				console.log("nurseId",this.info.nurseId)
+				console.log("nurse",this.info.nurse)
 				let currTime = moment().format('YYYY-MM-DD HH:mm:ss')
 				console.log("currTime:",currTime)
 				// 新增透析参数
@@ -317,25 +336,22 @@
 	}
 	.form-item{
 		align-items: center;
-		font-size: 28rpx;
+		font-size: 24rpx;
 	}
 	.form-prefix-space{
 		justify-content: flex-start;
 		padding-left: 0;
-		width: 150rpx;
-		height: 80rpx;
+		width: 120rpx;
+		height: 60rpx;
 	}
 	.form-cnt{
 		margin-left: 10rpx;
-		height: 80rpx;
+		height: 60rpx;
 		border-color: #C0C0C0;
 	}
 	.small-btn{
 		border-radius: 20rpx;
 		height: 60rpx;
 		font-size: 28rpx;
-	}
-	.one-btn{
-		margin-bottom: 20rpx;
 	}
 </style>

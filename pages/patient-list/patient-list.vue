@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<view class="list-view">
+		<view class="patient-list-view">
 			<view class="list-item" v-for="(item,key) in patientList">
 				<view class="header">
 					<view class="list-head-left">
@@ -319,7 +319,7 @@
 
 <style>
 	@import url("../../static/css/style.css");	
-	.list-view{
+	.patient-list-view{
 		width: 100%;
 	}
 	.list-item{

@@ -29,6 +29,64 @@
 			}
         }
         ,{
+            "path" : "pages/fall-list/fall-list",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "跌倒风险评估",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+            }
+            
+        }
+        ,{
+            "path" : "pages/fall-add/fall-add",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "添加跌倒风险评估",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+            }
+            
+        }
+        ,{
+            "path" : "pages/fall-edit/fall-edit",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "修改跌倒风险评估",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+            }
+            
+        }
+        ,{
+            "path" : "pages/dialysis-machine-list/dialysis-machine-list",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "透析机运行记录",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+            }
+            
+        }
+        ,{
+            "path" : "pages/dialysis-machine-add/dialysis-machine-add",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "添加透析机运行记录",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+            }
+        }
+		,{
+		    "path" : "pages/dialysis-machine-edit/dialysis-machine-edit",
+		    "style" :                                                                                    
+		    {
+				"navigationBarTitleText": "修改透析机运行记录",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+		    }
+		}
+        ,{
             "path" : "pages/patient-list/patient-list",
 			"style": {
 				"navigationBarTitleText": "血透患者选择",
@@ -60,6 +118,46 @@
 			}
         }
         ,{
+            "path" : "pages/guide-add/guide-add",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "健康宣教",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+            }
+            
+        }
+        ,{
+            "path" : "pages/complication-list/complication-list",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "并发症记录",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+            }
+            
+        }
+        ,{
+            "path" : "pages/complication-add/complication-add",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "添加并发症详情",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+            }
+            
+        }
+        ,{
+            "path" : "pages/complication-edit/complication-edit",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "修改并发症详情",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7"
+            }
+            
+        }
+        ,{
             "path" : "pages/vascular-access/vascular-access",
 			"style" :
 			{
@@ -82,6 +180,28 @@
 			}
 		}
         ,{
+            "path" : "pages/vascular-access-record/vascular-access-record",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "血管通路记录",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7",
+				"onReachBottomDistance":500
+            }
+            
+        }
+        ,{
+            "path" : "pages/vascular-access-record-add/vascular-access-record-add",
+            "style" :                                                                                    
+            {
+				"navigationBarTitleText": "添加血管通路记录",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor":"#51D3C7",
+				"onReachBottomDistance":500
+            }
+            
+        }
+        ,{
             "path" : "pages/medical-advice/medical-advice",
 			"style" :
 			{
@@ -94,17 +214,6 @@
         }
         ,{
             "path" : "pages/dialysis-param/dialysis-param",
-			"style" :
-			{
-				"app-plus":{
-					"softinputMode": "adjustResize",
-					"animationType": "none",
-					"titleNView":false
-				}
-			}
-        }
-        ,{
-            "path" : "pages/dialysis-summary/dialysis-summary",
 			"style" :
 			{
 				"app-plus":{
@@ -145,12 +254,24 @@
 				"navigationBarBackgroundColor":"#51D3C7"
 		    }
 		}
+        ,{
+            "path" : "pages/dialysis-summary/dialysis-summary",
+			"style" :
+			{
+				"app-plus":{
+					"softinputMode": "adjustResize",
+					"animationType": "none",
+					"titleNView":false
+				}
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+		"fontSize": "14px"
 	},
 	"tabBar": {
 		"color": "#7A7E83",

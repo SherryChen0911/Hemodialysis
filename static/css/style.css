@@ -50,6 +50,10 @@
 		padding: 0 20rpx 0 20rpx;
 		flex: 1;
 	}
+	.form-mid-space2{
+		padding: 0 20rpx 0 20rpx;
+		flex: 2;
+	}
 	.form-suffix-space{
 		width: 100rpx;
 		display: flex;
@@ -59,6 +63,48 @@
 	}
 	.suffix-text{
 		flex: 1;
+	}
+	.table-list{
+		width: calc(100% - 4rpx);
+		border: 2rpx solid;
+		border-color: #C0C0C0;
+		border-radius: 20rpx;
+	}
+	.table-line{
+		width: 100%;
+		height: 100rpx;
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+	}
+	.table-title{
+		color: #FFFFFF;
+		font-weight: 600;
+		background-color: #C0C0C0;
+		border-radius: 20rpx 20rpx 0 0;
+	}
+	.table-cnt{
+		border-top: 2rpx solid;
+		border-color: #C0C0C0;
+	}
+	.table-item{
+		flex: 1;
+		text-align: center;
+		font-size: 28rpx;
+	}
+	.section-style{
+		padding: 10rpx 10rpx 10rpx 10rpx;
+		border-left: 10rpx solid;
+		border-color: #51D3C7;
+		font-weight: 550;
+	}
+	.list-view{
+		margin: 20rpx 0;
+		padding: 20rpx 20rpx 20rpx 20rpx;
+		width: calc(100% - 40rpx);
+		border: 2rpx solid;
+		border-color: #51D3C7;
+		border-radius: 20rpx;
 	}
 	.one-btn::after{
 		border: none;
@@ -86,6 +132,9 @@
 		border-radius: 50rpx;
 		box-shadow: 1px 2px 5px rgba(28, 42, 134, 0.4);
 	}
+	.btn-margin{
+		margin-bottom: 20rpx;
+	}
 	.btn-area{
 		display: flex;
 		justify-content: center;
@@ -109,6 +158,13 @@
 	}
 	.disable-style{
 		background-color: #ebedef;
+	}
+	.bottom-select-view{
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 100rpx;
+		padding: 0 20rpx;
 	}
 	input{
 		height: 100%;

@@ -72,5 +72,15 @@
     },
     "uniStatistics" : {
         "enable" : false
+    },
+    "h5" : {
+        "router" : {
+            "mode" : "history"
+        },
+        "title" : "福鼎血透",
+        "devServer" : {
+            "https" : false,
+            "port" : ""
+        }
     }
 }

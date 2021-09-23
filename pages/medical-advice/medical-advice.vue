@@ -221,20 +221,7 @@
 
 <style>
 	@import url("../../static/css/style.css");
-	.section-style{
-		padding: 10rpx 10rpx 10rpx 10rpx;
-		border-left: 10rpx solid;
-		border-color: #51D3C7;
-		font-weight: 550;
-	}
-	.list-view{
-		margin: 20rpx 0;
-		padding: 20rpx 20rpx 20rpx 20rpx;
-		width: calc(100% - 40rpx);
-		border: 2rpx solid;
-		border-color: #51D3C7;
-		border-radius: 20rpx;
-	}
+
 	.list-item{
 		margin-bottom: 20rpx;
 		width: 100%;

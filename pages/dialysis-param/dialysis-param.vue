@@ -206,13 +206,6 @@
 	.table-btn{
 		width: 240rpx;
 	}
-	.bottom-select-view{
-		position: fixed;
-		left: 0;
-		right: 0;
-		bottom: 100rpx;
-		padding: 0 20rpx;
-	}
 	.one-btn{
 		margin-bottom: 20rpx;
 	}

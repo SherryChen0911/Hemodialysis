@@ -31,9 +31,11 @@
 					</picker>					
 				</view>
 			</view>
-			<view class="btn-area">
+			<!-- <view class="btn-area"> -->
 				<button class="one-btn paitent-select-btn" form-type="submit">查询患者</button>
-			</view> 
+				<button class="one-btn paitent-select-btn"  @click="toFallList">跌倒风险评估</button>
+				<button class="one-btn paitent-select-btn" @click="toMachineList">透析机运行记录</button>
+			<!-- </view> -->
 		</form>
 	</view>
 </template>
@@ -144,6 +146,7 @@
 				url:'/common/nurselist',
 				success: (res) => {
 					if(res.data.code == 200){
+						console.log("护士",res.data.data)
 						let nurseInfo = res.data.data;
 						Store.setStorageSync("nurseInfo",nurseInfo);
 					}
@@ -163,39 +166,32 @@
 				success: (res) => {
 					if(res.data.code == 200){
 						this.timeInfo = res.data.data;
-						console.log(this.timeInfo)
+						console.log("选择时段:",this.timeInfo)
 						for (let i = 0; i < this.timeInfo.length; i++) {
 							this.timeRange.push(this.timeInfo[i].item_name);
 						}
+						Store.setStorageSync("banciInfo",this.timeInfo);
+						Store.setStorageSync("banciRange",this.timeRange);
 						//获取时段默认值
 						let currTime = moment().format('YYYY-MM-DD HH:mm:ss');
 						let currDate = moment().format('YYYY-MM-DD');
-						console.log(currTime,currDate);
 						let time1 = currDate + ' 06:00:00';
 						let time2 = currDate + ' 12:00:00';
 						let time3 = currDate + ' 18:00:00';
 						let result1 = moment(time1).isBefore(currTime);
 						let result2 = moment(time2).isBefore(currTime);
 						let result3 = moment(time3).isBefore(currTime);
-						console.log(result1,result2,result3)
-						console.log('timeRange',this.timeRange)
 						if(result1 === true && result2 ===false){
-							console.log("上午")
 							this.patientSelectData.selectTime = "上午";
 							this.patientSelectData.timeOrder = this.timeRange.indexOf("上午");
-							console.log("序号",this.patientSelectData.timeOrder)
 						}
 						else if(result2 === true && result3 === false){
-							console.log("下午")
 							this.patientSelectData.selectTime = "下午";
 							this.patientSelectData.timeOrder = this.timeRange.indexOf("下午");
-							console.log("序号",this.patientSelectData.timeOrder)
 						}
 						else if(result3 === true || result1 === false){
-							console.log("晚班")
 							this.patientSelectData.selectTime = "晚班";
 							this.patientSelectData.timeOrder = this.timeRange.indexOf("晚班");
-							console.log("序号",this.patientSelectData.timeOrder)
 						}
 					}
 				},
@@ -207,10 +203,12 @@
 				success: (res) => {
 					if(res.data.code == 200){
 						this.roomInfo = res.data.data;
+						console.log("选择透析室:",this.roomInfo)
 						for (let i = 0; i < this.roomInfo.length; i++) {
 							this.roomRange.push(this.roomInfo[i].item_name);
 						}
-
+						Store.setStorageSync("roomInfo",this.roomInfo);
+						Store.setStorageSync("roomRange",this.roomRange);
 					}
 				},
 			});
@@ -222,6 +220,16 @@
 			return true;
 		},
 		methods: {
+			toMachineList(){
+				uni.navigateTo({
+					url: "../dialysis-machine-list/dialysis-machine-list"
+				});
+			},
+			toFallList(){
+				uni.navigateTo({
+					url: "../fall-list/fall-list"
+				});
+			},
 			//查询病患列表
 			formSubmit(e){
 				uni.showToast({
@@ -281,8 +289,6 @@
 		border-color: #51D3C7;
 	}
 	.paitent-select-btn{
-		margin: 50rpx auto;
-		height: 100rpx;
-		width: calc(100% - 40rpx);;
+		margin: 20rpx auto;
 	}
 </style>
