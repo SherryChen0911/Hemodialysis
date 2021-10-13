@@ -19,17 +19,17 @@
 				<view class="search-machine-item">
 					<text class="search-machine-title">病区/床位</text>
 					<picker class="search-machine-cnt" mode="selector" :range="roomRange"  @change="setSection">
-						<input type="text"  v-model="showSearchInfo.section" placeholder="请选择病区"/>
+						<input type="text" v-model="showSearchInfo.section" disabled="true" placeholder="请选择病区"/>
 					</picker>
 					<view style="width: 10rpx;"></view>
 					<picker class="search-machine-cnt" mode="selector" :range="bedRange"  @change="setBed">
-						<input type="text"  v-model="showSearchInfo.bed" placeholder="请选择床位"/>
+						<input type="text" v-model="showSearchInfo.bed" disabled="true" placeholder="请选择床位"/>
 					</picker>
 				</view>
 				<view class="search-machine-item">
 					<text class="search-machine-title">班次</text>
 					<picker class="search-machine-cnt" mode="selector" :range="banciRange"  @change="setShift">
-						<input type="text"  v-model="showSearchInfo.shift" placeholder="请选择班次"/>
+						<input type="text" v-model="showSearchInfo.shift" disabled="true" placeholder="请选择班次"/>
 					</picker>
 				</view>
 			</view>
@@ -172,21 +172,25 @@
 			},
 			//病区床位下拉框数据分类
 			classifyBedInfo(bedInfo){
-				for(let i = 0; i < this.roomRange.length; i++){
-					let quyuCollection = {
-						quyu:this.roomRange[i],
-						bedList:[],
-						bedRange:[],
-					};
-					for(let j = 0; j < bedInfo.length; j++){
-						if(bedInfo[j].quyu === this.roomRange[i]){
-							quyuCollection.bedList.push(bedInfo[j]);
-							quyuCollection.bedRange.push(bedInfo[j].bed_number);
+				if(Array.isArray(this.roomRange)){
+					for(let i = 0; i < this.roomRange.length; i++){
+						let quyuCollection = {
+							quyu:this.roomRange[i],
+							bedList:[],
+							bedRange:[],
+						};
+						if(Array.isArray(bedInfo)){
+							for(let j = 0; j < bedInfo.length; j++){
+								if(bedInfo[j].quyu === this.roomRange[i]){
+									quyuCollection.bedList.push(bedInfo[j]);
+									quyuCollection.bedRange.push(bedInfo[j].bed_number);
+								}
+							}
+							quyuCollection.bedRange.sort();
+							this.selectCondition.push(quyuCollection);
+							quyuCollection = [];
 						}
 					}
-					quyuCollection.bedRange.sort();
-					this.selectCondition.push(quyuCollection);
-					quyuCollection = [];
 				}
 				console.log("selectCondition",this.selectCondition)
 				Store.setStorageSync("selectCondition",this.selectCondition)
@@ -209,11 +213,13 @@
 			setSection(e){
 				this.showSearchInfo.bed = "";
 				let quyu = this.roomRange[e.detail.value];
-				for(let k = 0; k < this.selectCondition.length; k++){
-					if(this.selectCondition[k].quyu === quyu){
-						this.bedInfo = this.selectCondition[k].bedList;
-						this.bedRange = this.selectCondition[k].bedRange;
-						break;
+				if(Array.isArray(this.selectCondition)){
+					for(let k = 0; k < this.selectCondition.length; k++){
+						if(this.selectCondition[k].quyu === quyu){
+							this.bedInfo = this.selectCondition[k].bedList;
+							this.bedRange = this.selectCondition[k].bedRange;
+							break;
+						}
 					}
 				}
 				this.showSearchInfo.section = quyu;
@@ -230,21 +236,27 @@
 			query(){
 				console.log("enter query")
 				//病区id
-				for(let l = 0; l < this.roomInfo.length; l++){
-					if(this.roomInfo[l].item_name === this.showSearchInfo.section){
-						this.searchInfo.section = this.roomInfo[l].item_id;
+				if(Array.isArray(this.roomInfo)){
+					for(let l = 0; l < this.roomInfo.length; l++){
+						if(this.roomInfo[l].item_name === this.showSearchInfo.section){
+							this.searchInfo.section = this.roomInfo[l].item_id;
+						}
 					}
 				}
 				//床位id
-				for(let m = 0; m < this.bedInfo.length; m++){
-					if(this.bedInfo[m].bed_number === this.showSearchInfo.bed){
-						this.searchInfo.bed = this.bedInfo[m].bed_id;
+				if(Array.isArray(this.bedInfo)){
+					for(let m = 0; m < this.bedInfo.length; m++){
+						if(this.bedInfo[m].bed_number === this.showSearchInfo.bed){
+							this.searchInfo.bed = this.bedInfo[m].bed_id;
+						}
 					}
 				}
 				//班次value
-				for(let n = 0; n < this.banciInfo.length; n++){
-					if(this.banciInfo[n].item_name === this.showSearchInfo.shift){
-						this.searchInfo.shift = this.banciInfo[n].item_value;
+				if(Array.isArray(this.banciInfo)){
+					for(let n = 0; n < this.banciInfo.length; n++){
+						if(this.banciInfo[n].item_name === this.showSearchInfo.shift){
+							this.searchInfo.shift = this.banciInfo[n].item_value;
+						}
 					}
 				}
 				console.log("showSearchInfo",this.showSearchInfo)
@@ -326,6 +338,7 @@
 	}
 	.search-machine-title{
 		width: 160rpx;
+		font-size: 28rpx;
 	}
 	.search-machine-cnt{
 		flex: 1;

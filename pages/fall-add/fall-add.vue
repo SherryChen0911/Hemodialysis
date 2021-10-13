@@ -39,7 +39,7 @@
 					<text>年龄评分:</text>
 				</view>
 				<view class="form-mid-space">
-					<my-radio-box :radioList="ageList" @radioClick="setAge"></my-radio-box>
+					<my-radio-box-column :radioList="ageList" @radioClick="setAge"></my-radio-box-column>
 				</view>
 			</view>
 			<view class="form-item">
@@ -47,7 +47,7 @@
 					<text>跌倒史评分:</text>
 				</view>
 				<view class="form-mid-space">
-					<my-radio-box :radioList="fallList" @radioClick="setFall"></my-radio-box>
+					<my-radio-box-column :radioList="fallList" @radioClick="setFall"></my-radio-box-column>
 				</view>
 			</view>
 			<view class="form-item">
@@ -55,7 +55,7 @@
 					<text>意识状况评分:</text>
 				</view>
 				<view class="form-mid-space">
-					<my-radio-box :radioList="consciousList" @radioClick="setConcious"></my-radio-box>
+					<my-radio-box-column :radioList="consciousList" @radioClick="setConcious"></my-radio-box-column>
 				</view>
 			</view>
 			<view class="form-item">
@@ -63,7 +63,7 @@
 					<text>活动情况评分:</text>
 				</view>
 				<view class="form-mid-space">
-					<my-radio-box :radioList="moveList" @radioClick="setMove"></my-radio-box>
+					<my-radio-box-column :radioList="moveList" @radioClick="setMove"></my-radio-box-column>
 				</view>
 			</view>
 			<view class="form-item">
@@ -71,7 +71,7 @@
 					<text>视力评分:</text>
 				</view>
 				<view class="form-mid-space">
-					<my-radio-box :radioList="sightList" @radioClick="setSight"></my-radio-box>
+					<my-radio-box-column :radioList="sightList" @radioClick="setSight"></my-radio-box-column>
 				</view>
 			</view>
 			<view class="form-item">
@@ -79,7 +79,7 @@
 					<text>疾病因素评分:低血压(包括体位性低血压), 眩晕症, 帕金森综合征, 癫痫, 贫血, 短暂性脑缺血发作(TIA), 关节炎</text>
 				</view>
 				<view class="form-mid-space">
-					<my-radio-box :radioList="diseaseList" @radioClick="setDisease"></my-radio-box>
+					<my-radio-box-column :radioList="diseaseList" @radioClick="setDisease"></my-radio-box-column>
 				</view>
 			</view>
 			<view class="form-item">
@@ -87,7 +87,7 @@
 					<text>药物因素评分:麻醉药物, 抗组胺类, 利尿剂, 降压药, 降糖药, 抗惊厥药物, 抗抑郁药物, 镇静催眠药物</text>
 				</view>
 				<view class="form-mid-space">
-					<my-radio-box :radioList="drugList" @radioClick="setDrug"></my-radio-box>
+					<my-radio-box-column :radioList="drugList" @radioClick="setDrug"></my-radio-box-column>
 				</view>
 			</view>
 			<view class="rank-area">
@@ -104,7 +104,7 @@
 
 <script>
 	import Store from '../../common/store.js'
-	import MyRadioBox from '../../components/my-radios.vue'
+	import MyRadioBoxColumn from '../../components/my-radios-column.vue'
 	
 	export default {
 		data() {
@@ -174,7 +174,7 @@
 			}
 		},
 		components:{
-			MyRadioBox,
+			MyRadioBoxColumn,
 		},
 		onLoad() {
 			//获取user信息
@@ -211,8 +211,10 @@
 							this.patientListInfo = [];
 							this.patientListRange = [];
 							this.patientListInfo = res.data.data;
-							for (let i = 0; i < this.patientListInfo.length; i++) {
-								this.patientListRange.push(this.patientListInfo[i].name);
+							if(Array.isArray(this.patientListInfo)){
+								for (let i = 0; i < this.patientListInfo.length; i++) {
+									this.patientListRange.push(this.patientListInfo[i].name);
+								}
 							}
 							console.log("patientListRange:",this.patientListRange)
 							if(search !== ""){
@@ -269,6 +271,8 @@
 			},
 			//输入框进行缓则模糊搜索
 			inputChange(e){
+				this.data.patient_id = '';
+				this.data.patient_name = '';
 				console.log(e.detail.value)
 				this.searchPatient(e.detail.value);
 			},
@@ -277,21 +281,25 @@
 				this.data.patient_name = this.patientListRange[e.detail.value];
 				console.log(this.data.patient_name);
 				console.log(this.patientListInfo)
-				for (let submit1 = 0; submit1 < this.patientListInfo.length; submit1++) {
-					if(this.data.patient_name == this.patientListInfo[submit1].name){
-						this.data.patient_id = this.patientListInfo[submit1].patient_id;
-						this.data.hemodialysis_id =  this.patientListInfo[submit1].hemodialysis_id;
-						break;
+				if(Array.isArray(this.patientListInfo)){
+					for (let submit1 = 0; submit1 < this.patientListInfo.length; submit1++) {
+						if(this.data.patient_name == this.patientListInfo[submit1].name){
+							this.data.patient_id = this.patientListInfo[submit1].patient_id;
+							this.data.hemodialysis_id =  this.patientListInfo[submit1].hemodialysis_id;
+							break;
+						}
 					}
 				}
 			},
 			//选择变更：评估护士
 			setNurse(e){
 				this.data.assess_nurse_name = this.nurseRange[e.detail.value];
-				for (let submit2 = 0; submit2 < this.nurseInfo.length; submit2++) {
-					if(this.data.assess_nurse_name == this.nurseInfo[submit2].name){
-						this.data.assess_nurse_id = this.nurseInfo[submit2].emp_no;
-						break;
+				if(Array.isArray(this.nurseInfo)){
+					for (let submit2 = 0; submit2 < this.nurseInfo.length; submit2++) {
+						if(this.data.assess_nurse_name == this.nurseInfo[submit2].name){
+							this.data.assess_nurse_id = this.nurseInfo[submit2].emp_no;
+							break;
+						}
 					}
 				}
 			},
@@ -364,11 +372,6 @@
 		margin-left: 10rpx;
 		height: 60rpx;
 		border-color: #C0C0C0;
-	}
-	.my-radio-area{
-		flex-direction: column;
-		flex-wrap: nowrap;
-		align-items: flex-start;
 	}
 	.rank-area{
 		display: flex;

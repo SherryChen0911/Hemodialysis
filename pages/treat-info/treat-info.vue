@@ -9,7 +9,7 @@
 						<view class="form-prefix-space">
 							<text>上机前病情:</text>
 						</view>
-						<view class="form-cnt-noborder form-mid-space2" style="margin-left: 10rpx;">
+						<view class="form-cnt-noborder form-mid-space" style="margin-left: 10rpx;">
 							<view class="my-radio" v-show="status1 === true" @click="setStatus1">
 								<image src="../../static/radiopic.png" style="width: 30rpx; height: 30rpx;"></image>
 							</view>
@@ -353,6 +353,44 @@
 					</view>
 					<view class="form-item">
 						<view class="form-prefix-space">
+							<text>宣教指导:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<view class="my-radio" v-show="guide1 === true" @click="setGuide1">
+								<image src="../../static/radiopic.png" style="width: 30rpx; height: 30rpx;"></image>
+							</view>
+							<view class="my-radio" v-show="guide1 === false" @click="setGuide1"></view>
+							<text class="my-radio-cnt">有</text>
+							
+							<view class="my-radio" v-show="guide2 === true" @click="setGuide2">
+								<image src="../../static/radiopic.png" style="width: 30rpx; height: 30rpx;"></image>
+							</view>
+							<view class="my-radio" v-show="guide2 === false" @click="setGuide2"></view>
+							<text class="my-radio-cnt">无</text>
+						</view>
+						<button class="detail-btn" @click="toGuide">宣 教 信 息</button>
+					</view>
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>并发症:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<view class="my-radio" v-show="complication1 === true" @click="setComplication1">
+								<image src="../../static/radiopic.png" style="width: 30rpx; height: 30rpx;"></image>
+							</view>
+							<view class="my-radio" v-show="complication1 === false" @click="setComplication1"></view>
+							<text class="my-radio-cnt">有</text>
+							
+							<view class="my-radio" v-show="complication2 === true" @click="setComplication2">
+								<image src="../../static/radiopic.png" style="width: 30rpx; height: 30rpx;"></image>
+							</view>
+							<view class="my-radio" v-show="complication2 === false" @click="setComplication2"></view>
+							<text class="my-radio-cnt">无</text>
+						</view>
+						<button class="detail-btn" @click="toComplication">并发症信息</button>
+					</view>
+					<view class="form-item">
+						<view class="form-prefix-space">
 							<text>实际治疗时间:</text>
 						</view>
 						<view class="form-cnt form-mid-space">
@@ -619,7 +657,7 @@
 						<view class="form-prefix-space">
 							<text>上机前病情:</text>
 						</view>
-						<view class="form-cnt-noborder form-mid-space2" style="margin-left: 10rpx;">
+						<view class="form-cnt-noborder form-mid-space" style="margin-left: 10rpx;">
 							<view class="my-radio" v-show="status1 === true" @click="setStatus1">
 								<image src="../../static/radiopic.png" style="width: 30rpx; height: 30rpx;"></image>
 							</view>
@@ -991,13 +1029,13 @@
 								<image src="../../static/radiopic.png" style="width: 30rpx; height: 30rpx;"></image>
 							</view>
 							<view class="my-radio" v-show="joinWay1 === false" @click="setJoinWay1"></view>
-							<text class="my-radio-cnt">有</text>
+							<text class="my-radio-cnt">正接</text>
 							
 							<view class="my-radio" v-show="joinWay2 === true" @click="setJoinWay2">
 								<image src="../../static/radiopic.png" style="width: 30rpx; height: 30rpx;"></image>
 							</view>
 							<view class="my-radio" v-show="joinWay2 === false" @click="setJoinWay2"></view>
-							<text class="my-radio-cnt">无</text>
+							<text class="my-radio-cnt">反接</text>
 						</view>
 					</view>	
 					<view class="form-item">
@@ -1053,6 +1091,26 @@
 							<view class="my-radio" v-show="guide2 === false" @click="setGuide2"></view>
 							<text class="my-radio-cnt">无</text>
 						</view>
+						<button class="detail-btn" @click="toGuide">宣 教 信 息</button>
+					</view>
+					<view class="form-item">
+						<view class="form-prefix-space">
+							<text>并发症:</text>
+						</view>
+						<view class="form-cnt-noborder form-mid-space">
+							<view class="my-radio" v-show="complication1 === true" @click="setComplication1">
+								<image src="../../static/radiopic.png" style="width: 30rpx; height: 30rpx;"></image>
+							</view>
+							<view class="my-radio" v-show="complication1 === false" @click="setComplication1"></view>
+							<text class="my-radio-cnt">有</text>
+							
+							<view class="my-radio" v-show="complication2 === true" @click="setComplication2">
+								<image src="../../static/radiopic.png" style="width: 30rpx; height: 30rpx;"></image>
+							</view>
+							<view class="my-radio" v-show="complication2 === false" @click="setComplication2"></view>
+							<text class="my-radio-cnt">无</text>
+						</view>
+						<button class="detail-btn" @click="toComplication">并发症信息</button>
 					</view>
 					<view class="form-item">
 						<view class="form-prefix-space">
@@ -1403,6 +1461,8 @@
 				antibiotic2: false,
 				guide1: false,
 				guide2: false,
+				complication1: false,
+				complication2: false,
 				dressing1: false,
 				dressing2: false,
 				dressing3: false,
@@ -1515,6 +1575,7 @@
 				this.date = searchInfo.date;
 				//判断病人的类型：置管or内瘘
 				this.patient = Store.getStorageSync("patient");
+				console.log("patient",this.patient)
 				let tempType = this.patient.vascularaccess.indexOf("内瘘");
 				//控制置管tab页
 				if(tempType == -1){
@@ -2051,6 +2112,19 @@
 					this.guide1 = false;
 				}	
 			},
+			//选择变更：并发症
+			setComplication1(){
+				this.complication1 = !this.complication1
+				if(this.complication1 == true){
+					this.complication2 = false;
+				}
+			},
+			setComplication2(){
+				this.complication2 = !this.complication2
+				if(this.complication2 == true){
+					this.complication1 = false;
+				}	
+			},
 			//选择变更：敷料
 			setDressing1(){
 				this.dressing1 = !this.dressing1;
@@ -2160,6 +2234,18 @@
 					this.radio1 = false;
 				}
 			},
+			//并发症信息
+			toComplication(){
+				uni.navigateTo({
+					url:"../complication-list/complication-list",
+				});
+			},
+			//宣教信息
+			toGuide(){
+				uni.navigateTo({
+					url:"../guide-add/guide-add",
+				});
+			},
 			//下拉框选择医生
 			setDoctor(e) {
 				this.treatStateInfo.primary_doctor = this.doctorRange[e.detail.value];
@@ -2228,6 +2314,9 @@
 				else if(this.status2 == true){
 					this.dialysisInfo.has_special_state = "0";
 				}
+				else{
+					this.dialysisInfo.has_special_state = "";
+				}
 				//获取穿刺状态值
 				if(this.puncture1 == true){
 					this.dialysisInfo.chuanci_dunzhen = "0";
@@ -2235,12 +2324,18 @@
 				else if(this.puncture2 == true){
 					this.dialysisInfo.chuanci_dunzhen = "1";
 				}
+				else{
+					this.dialysisInfo.chuanci_dunzhen = "";
+				}
 				//获取方向状态值
 				if(this.direction1 == true){
 					this.dialysisInfo.chuanci_fangxiang = "0";
 				}
 				else if(this.direction2 == true){
 					this.dialysisInfo.chuanci_fangxiang = "1";
+				}
+				else{
+					this.dialysisInfo.chuanci_fangxiang = "";
 				}
 				//获取内瘘震颤状态值
 				if(this.tremor1 == true){
@@ -2255,6 +2350,9 @@
 				else if(this.tremor4 == true){
 					this.treatStateInfo.in_basket_wound_allergy = "3";
 				}
+				else{
+					this.treatStateInfo.in_basket_wound_allergy = "";
+				}
 				//获取杂音状态值
 				if(this.noise1 == true){
 					this.treatStateInfo.in_basket_plaster_allergy = "0";
@@ -2268,12 +2366,18 @@
 				else if(this.noise4 == true){
 					this.treatStateInfo.in_basket_plaster_allergy = "3";
 				}
+				else{
+					this.treatStateInfo.in_basket_plaster_allergy = "";
+				}
 				//获取红肿状态值
 				if(this.swell1 == true){
 					this.treatStateInfo.in_basket_hongzhong = "1";
 				}
 				else if(this.swell2 == true){
 					this.treatStateInfo.in_basket_hongzhong = "0";
+				}
+				else{
+					this.treatStateInfo.in_basket_hongzhong = "";
 				}
 				//获取狭窄状态值
 				if(this.narrow1 == true){
@@ -2282,12 +2386,18 @@
 				else if(this.narrow2 == true){
 					this.treatStateInfo.in_basket_xiazhai = "0";
 				}
+				else{
+					this.treatStateInfo.in_basket_xiazhai = "";
+				}
 				//获取瘤样扩张状态值
 				if(this.expand1 == true){
 					this.treatStateInfo.in_basket_liuyangkuozhang = "1";
 				}
 				else if(this.expand2 == true){
 					this.treatStateInfo.in_basket_liuyangkuozhang = "0";
+				}
+				else{
+					this.treatStateInfo.in_basket_liuyangkuozhang = "";
 				}
 				//获取透析器凝血状态值
 				if(this.cruor1 == true){
@@ -2301,6 +2411,9 @@
 				}
 				else if(this.cruor4 == true){
 					this.treatStateInfo.coagulation_in_dialyser = "3";
+				}
+				else{
+					this.treatStateInfo.coagulation_in_dialyser = "";
 				}
 				//获取护理措施状态值
 				if(this.check2 == true){
@@ -2333,6 +2446,327 @@
 				}
 				else {
 					this.treatStateInfo.before_dry_weightly = "";
+				}
+				//表单必填校验
+				if(this.dialysisInfo.has_special_state == ""){
+					uni.showToast({
+						title: '表单信息不完整！上机前病情未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if((this.dialysisInfo.frequency_hours == "") || (this.dialysisInfo.frequency_minute == "")){
+					uni.showToast({
+						title: '表单信息不完整！治疗时间未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.clean_up_times == ""){
+					uni.showToast({
+						title: '表单信息不完整！净化次数未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.pickerInfo.treatmentitems == ""){
+					uni.showToast({
+						title: '表单信息不完整！治疗方式未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.pickerInfo.filter == ""){
+					uni.showToast({
+						title: '表单信息不完整！净化器类型未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.chuanci_dunzhen == ""){
+					uni.showToast({
+						title: '表单信息不完整！穿刺未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.chuanci_fangxiang == ""){
+					uni.showToast({
+						title: '表单信息不完整！方向未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.before_temperature == ""){
+					uni.showToast({
+						title: '表单信息不完整！体温未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.before_bp == ""){
+					uni.showToast({
+						title: '表单信息不完整！脉搏未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.br == ""){
+					uni.showToast({
+						title: '表单信息不完整！呼吸未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.calcium_ion == ""){
+					uni.showToast({
+						title: '表单信息不完整！钙未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.bloow_flow == ""){
+					uni.showToast({
+						title: '表单信息不完整！血流量未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if((this.dialysisInfo.treatmentitems != 'HDF') && (this.dialysisInfo.dialysate_flow == "")){
+					uni.showToast({
+						title: '表单信息不完整！透析液流量未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.in_basket_wound_allergy == ""){
+					uni.showToast({
+						title: '表单信息不完整！内瘘震颤未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.in_basket_plaster_allergy == ""){
+					uni.showToast({
+						title: '表单信息不完整！杂音未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.in_basket_hongzhong == ""){
+					uni.showToast({
+						title: '表单信息不完整！红肿未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.in_basket_xiazhai == ""){
+					uni.showToast({
+						title: '表单信息不完整！狭窄未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.in_basket_liuyangkuozhang == ""){
+					uni.showToast({
+						title: '表单信息不完整！瘤样扩张未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if((this.treatStateInfo.actual_cleanup_hour == "") ||( this.treatStateInfo.actual_cleanup_minute == "")){
+					uni.showToast({
+						title: '表单信息不完整！实际治疗时间未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.dry_weight == ""){
+					uni.showToast({
+						title: '表单信息不完整！干体重未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.last_time_dry_weight == ""){
+					uni.showToast({
+						title: '表单信息不完整！上次透后体重未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.before_dry_weight == ""){
+					uni.showToast({
+						title: '表单信息不完整！透前体重未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if((this.treatStateInfo.before_dry_weightpc == "") && (this.treatStateInfo.before_dry_weightly == "")){
+					uni.showToast({
+						title: '表单信息不完整！平车或轮椅未勾选！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.dry_weight_tag == ""){
+					uni.showToast({
+						title: '表单信息不完整！体重增加未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.dry_weight_add == ""){
+					uni.showToast({
+						title: '表单信息不完整！较干体重增加未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.ufr == ""){
+					uni.showToast({
+						title: '表单信息不完整！预计脱水未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.after_dry_weight == ""){
+					uni.showToast({
+						title: '表单信息不完整！透后体重未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.dry_water_value == ""){
+					uni.showToast({
+						title: '表单信息不完整！实际脱水未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.hope_weight_lose == ""){
+					uni.showToast({
+						title: '表单信息不完整！期望体重下降量未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if((this.treatStateInfo.before_systolic_pressure == "") || (this.treatStateInfo.before_diastolic_pressure == "")){
+					uni.showToast({
+						title: '表单信息不完整！透前血压未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if((this.treatStateInfo.after_systolic_pressure == "") || (this.treatStateInfo.after_diastolic_pressure == "")){
+					uni.showToast({
+						title: '表单信息不完整！透后血压未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.after_temperature == ""){
+					uni.showToast({
+						title: '表单信息不完整！透后体温未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.after_bp == ""){
+					uni.showToast({
+						title: '表单信息不完整！透后脉搏未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.afterbr == ""){
+					uni.showToast({
+						title: '表单信息不完整！透后呼吸未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.actualdisplacement_liquid == ""){
+					uni.showToast({
+						title: '表单信息不完整！置换液总量未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.coagulation_in_dialyser == ""){
+					uni.showToast({
+						title: '表单信息不完整！透析器凝血未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.pickerInfo.primary_doctor == ""){
+					uni.showToast({
+						title: '表单信息不完整！责任医生未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.pickerInfo.primary_nurse == ""){
+					uni.showToast({
+						title: '表单信息不完整！责任护士未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.pickerInfo.check_nurse == ""){
+					uni.showToast({
+						title: '表单信息不完整！核对护士未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.pickerInfo.puncture_nurse == ""){
+					uni.showToast({
+						title: '表单信息不完整！穿刺护士未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
 				}
 				//治疗信息修改提交
 				this.$myRequest({
@@ -2437,12 +2871,18 @@
 				else if(this.status2 == true){
 					this.dialysisInfo.has_special_state = "0";
 				}
+				else {
+					this.dialysisInfo.has_special_state = "";
+				}
 				//获取固定牢固状态值
 				if(this.fixed1 == true){
 					this.treatStateInfo.ovascular_access_firm = "1";
 				}
 				else if(this.fixed2 == true){
 					this.treatStateInfo.ovascular_access_firm = "0";
+				}
+				else{
+					this.treatStateInfo.ovascular_access_firm = "";
 				}
 				//获取滑脱状态值
 				if(this.slide1 == true){
@@ -2451,12 +2891,18 @@
 				else if(this.slide2 == true){
 					this.treatStateInfo.vascular_access_shed = "0";
 				}
+				else{
+					this.treatStateInfo.vascular_access_shed = "";
+				}
 				//获取置管红肿状态值
 				if(this.pipeSwell1 == true){
 					this.treatStateInfo.vascular_access_swelling = "1";
 				}
 				else if(this.pipeSwell2 == true){
 					this.treatStateInfo.vascular_access_swelling = "0";
+				}
+				else{
+					this.treatStateInfo.vascular_access_swelling = "";
 				}
 				//获取渗血状态值
 				if(this.bleedBlood1 == true){
@@ -2465,12 +2911,18 @@
 				else if(this.bleedBlood2 == true){
 					this.treatStateInfo.vascular_access_errhyisis = "0";
 				}
+				else{
+					this.treatStateInfo.vascular_access_errhyisis = "";
+				}
 				//获取渗液状态值
 				if(this.bleedLiquid1 == true){
 					this.treatStateInfo.vascular_access_shenye = "1";
 				}
 				else if(this.bleedLiquid2 == true){
 					this.treatStateInfo.vascular_access_shenye = "0";
+				}
+				else{
+					this.treatStateInfo.vascular_access_shenye = "";
 				}
 				//获取血栓状态值
 				if(this.thrombus1 == true){
@@ -2479,12 +2931,18 @@
 				else if(this.thrombus2 == true){
 					this.treatStateInfo.vascular_access_thrombus = "0";
 				}
+				else{
+					this.treatStateInfo.vascular_access_thrombus = "";
+				}
 				//获取溶栓状态值
 				if(this.thrombolysis1 == true){
 					this.treatStateInfo.vascular_rongshuan = "1";
 				}
 				else if(this.thrombolysis2 == true){
 					this.treatStateInfo.vascular_rongshuan = "0";
+				}
+				else{
+					this.treatStateInfo.vascular_rongshuan = "";
 				}
 				//获取对接方式状态值
 				if(this.joinWay1 == true){
@@ -2493,12 +2951,18 @@
 				else if(this.joinWay2 == true){
 					this.treatStateInfo.vascular_duijiefangshi = "0";
 				}
+				else{
+					this.treatStateInfo.vascular_duijiefangshi = "";
+				}
 				//获取血流感染状态值
 				if(this.bleedInfection1 == true){
 					this.treatStateInfo.vascular_xueliuganran = "1";
 				}
 				else if(this.bleedInfection2 == true){
 					this.treatStateInfo.vascular_xueliuganran = "0";
+				}
+				else{
+					this.treatStateInfo.vascular_xueliuganran = "";
 				}
 				//获取使用抗生素状态值
 				if(this.antibiotic1 == true){
@@ -2507,12 +2971,18 @@
 				else if(this.antibiotic2 == true){
 					this.treatStateInfo.vascular_kangshengsu = "0";
 				}
+				else{
+					this.treatStateInfo.vascular_kangshengsu = "";
+				}
 				//获取宣教指导状态值
 				if(this.guide1 == true){
 					this.treatStateInfo.vascular_xuanjiao = "1";
 				}
 				else if(this.guide2 == true){
 					this.treatStateInfo.vascular_xuanjiao = "0";
+				}
+				else{
+					this.treatStateInfo.vascular_xuanjiao = "";
 				}
 				//获取敷料状态值
 				if(this.dressing1 == true){
@@ -2565,6 +3035,9 @@
 				else if(this.cruor4 == true){
 					this.treatStateInfo.coagulation_in_dialyser = "3";
 				}
+				else{
+					this.treatStateInfo.coagulation_in_dialyser = "";
+				}
 				//获取平车轮椅状态值
 				if (this.radio1 == true) {
 					this.treatStateInfo.before_dry_weightpc = "1";
@@ -2578,6 +3051,376 @@
 				else {
 					this.treatStateInfo.before_dry_weightly = "";
 				}
+				//表单必填校验
+				if(this.dialysisInfo.has_special_state == ""){
+					uni.showToast({
+						title: '表单信息不完整！上机前病情未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.frequency_hours == "" || this.dialysisInfo.frequency_minute == ""){
+					uni.showToast({
+						title: '表单信息不完整！治疗时间未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.clean_up_times == ""){
+					uni.showToast({
+						title: '表单信息不完整！净化次数未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.pickerInfo.treatmentitems == ""){
+					uni.showToast({
+						title: '表单信息不完整！治疗方式未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.pickerInfo.filter == ""){
+					uni.showToast({
+						title: '表单信息不完整！净化器类型未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.before_temperature == ""){
+					uni.showToast({
+						title: '表单信息不完整！体温未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.before_bp == ""){
+					uni.showToast({
+						title: '表单信息不完整！脉搏未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.br == ""){
+					uni.showToast({
+						title: '表单信息不完整！呼吸未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.calcium_ion == ""){
+					uni.showToast({
+						title: '表单信息不完整！钙未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.dialysisInfo.bloow_flow == ""){
+					uni.showToast({
+						title: '表单信息不完整！血流量未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if((this.dialysisInfo.treatmentitems != 'HDF') && (this.dialysisInfo.dialysate_flow == "")){
+					uni.showToast({
+						title: '表单信息不完整！透析液流量未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.in_basket_vascular_other == ""){
+					uni.showToast({
+						title: '表单信息不完整！外露未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.daoguan_waiyi == ""){
+					uni.showToast({
+						title: '表单信息不完整！外移未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.ovascular_access_firm == ""){
+					uni.showToast({
+						title: '表单信息不完整！固定牢固未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.vascular_access_shed == ""){
+					uni.showToast({
+						title: '表单信息不完整！滑脱未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.vascular_access_swelling == ""){
+					uni.showToast({
+						title: '表单信息不完整！置管口红肿未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.vascular_access_errhyisis == ""){
+					uni.showToast({
+						title: '表单信息不完整！渗血未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.vascular_access_shenye == ""){
+					uni.showToast({
+						title: '表单信息不完整！渗液未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.vascular_access_thrombus == ""){
+					uni.showToast({
+						title: '表单信息不完整！血栓未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.vascular_rongshuan == ""){
+					uni.showToast({
+						title: '表单信息不完整！溶栓未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.vascular_duijiefangshi == ""){
+					uni.showToast({
+						title: '表单信息不完整！对接方式未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.vascular_xueliuganran == ""){
+					uni.showToast({
+						title: '表单信息不完整！血流感染未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.vascular_kangshengsu == ""){
+					uni.showToast({
+						title: '表单信息不完整！使用抗生素未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.vascular_xuanjiao == ""){
+					uni.showToast({
+						title: '表单信息不完整！宣教指导未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if((this.treatStateInfo.actual_cleanup_hour == "") ||( this.treatStateInfo.actual_cleanup_minute == "")){
+					uni.showToast({
+						title: '表单信息不完整！实际治疗时间未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.dry_weight == ""){
+					uni.showToast({
+						title: '表单信息不完整！干体重未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.last_time_dry_weight == ""){
+					uni.showToast({
+						title: '表单信息不完整！上次透后体重未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.before_dry_weight == ""){
+					uni.showToast({
+						title: '表单信息不完整！透前体重未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if((this.treatStateInfo.before_dry_weightpc == "") && (this.treatStateInfo.before_dry_weightly == "")){
+					uni.showToast({
+						title: '表单信息不完整！平车或轮椅未勾选！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.dry_weight_tag == ""){
+					uni.showToast({
+						title: '表单信息不完整！体重增加未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.dry_weight_add == ""){
+					uni.showToast({
+						title: '表单信息不完整！较干体重增加未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.ufr == ""){
+					uni.showToast({
+						title: '表单信息不完整！预计脱水未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.after_dry_weight == ""){
+					uni.showToast({
+						title: '表单信息不完整！透后体重未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.dry_water_value == ""){
+					uni.showToast({
+						title: '表单信息不完整！实际脱水未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.hope_weight_lose == ""){
+					uni.showToast({
+						title: '表单信息不完整！期望体重下降量未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if((this.treatStateInfo.before_systolic_pressure == "") || (this.treatStateInfo.before_diastolic_pressure == "")){
+					uni.showToast({
+						title: '表单信息不完整！透前血压未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if((this.treatStateInfo.after_systolic_pressure == "") || (this.treatStateInfo.after_diastolic_pressure == "")){
+					uni.showToast({
+						title: '表单信息不完整！透后血压未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.after_temperature == ""){
+					uni.showToast({
+						title: '表单信息不完整！透后体温未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.after_bp == ""){
+					uni.showToast({
+						title: '表单信息不完整！透后脉搏未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.afterbr == ""){
+					uni.showToast({
+						title: '表单信息不完整！透后呼吸未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.actualdisplacement_liquid == ""){
+					uni.showToast({
+						title: '表单信息不完整！置换液总量未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.treatStateInfo.coagulation_in_dialyser == ""){
+					uni.showToast({
+						title: '表单信息不完整！透析器凝血未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.pickerInfo.primary_doctor == ""){
+					uni.showToast({
+						title: '表单信息不完整！责任医生未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.pickerInfo.primary_nurse == ""){
+					uni.showToast({
+						title: '表单信息不完整！责任护士未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.pickerInfo.check_nurse == ""){
+					uni.showToast({
+						title: '表单信息不完整！核对护士未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				else if(this.pickerInfo.puncture_nurse == ""){
+					uni.showToast({
+						title: '表单信息不完整！穿刺护士未填写！',
+						icon: 'none',
+						mask: true
+					});
+					return;
+				}
+				//请求接口
 				this.$myRequest({
 					url: '/patient/update/zhiguantreat',
 					method: 'POST',
@@ -3159,18 +4002,21 @@
 
 	.segment {
 		width: calc(100% - 40rpx);
+		
 	}
-
+	>>> .segmented-control__text{
+		font-size: 32rpx;
+	}
 	.form-item {
 		align-items: center;
-		font-size: 28rpx;
+		font-size: 24rpx;
 	}
 
 	.form-prefix-space {
 		justify-content: flex-start;
 		padding-left: 0;
 		width: 150rpx;
-		height: 80rpx;
+		height: 60rpx;
 	}
 
 	.form-mid-space2 {
@@ -3179,7 +4025,7 @@
 
 	.form-cnt {
 		margin-left: 10rpx;
-		height: 80rpx;
+		height: 60rpx;
 		border-color: #C0C0C0;
 	}
 	.my-checkbox{
@@ -3214,5 +4060,19 @@
 		border-radius: 20rpx;
 		height: 60rpx;
 		font-size: 28rpx;
+	}
+	.detail-btn::after{
+		border: none;
+	}
+	.detail-btn {
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
+		background-color: #FFFFFF;
+		color: #51D3C7;
+		font-size: 28upx;
+		border: 2rpx solid #51D3C7;
+	    border-radius: 10rpx;
+		height: 50rpx;
 	}
 </style>

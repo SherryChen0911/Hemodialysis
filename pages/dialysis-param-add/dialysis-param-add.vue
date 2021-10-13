@@ -220,8 +220,10 @@
 				this.defaultInfo.diastolic_pressure = bpData.before_diastolic_pressure;
 			}
 			this.nurseRange = [];
-			for (let i = 0; i < this.nurseInfo.length; i++) {
-				this.nurseRange.push(this.nurseInfo[i].name);
+			if(Array.isArray( this.nurseInfo)){
+				for (let i = 0; i < this.nurseInfo.length; i++) {
+					this.nurseRange.push(this.nurseInfo[i].name);
+				}
 			}
 			if(this.nurseInfo == "error"){
 				uni.showToast({

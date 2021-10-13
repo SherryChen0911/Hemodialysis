@@ -230,9 +230,6 @@
 			this.nurseInfo = [];
 			this.nurseInfo = Store.getStorageSync("nurseInfo");
 			console.log("nurseInfo",this.nurseInfo)
-			for (let i = 0; i < this.nurseInfo.length; i++) {
-				this.nurseRange.push(this.nurseInfo[i].name);
-			}
 			if(this.nurseInfo == "error"){
 				uni.showToast({
 					title: '护士列表请求失败',
@@ -242,6 +239,9 @@
 			}
 			//在获取nurse名字以后循环获取nurseid
 			else{
+				for (let i = 0; i < this.nurseInfo.length; i++) {
+					this.nurseRange.push(this.nurseInfo[i].name);
+				}
 				for(let i = 0; i < this.nurseInfo.length; i++){
 					if(this.nurseInfo[i].name == this.info.nurse)
 					{

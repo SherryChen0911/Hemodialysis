@@ -133,6 +133,7 @@
 	.vascular-item-title{
 		width: 100%;
 		padding-bottom: 20rpx;
+		font-size: 28rpx;
 		text-align: center;
 	}
 	.vascular-item-cnt{
@@ -156,7 +157,7 @@
 	    justify-content: center;
 		background-color: #51D3C7;
 		color: #FFFFFF;
-		font-size: 28upx;
+		font-size: 28rpx;
 	    border-radius: 20rpx;
 	    box-shadow: 1px 2px 5px rgba(28, 42, 134, 0.4);
 	}

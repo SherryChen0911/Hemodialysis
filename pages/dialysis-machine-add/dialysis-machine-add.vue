@@ -266,22 +266,27 @@
 				this.data.machine_name = "";
 				this.data.machine_model = "";
 				//获取床位下拉菜单数据
-				for (let k = 0; k < this.selectCondition.length; k++) {
-					if(this.data.dialysis_room_id === this.selectCondition[k].quyu){
-						this.bedInfo = this.selectCondition[k].bedList;
-						this.bedRange = this.selectCondition[k].bedRange;
+				if(Array.isArray(this.selectCondition)){
+					for (let k = 0; k < this.selectCondition.length; k++) {
+						if(this.data.dialysis_room_id === this.selectCondition[k].quyu){
+							this.bedInfo = this.selectCondition[k].bedList;
+							this.bedRange = this.selectCondition[k].bedRange;
+						}
 					}
 				}
+
 			},
 			setBed(e){
 				this.data.bed_number = this.bedRange[e.detail.value];
 				this.setMachine();
 			},
 			setMachine(){
-				for (let a = 0; a < this.bedInfo.length; a++) {
-					if(this.data.bed_number === this.bedInfo[a].bed_number){
-						this.data.machine_name = this.bedInfo[a].machine_name;
-						this.data.machine_model = this.bedInfo[a].machine_model;
+				if(Array.isArray(this.bedInfo)){
+					for (let a = 0; a < this.bedInfo.length; a++) {
+						if(this.data.bed_number === this.bedInfo[a].bed_number){
+							this.data.machine_name = this.bedInfo[a].machine_name;
+							this.data.machine_model = this.bedInfo[a].machine_model;
+						}
 					}
 				}
 			},
@@ -320,25 +325,31 @@
 				let submitData = {};
 				submitData.usedate = this.data.usedate;
 				//处理班次
-				for (let submit1 = 0; submit1 < this.banciInfo.length; submit1++ ) {
-					if(this.data.banci_id == this.banciInfo[submit1].item_name){
-						submitData.banci_id = this.banciInfo[submit1].item_value;
+				if(Array.isArray(this.banciInfo)){
+					for (let submit1 = 0; submit1 < this.banciInfo.length; submit1++ ) {
+						if(this.data.banci_id == this.banciInfo[submit1].item_name){
+							submitData.banci_id = this.banciInfo[submit1].item_value;
+						}
 					}
 				}
 				//处理区域
-				for (let submit2 = 0; submit2 < this.roomInfo.length; submit2++) {
-					if(this.data.dialysis_room_id === this.roomInfo[submit2].item_name){
-						submitData.dialysis_room_id = this.roomInfo[submit2].item_id;
+				if(Array.isArray(this.roomInfo)){
+					for (let submit2 = 0; submit2 < this.roomInfo.length; submit2++) {
+						if(this.data.dialysis_room_id === this.roomInfo[submit2].item_name){
+							submitData.dialysis_room_id = this.roomInfo[submit2].item_id;
+						}
 					}
 				}
 				//处理床位和机器信息
-				for (let submit3 = 0; submit3 < this.bedInfo.length; submit3++) {
-					if(this.data.bed_number === this.bedInfo[submit3].bed_number){
-						submitData.bed_number = this.bedInfo[submit3].bed_id;
-						submitData.machine_id = this.bedInfo[submit3].machine_id;
-						submitData.machine_name = this.bedInfo[submit3].machine_name;
-						submitData.machine_type = this.bedInfo[submit3].machine_type;
-						submitData.machine_model = this.bedInfo[submit3].machine_model;
+				if(Array.isArray(this.bedInfo)){
+					for (let submit3 = 0; submit3 < this.bedInfo.length; submit3++) {
+						if(this.data.bed_number === this.bedInfo[submit3].bed_number){
+							submitData.bed_number = this.bedInfo[submit3].bed_id;
+							submitData.machine_id = this.bedInfo[submit3].machine_id;
+							submitData.machine_name = this.bedInfo[submit3].machine_name;
+							submitData.machine_type = this.bedInfo[submit3].machine_type;
+							submitData.machine_model = this.bedInfo[submit3].machine_model;
+						}
 					}
 				}
 				submitData.machine_check = this.data.machine_check;
@@ -353,9 +364,11 @@
 				submitData.dealwith = this.data.dealwith;
 				//处理操作者
 				console.log("sign_name",this.data.sign_name)
-				for (let submit4 = 0; submit4 < this.nurseInfo.length; submit4++) {
-					if (this.data.sign_name === this.nurseInfo[submit4].name) {
-						submitData.sign_name = this.nurseInfo[submit4].emp_no;
+				if(Array.isArray(this.nurseInfo)){
+					for (let submit4 = 0; submit4 < this.nurseInfo.length; submit4++) {
+						if (this.data.sign_name === this.nurseInfo[submit4].name) {
+							submitData.sign_name = this.nurseInfo[submit4].emp_no;
+						}
 					}
 				}
 				console.log("submitData",submitData)

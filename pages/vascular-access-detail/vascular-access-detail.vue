@@ -4,35 +4,13 @@
 		<view class="vascular-view">
 			<view class="vascular-item" v-for="(item, index) in list">
 				<view class="pic-view">
-					<image class="vascular-pic" :src="item.url" mode="aspectFill" @click="bigPic(item)"/>
-					<!-- <image class="vascular-pic" :src="item.url" mode="widthFix" @click="bigPic(item)"/> -->
+					<image class="vascular-pic" :src="item.url" mode="aspectFill" @click="toRecord(item)"/>
 				</view>
 				<view class="vascular-del-btn">
 					<uni-icons type="trash-filled" color="#c0c0c0" size="20" @click="delPic(item)"></uni-icons>
 				</view>
 			</view>
 		</view>
-
-		<!-- 弹出框 -->
-		<uni-popup ref="bigPic" type="dialog">
-			<view class="big-pic-area" slot="default" >
-				<image class="big-pic" :src="currItem.url" mode="aspectFit"/>
-				<view class="vascular-btn-area">
-					<button class="btn" @click="delPic(currItem)">删除</button>
-					<button class="btn" @click="clocePopup">返回</button>
-				</view>
-			</view>
-		</uni-popup>
-
-		<!-- <uni-popup ref="bigPic" type="dialog" background-color="red">
-			<view class="big-pic-area" slot="default" >
-				<image class="big-pic" :src="currItem.url" mode="widthFix"/>
-				<view class="vascular-btn-area">
-					<button class="btn" @click="delPic">删除</button>
-					<button class="btn" @click="clocePopup">返回</button>
-				</view>
-			</view>
-		</uni-popup> -->
 	</view>
 </template>
 
@@ -104,13 +82,13 @@
 					},
 				});
 			},
-			bigPic(item){
+			toRecord(item){
 				this.currItem = item;
 				console.log("currItem",this.currItem)
-				this.$refs.bigPic.open();
-			},
-			clocePopup(){
-				this.$refs.bigPic.close();
+				Store.setStorageSync("vasuclarItem",this.currItem);
+				uni.navigateTo({
+					url:"../vascular-access-record/vascular-access-record"
+				});
 			},
 			delPic(item){
 				this.$myRequest({

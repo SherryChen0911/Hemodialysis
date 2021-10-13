@@ -167,8 +167,10 @@
 					if(res.data.code == 200){
 						this.timeInfo = res.data.data;
 						console.log("选择时段:",this.timeInfo)
-						for (let i = 0; i < this.timeInfo.length; i++) {
-							this.timeRange.push(this.timeInfo[i].item_name);
+						if(Array.isArray(this.timeInfo)){
+							for (let i = 0; i < this.timeInfo.length; i++) {
+								this.timeRange.push(this.timeInfo[i].item_name);
+							}
 						}
 						Store.setStorageSync("banciInfo",this.timeInfo);
 						Store.setStorageSync("banciRange",this.timeRange);
@@ -204,8 +206,10 @@
 					if(res.data.code == 200){
 						this.roomInfo = res.data.data;
 						console.log("选择透析室:",this.roomInfo)
-						for (let i = 0; i < this.roomInfo.length; i++) {
-							this.roomRange.push(this.roomInfo[i].item_name);
+						if(Array.isArray(this.roomInfo)){
+							for (let i = 0; i < this.roomInfo.length; i++) {
+								this.roomRange.push(this.roomInfo[i].item_name);
+							}
 						}
 						Store.setStorageSync("roomInfo",this.roomInfo);
 						Store.setStorageSync("roomRange",this.roomRange);

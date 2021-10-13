@@ -5,7 +5,7 @@
 				<view class="header">
 					<view class="list-head-left">
 						<image class="patient-pic" :src="item.pic" mode="aspectFill"></image>
-						<text>{{item.name}} {{item.sex}}</text>
+						<text style="font-size: 28rpx;">{{item.name}} {{item.sex}}</text>
 						<view class="patient-status">
 							<text v-show="item.isfinish">已完成</text>
 						</view>
@@ -21,8 +21,19 @@
 						<text>抗凝方式: {{item.anticoagulationmethod}}</text>
 						<text>首计: {{item.first}}</text>
 						<text>追加: {{item.second}}</text>
+						<view class="patient-label-area">
+							<text class="patient-label">并发症1</text>
+							<text class="patient-label">并发症2</text>
+							<text class="patient-label">并发症3</text>
+							<text class="patient-label">并发症4</text>
+							<text class="patient-label">并发症5</text>
+							<text class="patient-label">并发症6</text>
+							<text class="patient-label">并发症6</text>
+							<text class="patient-label">并发症6</text>
+						</view>
 					</view>
 				</view>
+
 				<view v-show="!item.isfinish" class="footer">
 					<button class="btn" @click="callPatient(item,key)">叫号</button>
 					<button class="btn" @click="takePic(item,key)">患者拍照</button>
@@ -330,6 +341,7 @@
 		flex-direction: column;
 		border-radius: 20rpx;
 		box-shadow: 1px 2px 5px rgba(28, 42, 134, 0.4);
+		font-size: 24rpx;
 	}
 	.header{
 		display: flex;
@@ -351,14 +363,28 @@
 		color: #FFFFFF;
 		background-color: #C0C0C0;
 		border-radius: 20rpx;
-		font-size: 28rpx;
+/* 		font-size: 28rpx; */
 	}
 	.list-head-right{
 		margin-left: 20rpx;
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		font-size: 28rpx;
+		/* font-size: 28rpx; */
+	}
+	.patient-label-area{
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		align-items: center;
+	}
+	.patient-label{
+		padding: 5rpx;
+		margin: 0 5rpx 5rpx 0;
+		border-radius: 5rpx;
+		background-color: #51D3C7;
+		font-size: 24rpx;
+		color: #FFFFFF;
 	}
 	.footer{
 		margin-top: 20rpx;

@@ -77,11 +77,13 @@
 								Store.setStorageSync("defaultBP",1);
 							}
 							//改记录时间的样式
-							for(let i = 0; i < res.data.data.length; i++){
-								if(res.data.data[i].create_date != ""){
-									let temp = res.data.data[i].create_date.split(" ");
-									let temp1 = temp[1].slice(0,5);
-									res.data.data[i].show_create_date = temp1;
+							if(Array.isArray(res.data.data)){
+								for(let i = 0; i < res.data.data.length; i++){
+									if(res.data.data[i].create_date != ""){
+										let temp = res.data.data[i].create_date.split(" ");
+										let temp1 = temp[1].slice(0,5);
+										res.data.data[i].show_create_date = temp1;
+									}
 								}
 							}
 							this.dialysisParamInfo = _.cloneDeep(res.data.data);

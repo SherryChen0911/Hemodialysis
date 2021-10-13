@@ -112,7 +112,7 @@
 			{
 				"app-plus":{
 					"softinputMode": "adjustResize",
-					"animationType": "none",
+					// "animationType": "none",
 					"titleNView":false
 				}
 			}
@@ -164,7 +164,7 @@
 				"onReachBottomDistance":100,
 				"app-plus":{
 					"softinputMode": "adjustResize",
-					"animationType": "none",
+					// "animationType": "none",
 					"titleNView":false
 				}
 			}
@@ -207,7 +207,7 @@
 			{
 				"app-plus":{
 					"softinputMode": "adjustResize",
-					"animationType": "none",
+					// "animationType": "none",
 					"titleNView":false
 				}
 			}
@@ -218,7 +218,7 @@
 			{
 				"app-plus":{
 					"softinputMode": "adjustResize",
-					"animationType": "none",
+					// "animationType": "none",
 					"titleNView":false
 				}
 			}
@@ -227,10 +227,6 @@
             "path" : "pages/dialysis-param-add/dialysis-param-add",
             "style" :                                                                                    
             {
-				"app-plus":{
-					"softinputMode": "adjustResize",
-					"animationType": "none"
-				},
 				"navigationBarTitleText": "添加透析参数",
 				"navigationBarTextStyle": "white",
 				"navigationBarBackgroundColor":"#51D3C7"
@@ -260,22 +256,19 @@
 			{
 				"app-plus":{
 					"softinputMode": "adjustResize",
-					"animationType": "none",
+					// "animationType": "none"
 					"titleNView":false
 				}
 			}
         }
     ],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8",
-		"fontSize": "14px"
+		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
 		"color": "#7A7E83",
-		"fontSize": "14px",
+		"fontSize": "18px",
 		"selectedColor": "#51D3C7",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",

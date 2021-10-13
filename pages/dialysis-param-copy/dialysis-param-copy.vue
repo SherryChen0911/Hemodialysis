@@ -214,19 +214,8 @@
 					}
 				}
 			}
-			else{
-				for(let i = 0; i < this.nurseInfo.length; i++){
-					if(this.nurseInfo[i].name = this.info.nurse)
-					{
-						this.info.nurseid = this.nurseInfo[i].emp_no;
-					}
-				}
-			}
 			this.patient = Store.getStorageSync("patient");
 			this.nurseInfo = Store.getStorageSync("nurseInfo");
-			for (let i = 0; i < this.nurseInfo.length; i++) {
-				this.nurseRange.push(this.nurseInfo[i].name);
-			}
 			if(this.nurseInfo == "error"){
 				uni.showToast({
 					title: '护士列表请求失败',
@@ -235,10 +224,13 @@
 				});
 			}
 			else{
-				for(let i = 0; i < this.nurseInfo.length; i++){
-					if(this.nurseInfo[i].name == this.info.nurse)
+				for (let j = 0; j < this.nurseInfo.length; j++) {
+					this.nurseRange.push(this.nurseInfo[j].name);
+				}
+				for(let k = 0; k < this.nurseInfo.length; k++){
+					if(this.nurseInfo[k].name == this.info.nurse)
 					{
-						this.info.nurseid = this.nurseInfo[i].emp_no;
+						this.info.nurseid = this.nurseInfo[k].emp_no;
 					}
 				}
 			}

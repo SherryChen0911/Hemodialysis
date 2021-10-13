@@ -29,11 +29,11 @@
 				<text class="scorll-table-item">患者姓名</text>
 				<text class="scorll-table-item">总评分</text>
 				<text class="scorll-table-item">年龄评分</text>
-				<text class="scorll-table-item">跌倒史 评分</text>
+				<text class="scorll-table-item">跌倒史评分</text>
 				<text class="scorll-table-item">活动能力评分</text>
 				<text class="scorll-table-item">意识评分</text>
 				<text class="scorll-table-item">视力评分</text>
-				<text class="scorll-table-item">疾病史 评分</text>
+				<text class="scorll-table-item">疾病史评分</text>
 				<text class="scorll-table-item">用药风险评分</text>
 			</view>
 			<view v-if="!hasFallData" class="table-line table-cnt">
@@ -85,6 +85,11 @@
 		methods: {
 			//获取列表数据
 			getFallList(){
+				uni.showToast({
+					title: 'loading',
+					icon: 'loading',
+					mask: true
+				});
 				this.$myRequest({
 					url:'/fallrisk/list',
 					method:'POST',
@@ -216,6 +221,7 @@
 	}
 	.search-machine-title{
 		width: 160rpx;
+		font-size: 28rpx;
 	}
 	.search-machine-cnt{
 		flex: 1;
