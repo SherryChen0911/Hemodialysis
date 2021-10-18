@@ -6,7 +6,7 @@
 					<text>透析机使用日期:</text>
 				</view>
 				<view class="form-cnt form-mid-space">
-					<picker mode="date" @change="setDate($event)">
+					<picker mode="date" fields="day" @change="setDate($event)">
 						<input class="form-mid-space" disabled="true" type="text" v-model="data.usedate" name="usedate"/>
 					</picker>
 				</view>

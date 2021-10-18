@@ -1,46 +1,49 @@
 <template>
 	<view style="width: 100%;">
 		<view class="vascular-record-border-bottom">
+
+			<view class="vascular-access-bodypart-area">
+				<text class="vascular-access-bodypart-title">部位:</text>
+				<input class="vascular-access-bodypart-input" type="text" v-model="vasuclarItem.location" placeholder="请填写血管通路照片部位" placeholder-style="font-size:28rpx;"/>
+				<button class="one-btn small-btn" @click="setLocation">保存部位</button>
+			</view>
+			<img id="target" style="width: 710rpx;" :src="vasuclarItem.url"  @click="addPoint"></img>
+			<!-- <image style="width: 750rpx;" :src="vasuclarItem.url" mode="aspectFit" @click="abc"></image> -->
 			<view class="point-btn-area">
 				<button v-if="!pointLabel" class="point-btn" @click="startLabel">标记</button>
 				<button v-if="pointLabel" class="point-btn" @click="stopLabel">结束标记</button>
-				<button class="point-btn" @click="withdrawLabel">撤销</button>
-				<button class="point-btn" @click="clearLabel">清除标记</button>
-				<button class="point-btn" @click="saveLabel">保存标记</button>
-			</view>
-			<img style="width: 710rpx;" :src="vasuclarItem.url"  @click="abc"></img>
-			<!-- <image style="width: 750rpx;" :src="vasuclarItem.url" mode="aspectFit" @click="abc"></image> -->
-			<view class="vascular-access-bodypart-area">
-				<text class="vascular-access-bodypart-title">部位:</text>
-				<input class="vascular-access-bodypart-input" type="text" value="" placeholder="请填写血管通路照片部位" placeholder-style="font-size:28rpx;"/>
-				<button class="one-btn small-btn">保存部位</button>
+				<button class="point-btn" @click="withdrawPoint">撤销</button>
+<!-- 				<button class="point-btn" @click="clearLabel">清除标记</button>
+				<button class="point-btn" @click="saveLabel">保存标记</button> -->
 			</view>
 			<view class="point" :style="{left: item.x +'px',top: item.y + 'px'}" v-for="(item,index) in pointList">
-				{{index}}
+				{{parseInt(item.key)+1}}
 			</view>
 		</view>
 		<view class="vascular-record-border-bottom">
 			<view class="content">
 				<view class="section-style new-record">
 					<text>最新记录</text>
-					<view class="position-circle-btn" @click="toDetail">
-						<uni-icons type="plusempty" color="#FFFFFF" size="15" style="margin-right:10rpx;" @click="toDetail"></uni-icons>
+					<view class="position-circle-btn" @click="toAdd">
+						<uni-icons type="plusempty" color="#FFFFFF" size="15" style="margin-right:10rpx;"></uni-icons>
 						<text>新增</text>
 					</view>
 				</view>
-				<view class="list-view">
+				<view v-if="!hasCurr" class="list-view">
+					暂无记录
+				</view>
+				<view v-if="hasCurr" class="list-view">
 					<view class="list-left">
 						<view class="list-item-line">
 							<text>{{currRecord.holeNo}}</text>
 							<text>{{currRecord.nurse}}</text>
-							<text>{{currRecord.date}}</text>
-							<text>{{currRecord.time}}</text>
+							<text>{{currRecord.create_time}}</text>
 						</view>
 						<view class="list-item-line">
-							<text>备注：{{currRecord.comment}}</text>
+							<text>备注：{{currRecord.remark}}</text>
 						</view>
 					</view>
-					<uni-icons type="arrowright" color="#C0C0C0" size="20" style="padding:20rpx 0 20rpx 20rpx;margin:0;" @click="toDetail"></uni-icons>
+					<uni-icons type="arrowright" color="#C0C0C0" size="20" style="padding:20rpx 0 20rpx 20rpx;margin:0;" @click="toDetail(currRecord)"></uni-icons>
 				</view>
 			</view>
 		</view>
@@ -49,26 +52,25 @@
 				<view class="section-style">
 					<text>历史记录</text>
 				</view>
-				<view class="list-view" v-for="item in recordList">
+				<view v-if="!hasHistory" class="list-view">
+					暂无记录
+				</view>
+				<view v-if="hasHistory" class="list-view" v-for="item in recordList">
 					<view class="list-left">
 						<view class="list-item-line">
 							<text>{{item.holeNo}}</text>
 							<text>{{item.nurse}}</text>
-							<text>{{item.date}}</text>
-							<text>{{item.time}}</text>
+							<text>{{item.create_time}}</text>
 						</view>
 						<view class="list-item-line">
-							<text>备注：{{item.comment}}</text>
+							<text>备注：{{item.remark}}</text>
 						</view>
 					</view>
-					<uni-icons type="arrowright" color="#C0C0C0" size="20" style="padding:20rpx 0 20rpx 20rpx;margin:0;" @click="toDetail"></uni-icons>
+					<uni-icons type="arrowright" color="#C0C0C0" size="20" style="padding:20rpx 0 20rpx 20rpx;margin:0;" @click="toDetail(item)"></uni-icons>
 				</view>
 			</view>
 		</view>
-		
-
 	</view>
-	
 </template>
 
 <script>
@@ -77,59 +79,285 @@
 	export default {
 		data() {
 			return {
+				target:{},
 				vasuclarItem:{},
+				nurseInfo:{},
 				pointLabel:false,
-				bodyPart:false,
+				pointCount:0,
 				pointList:[],
-				currRecord:{holeNo:"1孔", nurse:"陈护士", date:"2021-08-31", time:"10:30:00", comment:"正常正常正常正常正常正常正常正常正常正常正常正常正常正常"},
-				recordList:[
-					{holeNo:"1孔", nurse:"陈护士", date:"2021-08-31", time:"10:30:00", comment:"正常"},
-					{holeNo:"1孔", nurse:"陈护士", date:"2021-08-31", time:"10:30:00", comment:"正常"},
-					{holeNo:"1孔", nurse:"陈护士", date:"2021-08-31", time:"10:30:00", comment:"正常"},
-					{holeNo:"1孔", nurse:"陈护士", date:"2021-08-31", time:"10:30:00", comment:"正常"},
-					{holeNo:"1孔", nurse:"陈护士", date:"2021-08-31", time:"10:30:00", comment:"正常"},
-					{holeNo:"1孔", nurse:"陈护士", date:"2021-08-31", time:"10:30:00", comment:"正常"},
-				]
-				
+				hasCurr:false,
+				hasHistory:false,
+				currRecord:{},
+				recordList:[],
+				scrollDistance:0,
 			}
 		},
 		onLoad() {
 			this.vasuclarItem = Store.getStorageSync("vasuclarItem");
+			this.nurseInfo = Store.getStorageSync("nurseInfo");
+			console.log("nurseInfo",this.nurseInfo)
 			console.log("vasuclarItem",this.vasuclarItem)
 		},
+		onShow() {
+			this.getRecordList();
+		},
+		onReady() {
+			uni.showToast({
+				title: 'loading',
+				icon: 'loading',
+				mask: true
+			});
+			setTimeout(()=>{
+				const query = uni.createSelectorQuery().in(this);
+				query.select('#target').boundingClientRect(
+					(data) => {
+						console.log("target",data)
+						this.target = data;
+					}
+				).exec();
+				this.getPoints();
+				this.getRecordList();
+			},1000);
+
+		},
+		onPageScroll(e) {
+			console.log(e)
+			this.scrollDistance = e.scrollTop;
+		},
 		methods: {
+			//设置图片部位
+			setLocation(){
+				this.$myRequest({
+					url:'/vascularposition/location',
+					method:'POST',
+					data:{
+						"pic_id":this.vasuclarItem.pic_id,
+						"location":this.vasuclarItem.location,
+					},
+					success: (res) => {
+						if(res.data.code == 200){
+							console.log("setLocation",res.data.data)
+						}
+					},
+					fail:(err)=>{
+						console.error("setLocation失败",err);
+					}
+				});
+			},
+			//获取坐标点
+			getPoints(){
+				this.pointList = [];
+				this.$myRequest({
+					url:'/vascularposition/getposition',
+					method:'POST',
+					data:{
+						"pic_id":this.vasuclarItem.pic_id,
+					},
+					success: (res) => {
+						if(res.data.code == 200){
+							console.log("positionList",res.data.data)
+							let tempPoints = res.data.data;
+							Store.setStorageSync("pointList",tempPoints);
+							for(let l = 0; l < tempPoints.length; l++){
+								tempPoints[l].x = tempPoints[l].x * this.target.width + this.target.left;
+								tempPoints[l].y = tempPoints[l].y * this.target.height + this.target.top;
+							}
+							console.log("pointList",tempPoints)
+							this.pointList = tempPoints;
+							this.pointCount = tempPoints.length;
+							console.log("pointCount",this.pointCount)
+						}
+					},
+					fail:(err)=>{
+						console.error("positionList失败",err);
+					}
+				});
+			},
+			//获取血管通路记录列表
+			getRecordList(){
+				console.log("getRecordList")
+				this.hasCurr = false;
+				this.hasHistory = false;
+				this.currRecord = {};
+				this.recordList = [];
+				this.$myRequest({
+					url:'/vascularposition/getdesclist',
+					method:'POST',
+					data:{
+						"pic_id":this.vasuclarItem.pic_id,
+					},
+					success: (res) => {
+						console.log("recordList",res.data.data)
+						if(res.data.code == 200){
+							console.log("recordList",res.data.data)
+							let tempList = res.data.data;
+							for(let i = 0; i < tempList.length; i++){
+								tempList[i].holeNo = "插孔";
+								//获取插孔
+								for(let j = 0; j < this.pointList.length; j++){
+									if(this.pointList[j].position_id == tempList[i].position_id){
+										let index = j+1;
+										tempList[i].holeNo = "插孔" + index.toString();
+									}
+								}
+								//获取护士
+								for(let k = 0; k < this.nurseInfo.length; k++){
+									if(this.nurseInfo[k].emp_no == tempList[i].nurse_id){
+										tempList[i].nurse = this.nurseInfo[k].name;
+									}
+								}
+								
+							}
+							if(tempList.length > 0){
+								this.hasCurr = true;
+								this.currRecord = tempList[0];
+								tempList.shift();
+								this.recordList = tempList;
+								console.log("currRecord",this.currRecord)
+								console.log("recordList",this.recordList)
+							}
+							if(this.recordList.length > 0){
+								this.hasHistory = true;
+							}
+						}
+					},
+					fail:(err)=>{
+						console.error("positionList失败",err);
+					}
+				});
+			},
+			//添加标记
+			addPoint(e){
+				if(this.pointLabel){
+					console.log("e", e.detail)
+					console.log("left", this.target.left)
+					console.log("top", this.target.top)
+					//计算点与图片的距离比例
+					let xPoint = (e.detail.x - 7 - this.target.left)/this.target.width;
+					let yPoint = (e.detail.y + this.scrollDistance - 7 - this.target.top)/this.target.height;
+					console.log("x",xPoint)
+					console.log("y",yPoint)
+					let point = {x: xPoint, y: yPoint};
+					uni.showToast({
+						title: 'loading',
+						icon: 'loading',
+						mask: true
+					},100);
+					this.$myRequest({
+						url:'/vascularposition/addposition',
+						method:'POST',
+						data:{
+							"pic_id":this.vasuclarItem.pic_id,
+							"x":point.x,
+							"y":point.y,
+							"key":this.pointList.length,
+						},
+						success: (res) => {
+							//若获取成功同时传入图片和治疗状态数据
+							if(res.data.code == 200){
+								console.log("addPoint",res.data.data)
+								this.getPoints();
+							}
+						},
+						fail:(err)=>{
+							console.error("addPoint失败",err);
+							uni.showToast({
+								title: '添加失败',
+								icon: 'none',
+								mask: true
+							});
+						}
+					});
+					console.log('pointList',this.pointList)
+				}
+			},
+			//撤销标记
+			withdrawPoint(){
+				let withdrawable = true;
+				let length = this.pointList.length;
+				if(length > 0){
+					uni.showToast({
+						title: 'loading',
+						icon: 'loading',
+						mask: true
+					},100);
+					let keyValue = (this.pointCount-1).toString();
+					let withdrawPoint = {};
+					for(let n = 0; n < this.pointList.length; n++){
+						if(this.pointList[n].key == keyValue){
+							withdrawPoint =  this.pointList[n];
+							break;
+						}
+					}
+					console.log("withdrawPoint",withdrawPoint)
+					if(this.currRecord.position_id == withdrawPoint.position_id){
+						withdrawable = false;
+						uni.showToast({
+							title: '有相关记录，不可删除',
+							icon: 'none',
+							mask: true
+						});
+					}
+					else{
+						for(let m = 0; m < this.recordList.length; m++){
+							if(this.recordList[m].position_id == withdrawPoint.position_id){
+								withdrawable = false;
+								uni.showToast({
+									title: '有相关记录，不可删除',
+									icon: 'none',
+									mask: true
+								});
+								return;
+							}
+						}
+					}
+					if(withdrawable == true){
+						this.$myRequest({
+							url:'/vascularposition/deleteposition',
+							method:'POST',
+							data:{
+								"position_id":withdrawPoint.position_id,
+							},
+							success: (res) => {
+								//若获取成功同时传入图片和治疗状态数据
+								if(res.data.code == 200){
+									console.log("withdrawPoint",res.data.data)
+									this.getPoints()
+								}
+							},
+							fail:(err)=>{
+								console.error("withdrawPoint失败",err);
+								uni.showToast({
+									title: '撤销失败',
+									icon: 'none',
+									mask: true
+								});
+							}
+						});
+					}
+
+				}
+				this.pointLabel = false;
+			},
+			//标记状态变更
 			startLabel(){
 				this.pointLabel = true;
 			},
+			//标记状态变更
 			stopLabel(){
 				this.pointLabel = false;
 			},
-			withdrawLabel(){
-				if(this.pointList.length > 0){
-					this.pointList.pop();
-				}
-				this.pointLabel = false;
-			},
-			clearLabel(){
-				this.pointList = [];
-				this.pointLabel = false;
-			},
-			saveLabel(){
-				this.pointLabel = false;
-			},
-			abc(e){
-				if(this.pointLabel){
-					console.log("e type", typeof e.detail.x)
-					let point = {x: e.detail.x - 7, y: e.detail.y - 7,};
-					this.pointList.push(point);
-					// this.$forceUpdate()
-					console.log('pointList',this.pointList)
-				}
-
-			},
-			toDetail(){
+			//跳转新增
+			toAdd(){
 				uni.navigateTo({
 					url:'../vascular-access-record-add/vascular-access-record-add'
+				})
+			},
+			//跳转详情
+			toDetail(item){
+				Store.setStorageSync("selectRecord",item);
+				uni.navigateTo({
+					url:'../vascular-access-record-edit/vascular-access-record-edit'
 				})
 			}
 		}
@@ -141,6 +369,8 @@
 	.point-btn-area{
 		margin: 20rpx;
 		display: flex;
+		justify-content: flex-start;
+		align-items: flex-start;
 	}
 	.point{
 		position: absolute;
@@ -158,28 +388,14 @@
 		border: none;
 	}
 	.point-btn {
-	    display: flex;
-	    align-items: center;
-	    justify-content: center;
-		/* background-color: #51D3C7; */
+		width: 200rpx;
+		height: 50rpx;
+		line-height: 50rpx;
 		color: #51D3C7;
 		font-size: 28upx;
 		border: 2rpx solid #51D3C7;
-	    border-radius: 0;
-	    /* box-shadow: 1px 2px 5px rgba(28, 42, 134, 0.4); */
-		height: 50rpx;
-	}
-	.point-btn-disable {
-	    display: flex;
-	    align-items: center;
-	    justify-content: center;
-		background-color: #C0C0C0;
-		color: #FFFFFF;
-		font-size: 28upx;
-		/* border: 2rpx solid #51D3C7; */
-	    border-radius: 0;
-	    /* box-shadow: 1px 2px 5px rgba(28, 42, 134, 0.4); */
-		height: 50rpx;
+	    border-radius: 20rpx;
+
 	}
 	.vascular-access-bodypart-area{
 		margin: 20rpx;

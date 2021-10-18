@@ -78,8 +78,8 @@
 							mask: true
 						});
 						uni.uploadFile({
-							// url:"http://192.168.0.46:8083/patient/new/vascularaccesspic",
-							url:"http://172.19.38.137:8083/patient/new/vascularaccesspic",
+							url:"http://192.168.0.46:8083/patient/new/vascularaccesspic",
+							// url:"http://172.19.38.137:8083/patient/new/vascularaccesspic",
 							filePath:res.tempFilePaths[0],
 							fileType:'image',
 							name:'file',

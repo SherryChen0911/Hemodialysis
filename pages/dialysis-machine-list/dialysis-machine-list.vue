@@ -8,11 +8,11 @@
 			<view class="search-machine-condition">
 				<view class="search-machine-item">
 					<text class="search-machine-title">使用日期</text>
-					<picker class="search-machine-cnt-date" mode="date" @change="setStartDate($event)">
+					<picker class="search-machine-cnt-date" fields="day" mode="date" @change="setStartDate($event)">
 						<input class="search-machine-cnt-date" type="text" disabled="true" v-model="searchInfo.startDate" placeholder="开始日期"/>
 					</picker>
 					<text >至</text>
-					<picker class="search-machine-cnt-date" mode="date" @change="setEndDate($event)">
+					<picker class="search-machine-cnt-date" fields="day" mode="date" @change="setEndDate($event)">
 						<input class="search-machine-cnt-date" type="text" disabled="true" v-model="searchInfo.endDate" placeholder="结束日期"/>
 					</picker>
 				</view>

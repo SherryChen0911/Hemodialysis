@@ -1,16 +1,5 @@
 <template>
 	<view class="content">
-		<view class="a">
-			<view class="b" @click="toFall">跌倒</view>
-			<view class="b" @click="toFallDetail">跌倒详情</view>
-			<view class="b" @click="toMachine">透析机</view>
-			<view class="b" @click="toMachineDetail">透析机详情</view>
-			<view class="b" @click="toComplication">并发症记录</view>
-			<view class="b" @click="toComplicationDetail">并发症详情</view>
-			<view class="b" @click="toGuide">宣教</view>
-			<view class="b" @click="toVascular">血管通路</view>
-			<view class="b" @click="toVascularDetail">血管通路详情</view>
-		</view>
 		<form class="login"  @submit="formSubmit">
 			<view class="form-item form-cnt login-item">
 				<view class="form-prefix-space login-prefix">
@@ -169,17 +158,6 @@
 
 <style>
 	@import url("../../static/css/style.css");
-	.a{
-		display: flex;
-		justify-content: flex-start;
-		align-items: flex-start;
-		flex-wrap: wrap;
-	}
-	.b{
-		background-color: #51D3C7;
-		margin-right: 10rpx;
-		margin-bottom: 10rpx;
-	}
 	.login{
 		position: absolute;
 		top: 400rpx;

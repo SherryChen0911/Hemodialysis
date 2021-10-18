@@ -6,7 +6,7 @@
 					<text>日期:</text>
 				</view>
 				<view class="form-cnt form-mid-space">
-					<picker mode="date" @change="setDate($event)">
+					<picker mode="date" fields="day" @change="setDate($event)">
 						<input class="form-mid-space" v-model="complicationInfo.work_date" type="text" disabled="true" name=""/>
 					</picker>
 				</view>

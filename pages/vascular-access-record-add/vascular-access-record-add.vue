@@ -13,26 +13,6 @@
 			</view>
 			<view class="form-item">
 				<view class="form-prefix-space">
-						<text>日期:</text>
-				</view>
-				<view class="form-cnt form-mid-space">
-					<picker mode="date" @change="setDate($event)">
-						<input class="form-mid-space" disabled="true" type="text" v-model="submitInfo.date" name=""/>
-					</picker>
-				</view>
-			</view>
-			<view class="form-item">
-				<view class="form-prefix-space">
-					<text>时间:</text>
-				</view>
-				<view class="form-cnt form-mid-space">
-					<picker mode="time" @change="setTime($event)">
-						<input class="form-mid-space" disabled="true" type="text" v-model="submitInfo.time" name=""/>
-					</picker>
-				</view>
-			</view>
-			<view class="form-item">
-				<view class="form-prefix-space">
 					<text>插孔护士:</text>
 				</view>
 				<view class="form-cnt form-mid-space">
@@ -46,18 +26,20 @@
 					<text>备注:</text>
 				</view>
 				<view class="form-cnt form-mid-space">
-					<input class="form-mid-space" type="text" name=""/>
+					<input class="form-mid-space" v-model="recordItem.remark" type="text" name=""/>
 				</view>
 			</view>
 			<view class="form-item">
 				<view class="form-prefix-space">
 					<text>照片:</text>
 				</view>
-				<view class="form-mid-space form-mid-space3">
-					<uni-icons v-if="!submitInfo.hasPic" type="camera" color="#C0C0C0" size="50" @click="addPic()"></uni-icons>
-					<image class="record-pic" v-if="submitInfo.hasPic" :src="submitInfo.url" mode="aspectFill" @click="bigPic"></image>
-					<uni-icons v-if="submitInfo.hasPic" type="close" color="#c0c0c0" size="25" @click="delPic()"></uni-icons>
+			</view>
+			<view class="record-pic-area">
+				<view v-for="item in imgList">
+					<image class="record-pic"  :src="item" mode="aspectFill" @click="bigPic(item)"></image>
+					<!-- <uni-icons type="close" color="#c0c0c0" size="25" style="margin-right: 40rpx;" @click="delPic()"></uni-icons> -->
 				</view>
+				<uni-icons type="camera" color="#C0C0C0" size="50" style="line-height: 200rpx; margin-left: 50rpx;" @click="addPic()"></uni-icons>
 			</view>
 			<button class="one-btn btn-margin" form-type="submit">保存</button>
 			<button class="err-btn">取消</button>
@@ -66,7 +48,7 @@
 		<!-- 弹出框 -->
 		<uni-popup ref="bigPic" type="dialog">
 			<view class="big-pic-area" slot="default" >
-				<image class="big-pic" :src="submitInfo.url" mode="aspectFit"/>
+				<image class="big-pic" :src="selectImg" mode="aspectFit"/>
 				<view class="vascular-btn-area">
 					<button class="btn" @click="delPic">删除</button>
 					<button class="btn" @click="clocePopup">返回</button>
@@ -79,12 +61,25 @@
 <script>
 	import Store from '../../common/store.js'
 	
+	let that = null;
 	export default {
 		data() {
 			return {
+				vasuclarItem:{},
+				recordItem:{
+					position_id:"",
+					pic_id:"",
+					remark:"",
+					nurse_id:"",
+					key:"",
+					
+				},
+				pointList:[],
 				nurseInfo:[],
 				nurseRange:[],
-				holeRange:['插孔1','插孔2','插孔3','插孔4','插孔5','插孔6','插孔7','插孔8','插孔9','插孔10','插孔11','插孔12'],
+				holeRange:[],
+				imgList:[],
+				selectImg:"",
 				submitInfo:{
 					hole:'',
 					date:'',
@@ -92,14 +87,29 @@
 					nurse:'',
 					nurseid:'',
 					comment:'',
-					url:"../../static/vascular.png",
-					hasPic:false,
 				},
 			}
 		},
 		onLoad() {
+			//获取图片对象
+			this.vasuclarItem = Store.getStorageSync("vasuclarItem");
+			//获取插孔列表的下拉菜单
+			this.pointList = Store.getStorageSync("pointList");
+			this.holeRange = [];
+			for(let i = 0; i < this.pointList.length; i++){
+				let index = i+1;
+				let holeName = "插孔"+ index.toString();
+				this.holeRange.push(holeName);
+			}
+			console.log("holeRange",this.holeRange)
 			this.userInfo = Store.getStorageSync("userInfo");
 			this.nurseInfo = Store.getStorageSync("nurseInfo");
+			console.log("vasuclarItem",this.vasuclarItem)
+			console.log("pointList",this.pointList)
+			console.log("userInfo",this.userInfo)
+			console.log("nurseInfo",this.nurseInfo)
+			this.recordItem.nurse_id = this.userInfo.user_id;
+			this.recordItem.pic_id = this.vasuclarItem.pic_id;
 			this.nurseRange = [];
 			if(Array.isArray(this.nurseInfo)){
 				for (let i = 0; i < this.nurseInfo.length; i++) {
@@ -108,35 +118,88 @@
 			}
 			//设置默认值
 			this.submitInfo.nurse = this.userInfo.user_name;
+
 		},
 		methods: {
 			submit(){
-				
+				console.log("recordItem",this.recordItem)
+				this.$myRequest({
+					url:'/vascularposition/newdesc',
+					method:'POST',
+					data:this.recordItem,
+					success: (res) => {
+						if(res.data.code == 200){
+							console.log("新增血管通路记录",res.data.data)
+							for(let a = 0; a < this.imgList.length; a++){
+								this.addPicAPI(this.imgList[a],res.data.data.desc_id);
+							}
+							uni.showToast({
+								title: "血管通路记录新增成功!",
+								icon: 'none',
+								mask: true
+							});
+						}
+					},
+					fail:(err)=>{
+						console.error("新增血管通路记录失败",err);
+					}
+				});
 			},
 			setHole(e){
 				this.submitInfo.hole = this.holeRange[e.detail.value];
-				
-			},
-			setDate(e){
-				this.submitInfo.date = e.detail.value;
-			},
-			setTime(e){
-				this.submitInfo.time = e.detail.value;
+				this.recordItem.position_id = this.pointList[e.detail.value].position_id;
+				this.recordItem.key = this.pointList[e.detail.value].key;
+				console.log("recordItem",this.recordItem)
 			},
 			setNurse(e){
 				this.submitInfo.nurse = this.nurseRange[e.detail.value];
+				this.recordItem.nurse_id = this.nurseInfo[e.detail.value].emp_no;
+				console.log("recordItem",this.recordItem)
 			},
 			addPic(){
-				this.submitInfo.hasPic = true;
+				that = this;
+				uni.chooseImage({
+					count: 1,
+					success: function (res) {
+						console.log("chooseImage",res)
+						console.log("chooseImage",res.tempFilePaths[0])
+						that.imgList.push(res.tempFilePaths[0]);
+						console.log("imgList",that.imgList)
+					},
+					fail: function (err) {
+						console.log("chooseImage 失败",err);
+					}
+				});
 			},
-			bigPic(){
+			addPicAPI(item,id){
+				console.log("enter addPicAPI")
+				console.log("url:",item)
+				uni.uploadFile({
+					// url:"http://192.168.0.46:8083/vascularposition/new/vascularpic",
+					url:"http://192.168.0.46:8083/vascularposition/new/vascularpic",
+					filePath:item,
+					fileType:'image',
+					name:'file',
+					formData:{
+						'desc_id':id,
+					},
+					success:(res)=>{
+						console.log("uploadFile",res)
+					},
+					fail:(err1)=>{
+						console.log("uploadFile",err1)
+						console.error("uploadFile 失败",err1);
+					}
+				})
+			},
+			bigPic(item){
+				this.selectImg = item;
 				this.$refs.bigPic.open();
 			},
 			clocePopup(){
 				this.$refs.bigPic.close();
 			},
 			delPic(){
-				this.submitInfo.hasPic = false;
 				this.$refs.bigPic.close();
 			}
 		}
@@ -168,16 +231,17 @@
 		width: 200rpx;
 		height: 200rpx;
 	}
-	.form-mid-space3{
+	.record-pic-area{
+		margin-left: 50rpx;
+		margin-bottom: 20rpx;
 		display: flex;
 		align-items: flex-start;
+		flex-wrap: wrap;
 	}
 	.btn-margin{
 		margin-bottom: 20rpx;
 	}
 	.big-pic-area{
-		margin-top: 50rpx;
-		/* margin: 10rpx; */
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
